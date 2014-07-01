@@ -215,19 +215,9 @@ class CLITestV20Base(base.BaseTestCase):
         self.mox.StubOutWithMock(cmd, "get_client")
         self.mox.StubOutWithMock(self.client.httpclient, "request")
         cmd.get_client().MultipleTimes().AndReturn(self.client)
-        non_admin_status_resources = ['subnet', 'floatingip', 'security_group',
-                                      'security_group_rule', 'qos_queue',
-                                      'network_gateway', 'gateway_device',
-                                      'credential', 'network_profile',
-                                      'policy_profile', 'ikepolicy',
-                                      'ipsecpolicy', 'metering_label',
-                                      'metering_label_rule', 'net_partition']
         if not cmd_resource:
             cmd_resource = resource
-        if (resource in non_admin_status_resources):
-            body = {resource: {}, }
-        else:
-            body = {resource: {'admin_state_up': admin_state_up, }, }
+        body = {resource: {}, }
         if tenant_id:
             body[resource].update({'tenant_id': tenant_id})
         if tags:
@@ -616,10 +606,6 @@ class ClientV2TestJson(CLITestV20Base):
         self.assertEqual("An error", str(error))
         self.mox.VerifyAll()
         self.mox.UnsetStubs()
-
-
-class ClientV2UnicodeTestXML(ClientV2TestJson):
-    format = 'xml'
 
 
 class CLITestV20ExceptionHandler(CLITestV20Base):
