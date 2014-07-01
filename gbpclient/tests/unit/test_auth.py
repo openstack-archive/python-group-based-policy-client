@@ -30,7 +30,6 @@ from keystoneclient import exceptions as ks_exceptions
 from keystoneclient.fixture import v2 as ks_v2_fixture
 from keystoneclient.fixture import v3 as ks_v3_fixture
 from keystoneclient import session
-
 from neutronclient import client
 from neutronclient.common import exceptions
 from neutronclient.common import utils
