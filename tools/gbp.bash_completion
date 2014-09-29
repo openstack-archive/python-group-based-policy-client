@@ -1,0 +1,27 @@
+_gbp_opts="" # lazy init
+_gbp_flags="" # lazy init
+_gbp_opts_exp="" # lazy init
+_gbp()
+{
+	local cur prev nbc cflags
+	COMPREPLY=()
+	cur="${COMP_WORDS[COMP_CWORD]}"
+	prev="${COMP_WORDS[COMP_CWORD-1]}"
+
+	if [ "x$_gbp_opts" == "x" ] ; then
+		nbc="`gbp bash-completion`"
+		_gbp_opts="`echo "$nbc" | sed -e "s/--[a-z0-9_-]*//g" -e "s/\s\s*/ /g"`"
+		_gbp_flags="`echo " $nbc" | sed -e "s/ [^-][^-][a-z0-9_-]*//g" -e "s/\s\s*/ /g"`"
+		_gbp_opts_exp="`echo "$_gbp_opts" | sed -e "s/\s/|/g"`"
+	fi
+
+	if [[ " ${COMP_WORDS[@]} " =~ " "($_gbp_opts_exp)" " && "$prev" != "help" ]] ; then
+		COMPLETION_CACHE=~/.gbpclient/*/*-cache
+		cflags="$_gbp_flags "$(cat $COMPLETION_CACHE 2> /dev/null | tr '\n' ' ')
+		COMPREPLY=($(compgen -W "${cflags}" -- ${cur}))
+	else
+		COMPREPLY=($(compgen -W "${_gbp_opts}" -- ${cur}))
+	fi
+	return 0
+}
+complete -F _gbp gbp
