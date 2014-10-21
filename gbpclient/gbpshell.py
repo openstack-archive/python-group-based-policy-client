@@ -39,6 +39,7 @@ from neutronclient.openstack.common import strutils
 from neutronclient.version import __version__
 
 from gbpclient.gbp.v2_0 import groupbasedpolicy as gbp
+from gbpclient.gbp.v2_0 import servicechain
 
 VERSION = '2.0'
 NEUTRON_API_VERSION = '2.0'
@@ -126,6 +127,31 @@ COMMAND_V2 = {
     'policy-rule-set-update': gbp.UpdateContract,
     'policy-rule-set-list': gbp.ListContract,
     'policy-rule-set-show': gbp.ShowContract,
+    'servicechain-node-list': servicechain.ListServiceChainNode,
+    'servicechain-node-show': servicechain.ShowServiceChainNode,
+    'servicechain-node-create': servicechain.CreateServiceChainNode,
+    'servicechain-node-delete': servicechain.DeleteServiceChainNode,
+    'servicechain-node-update': servicechain.UpdateServiceChainNode,
+    'servicechain-spec-list': servicechain.ListServiceChainSpec,
+    'servicechain-spec-show': servicechain.ShowServiceChainSpec,
+    'servicechain-spec-create': servicechain.CreateServiceChainSpec,
+    'servicechain-spec-delete': servicechain.DeleteServiceChainSpec,
+    'servicechain-spec-update': servicechain.UpdateServiceChainSpec,
+    'servicechain-instance-list': (
+        servicechain.ListServiceChainInstance
+    ),
+    'servicechain-instance-show': (
+        servicechain.ShowServiceChainInstance
+    ),
+    'servicechain-instance-create': (
+        servicechain.CreateServiceChainInstance
+    ),
+    'servicechain-instance-delete': (
+        servicechain.DeleteServiceChainInstance
+    ),
+    'servicechain-instance-update': (
+        servicechain.UpdateServiceChainInstance
+    ),
 }
 
 COMMANDS = {'2.0': COMMAND_V2}
