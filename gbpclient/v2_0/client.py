@@ -165,6 +165,12 @@ class Client(object):
     policy_rule_path = "/grouppolicy/policy_rules/%s"
     contracts_path = "/grouppolicy/contracts"
     contract_path = "/grouppolicy/contracts/%s"
+    servicechain_nodes_path = "/servicechain/servicechain_nodes"
+    servicechain_node_path = "/servicechain/servicechain_nodes/%s"
+    servicechain_specs_path = "/servicechain/servicechain_specs"
+    servicechain_spec_path = "/servicechain/servicechain_specs/%s"
+    servicechain_instances_path = "/servicechain/servicechain_instances"
+    servicechain_instance_path = "/servicechain/servicechain_instances/%s"
 
     # API has no way to report plurals, so we have to hard code them
     EXTED_PLURALS = {'endpoints': 'endpoint',
@@ -459,6 +465,98 @@ class Client(object):
     def delete_contract(self, contract):
         """Deletes the specified contract."""
         return self.delete(self.contract_path % (contract))
+
+    def list_servicechain_nodes(self, retrieve_all=True, **_params):
+
+        """Fetches a list of all service chain nodes for a tenant."""
+        # Pass filters in "params" argument to do_request
+
+        return self.list('servicechain_nodes', self.servicechain_nodes_path,
+                         retrieve_all, **_params)
+
+    @APIParamsCall
+    def show_servicechain_node(self, servicechain_node, **_params):
+        """Fetches information of a certain service chain node."""
+        return self.get(self.servicechain_node_path % (servicechain_node),
+                        params=_params)
+
+    @APIParamsCall
+    def create_servicechain_node(self, body=None):
+        """Creates a new service chain node."""
+        return self.post(self.servicechain_nodes_path, body=body)
+
+    @APIParamsCall
+    def update_servicechain_node(self, servicechain_node, body=None):
+        """Updates a service chain node."""
+        return self.put(self.servicechain_node_path % (servicechain_node),
+                        body=body)
+
+    @APIParamsCall
+    def delete_servicechain_node(self, servicechain_node):
+        """Deletes the specified service chain node."""
+        return self.delete(self.servicechain_node_path % (servicechain_node))
+
+    @APIParamsCall
+    def list_servicechain_specs(self, retrieve_all=True, **_params):
+        """Fetches a list of all service chain specs for a tenant."""
+        # Pass filters in "params" argument to do_request
+
+        return self.list('servicechain_specs', self.servicechain_specs_path,
+                         retrieve_all, **_params)
+
+    @APIParamsCall
+    def show_servicechain_spec(self, servicechain_spec, **_params):
+        """Fetches information of a certain service chain spec."""
+        return self.get(self.servicechain_spec_path % (servicechain_spec),
+                        params=_params)
+
+    @APIParamsCall
+    def create_servicechain_spec(self, body=None):
+        """Creates a new service chain spec."""
+        return self.post(self.servicechain_specs_path, body=body)
+
+    @APIParamsCall
+    def update_servicechain_spec(self, servicechain_spec, body=None):
+        """Updates a service chain spec."""
+        return self.put(self.servicechain_spec_path % (servicechain_spec),
+                        body=body)
+
+    @APIParamsCall
+    def delete_servicechain_spec(self, servicechain_spec):
+        """Deletes the specified service chain spec."""
+        return self.delete(self.servicechain_spec_path % (servicechain_spec))
+
+    @APIParamsCall
+    def list_servicechain_instances(self, retrieve_all=True, **_params):
+        """Fetches a list of all service chain instances for a tenant."""
+        # Pass filters in "params" argument to do_request
+
+        return self.list('servicechain_instances',
+                         self.servicechain_instances_path,
+                         retrieve_all, **_params)
+
+    @APIParamsCall
+    def show_servicechain_instance(self, servicechain_instance, **_params):
+        """Fetches information of a certain service chain instance."""
+        return self.get(self.servicechain_instance_path %
+                        (servicechain_instance), params=_params)
+
+    @APIParamsCall
+    def create_servicechain_instance(self, body=None):
+        """Creates a new service chain instance."""
+        return self.post(self.servicechain_instances_path, body=body)
+
+    @APIParamsCall
+    def update_servicechain_instance(self, servicechain_instance, body=None):
+        """Updates a service chain instance."""
+        return self.put(self.servicechain_instance_path %
+                        (servicechain_instance), body=body)
+
+    @APIParamsCall
+    def delete_servicechain_instance(self, servicechain_instance):
+        """Deletes the specified service chain instance."""
+        return self.delete(self.servicechain_instance_path %
+                           (servicechain_instance))
 
     def __init__(self, **kwargs):
         """Initialize a new client for the GBP v2.0 API."""
