@@ -60,10 +60,10 @@ class CreateServiceChainInstance(neutronV20.CreateCommand):
             '--service-chain-spec', dest='servicechain_spec',
             help=_('Service Chain Spec ID or the Service Chain Spec name'))
         parser.add_argument(
-            '--provider-epg', dest='provider_epg',
+            '--provider-ptg', dest='provider_epg',
             help=_('Destination Policy Target Group ID of the Provider.'))
         parser.add_argument(
-            '--consumer-epg', dest='consumer_epg',
+            '--consumer-ptg', dest='consumer_epg',
             help=_('Source Policy Target Group ID of the Consumer.'))
         parser.add_argument(
             '--param-values', dest='param_values',
@@ -77,20 +77,20 @@ class CreateServiceChainInstance(neutronV20.CreateCommand):
                 neutronV20.find_resourceid_by_name_or_id(
                     self.get_client(), 'servicechain_spec',
                     parsed_args.servicechain_spec)
-        if parsed_args.provider_epg:
-            body[self.resource]['provider_epg'] = \
+        if parsed_args.provider_ptg:
+            body[self.resource]['provider_ptg'] = \
                 neutronV20.find_resourceid_by_name_or_id(
-                    self.get_client(), 'endpoint_group',
-                    parsed_args.provider_epg)
-        if parsed_args.consumer_epg:
-            body[self.resource]['consumer_epg'] = \
+                    self.get_client(), 'policy_target_group',
+                    parsed_args.provider_ptg)
+        if parsed_args.consumer_ptg:
+            body[self.resource]['consumer_ptg'] = \
                 neutronV20.find_resourceid_by_name_or_id(
-                    self.get_client(), 'endpoint_group',
-                    parsed_args.consumer_epg)
+                    self.get_client(), 'policy_target_group',
+                    parsed_args.consumer_ptg)
         neutronV20.update_dict(parsed_args, body[self.resource],
                                ['name', 'tenant_id', 'description',
-                                'servicechain_spec', 'provider_epg',
-                                'consumer_epg', 'param_values'])
+                                'servicechain_spec', 'provider_ptg',
+                                'consumer_ptg', 'param_values'])
         return body
 
 
@@ -105,10 +105,10 @@ class UpdateServiceChainInstance(neutronV20.UpdateCommand):
             '--service-chain-spec', dest='servicechain_spec',
             help=_('Service Chain Spec ID or the Service Chain Spec name'))
         parser.add_argument(
-            '--provider-epg', dest='provider_epg',
+            '--provider-ptg', dest='provider_epg',
             help=_('Destination Policy Target Group ID of the Provider.'))
         parser.add_argument(
-            '--consumer-epg', dest='consumer_epg',
+            '--consumer-ptg', dest='consumer_epg',
             help=_('Source Policy Target Group ID of the Consumer.'))
         parser.add_argument(
             '--param-values', dest='param_values',
@@ -122,20 +122,20 @@ class UpdateServiceChainInstance(neutronV20.UpdateCommand):
                 neutronV20.find_resourceid_by_name_or_id(
                     self.get_client(), 'servicechain_spec',
                     parsed_args.servicechain_spec)
-        if parsed_args.provider_epg:
-            body[self.resource]['provider_epg'] = \
+        if parsed_args.provider_ptg:
+            body[self.resource]['provider_ptg'] = \
                 neutronV20.find_resourceid_by_name_or_id(
-                    self.get_client(), 'endpoint_group',
-                    parsed_args.provider_epg)
-        if parsed_args.consumer_epg:
-            body[self.resource]['consumer_epg'] = \
+                    self.get_client(), 'policy_target_group',
+                    parsed_args.provider_ptg)
+        if parsed_args.consumer_ptg:
+            body[self.resource]['consumer_ptg'] = \
                 neutronV20.find_resourceid_by_name_or_id(
-                    self.get_client(), 'endpoint_group',
-                    parsed_args.consumer_epg)
+                    self.get_client(), 'policy_target_group',
+                    parsed_args.consumer_ptg)
         neutronV20.update_dict(parsed_args, body[self.resource],
                                ['name', 'description',
-                                'servicechain_spec', 'provider_epg',
-                                'consumer_epg', 'param_values'])
+                                'servicechain_spec', 'provider_ptg',
+                                'consumer_ptg', 'param_values'])
         return body
 
 

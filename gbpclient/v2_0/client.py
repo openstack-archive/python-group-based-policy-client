@@ -147,10 +147,10 @@ class Client(object):
 
     """
 
-    endpoints_path = "/grouppolicy/endpoints"
-    endpoint_path = "/grouppolicy/endpoints/%s"
-    endpoint_groups_path = "/grouppolicy/endpoint_groups"
-    endpoint_group_path = "/grouppolicy/endpoint_groups/%s"
+    policy_targets_path = "/grouppolicy/policy_targets"
+    policy_target_path = "/grouppolicy/policy_targets/%s"
+    policy_target_groups_path = "/grouppolicy/policy_target_groups"
+    policy_target_group_path = "/grouppolicy/policy_target_groups/%s"
     l2_policies_path = "/grouppolicy/l2_policies"
     l2_policy_path = "/grouppolicy/l2_policies/%s"
     l3_policies_path = "/grouppolicy/l3_policies"
@@ -163,8 +163,8 @@ class Client(object):
     policy_action_path = "/grouppolicy/policy_actions/%s"
     policy_rules_path = "/grouppolicy/policy_rules"
     policy_rule_path = "/grouppolicy/policy_rules/%s"
-    contracts_path = "/grouppolicy/contracts"
-    contract_path = "/grouppolicy/contracts/%s"
+    policy_rule_sets_path = "/grouppolicy/policy_rule_sets"
+    policy_rule_set_path = "/grouppolicy/policy_rule_sets/%s"
     servicechain_nodes_path = "/servicechain/servicechain_nodes"
     servicechain_node_path = "/servicechain/servicechain_nodes/%s"
     servicechain_specs_path = "/servicechain/servicechain_specs"
@@ -173,15 +173,15 @@ class Client(object):
     servicechain_instance_path = "/servicechain/servicechain_instances/%s"
 
     # API has no way to report plurals, so we have to hard code them
-    EXTED_PLURALS = {'endpoints': 'endpoint',
-                     'endpoint_groups': 'endpoint_group',
+    EXTED_PLURALS = {'policy_targets': 'policy_target',
+                     'policy_target_groups': 'policy_target_group',
                      'l2_policies': 'l2_policy',
                      'l3_policies': 'l3_policy',
                      'network_service_policies': 'network_service_policy',
                      'policy_classifiers': 'policy_classifier',
                      'policy_actions': 'policy_action',
                      'policy_rules': 'policy_rule',
-                     'contracts': 'contract',
+                     'policy_rule_sets': 'policy_rule_set',
                      }
     # 8192 Is the default max URI len for eventlet.wsgi.server
     MAX_URI_LEN = 8192
@@ -210,60 +210,63 @@ class Client(object):
         return self.get(self.extension_path % ext_alias, params=_params)
 
     @APIParamsCall
-    def list_endpoints(self, retrieve_all=True, **_params):
-        """Fetches a list of all endpoints for a tenant."""
+    def list_policy_targets(self, retrieve_all=True, **_params):
+        """Fetches a list of all policy targets for a tenant."""
         # Pass filters in "params" argument to do_request
-        return self.list('endpoints', self.endpoints_path, retrieve_all,
-                         **_params)
-
-    @APIParamsCall
-    def show_endpoint(self, endpoint, **_params):
-        """Fetches information of a certain endpoint."""
-        return self.get(self.endpoint_path % (endpoint), params=_params)
-
-    @APIParamsCall
-    def create_endpoint(self, body=None):
-        """Creates a new endpoint."""
-        return self.post(self.endpoints_path, body=body)
-
-    @APIParamsCall
-    def update_endpoint(self, endpoint, body=None):
-        """Updates a endpoint."""
-        return self.put(self.endpoint_path % (endpoint), body=body)
-
-    @APIParamsCall
-    def delete_endpoint(self, endpoint):
-        """Deletes the specified endpoint."""
-        return self.delete(self.endpoint_path % (endpoint))
-
-    @APIParamsCall
-    def list_endpoint_groups(self, retrieve_all=True, **_params):
-        """Fetches a list of all endpoint_groups for a tenant."""
-        # Pass filters in "params" argument to do_request
-        return self.list('endpoint_groups', self.endpoint_groups_path,
+        return self.list('policy_targets', self.policy_targets_path,
                          retrieve_all, **_params)
 
     @APIParamsCall
-    def show_endpoint_group(self, endpoint_group, **_params):
-        """Fetches information of a certain endpoint_group."""
-        return self.get(self.endpoint_group_path % (endpoint_group),
+    def show_policy_target(self, policy_target, **_params):
+        """Fetches information of a certain policy target."""
+        return self.get(self.policy_target_path % (policy_target),
                         params=_params)
 
     @APIParamsCall
-    def create_endpoint_group(self, body=None):
-        """Creates a new endpoint_group."""
-        return self.post(self.endpoint_groups_path, body=body)
+    def create_policy_target(self, body=None):
+        """Creates a new policy target."""
+        return self.post(self.policy_targets_path, body=body)
 
     @APIParamsCall
-    def update_endpoint_group(self, endpoint_group, body=None):
-        """Updates a endpoint_group."""
-        return self.put(self.endpoint_group_path % (endpoint_group),
+    def update_policy_target(self, policy_target, body=None):
+        """Updates a policy target."""
+        return self.put(self.policy_target_path % (policy_target), body=body)
+
+    @APIParamsCall
+    def delete_policy_target(self, policy_target):
+        """Deletes the specified policy target."""
+        return self.delete(self.policy_target_path % (policy_target))
+
+    @APIParamsCall
+    def list_policy_target_groups(self, retrieve_all=True, **_params):
+        """Fetches a list of all policy target_groups for a tenant."""
+        # Pass filters in "params" argument to do_request
+        return self.list('policy_target_groups',
+                         self.policy_target_groups_path, retrieve_all,
+                         **_params)
+
+    @APIParamsCall
+    def show_policy_target_group(self, policy_target_group, **_params):
+        """Fetches information of a certain policy target_group."""
+        return self.get(self.policy_target_group_path % (policy_target_group),
+                        params=_params)
+
+    @APIParamsCall
+    def create_policy_target_group(self, body=None):
+        """Creates a new policy target_group."""
+        return self.post(self.policy_target_groups_path, body=body)
+
+    @APIParamsCall
+    def update_policy_target_group(self, policy_target_group, body=None):
+        """Updates a policy target_group."""
+        return self.put(self.policy_target_group_path % (policy_target_group),
                         body=body)
 
     @APIParamsCall
-    def delete_endpoint_group(self, endpoint_group):
-        """Deletes the specified endpoint_group."""
-        return self.delete(self.endpoint_group_path % (endpoint_group))
+    def delete_policy_target_group(self, policy_target_group):
+        """Deletes the specified policy target_group."""
+        return self.delete(
+            self.policy_target_group_path % (policy_target_group))
 
     @APIParamsCall
     def list_l2_policies(self, retrieve_all=True, **_params):
@@ -440,31 +443,33 @@ class Client(object):
         return self.delete(self.policy_rule_path % (policy_rule))
 
     @APIParamsCall
-    def list_contracts(self, retrieve_all=True, **_params):
-        """Fetches a list of all contracts for a tenant."""
+    def list_policy_rule_sets(self, retrieve_all=True, **_params):
+        """Fetches a list of all Policy Rule Sets for a tenant."""
         # Pass filters in "params" argument to do_request
-        return self.list('contracts', self.contracts_path, retrieve_all,
-                         **_params)
+        return self.list('policy_rule_sets', self.policy_rule_sets_path,
+                         retrieve_all, **_params)
 
     @APIParamsCall
-    def show_contract(self, contract, **_params):
-        """Fetches information of a certain contract."""
-        return self.get(self.contract_path % (contract), params=_params)
+    def show_policy_rule_set(self, policy_rule_set, **_params):
+        """Fetches information of a certain Policy Rule Set."""
+        return self.get(self.policy_rule_set_path % (policy_rule_set),
+                        params=_params)
 
     @APIParamsCall
-    def create_contract(self, body=None):
-        """Creates a new contract."""
-        return self.post(self.contracts_path, body=body)
+    def create_policy_rule_set(self, body=None):
+        """Creates a new Policy Rule Set."""
+        return self.post(self.policy_rule_sets_path, body=body)
 
     @APIParamsCall
-    def update_contract(self, contract, body=None):
-        """Updates a contract."""
-        return self.put(self.contract_path % (contract), body=body)
+    def update_policy_rule_set(self, policy_rule_set, body=None):
+        """Updates a Policy Rule Set."""
+        return self.put(self.policy_rule_set_path % (policy_rule_set),
+                        body=body)
 
     @APIParamsCall
-    def delete_contract(self, contract):
-        """Deletes the specified contract."""
-        return self.delete(self.contract_path % (contract))
+    def delete_policy_rule_set(self, policy_rule_set):
+        """Deletes the specified Policy Rule Set."""
+        return self.delete(self.policy_rule_set_path % (policy_rule_set))
 
     def list_servicechain_nodes(self, retrieve_all=True, **_params):
 
