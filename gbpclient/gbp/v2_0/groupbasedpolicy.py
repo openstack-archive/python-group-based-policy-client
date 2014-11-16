@@ -28,56 +28,56 @@ def _format_network_service_params(net_svc_policy):
         return ''
 
 
-class ListEndpoint(neutronV20.ListCommand):
+class ListPolicyTarget(neutronV20.ListCommand):
     """List policy_targets that belong to a given tenant."""
 
-    resource = 'endpoint'
-    log = logging.getLogger(__name__ + '.ListEndpoint')
+    resource = 'policy_target'
+    log = logging.getLogger(__name__ + '.ListPolicyTarget')
     _formatters = {}
-    list_columns = ['id', 'name', 'description', 'endpoint_group_id']
+    list_columns = ['id', 'name', 'description', 'policy_target_group_id']
     pagination_support = True
     sorting_support = True
 
 
-class ShowEndpoint(neutronV20.ShowCommand):
+class ShowPolicyTarget(neutronV20.ShowCommand):
     """Show information of a given policy_target."""
 
-    resource = 'endpoint'
-    log = logging.getLogger(__name__ + '.ShowEndpoint')
+    resource = 'policy_target'
+    log = logging.getLogger(__name__ + '.ShowPolicyTarget')
 
 
-class CreateEndpoint(neutronV20.CreateCommand):
+class CreatePolicyTarget(neutronV20.CreateCommand):
     """Create a policy_target for a given tenant."""
 
-    resource = 'endpoint'
-    log = logging.getLogger(__name__ + '.CreateEndpoint')
+    resource = 'policy_target'
+    log = logging.getLogger(__name__ + '.CreatePolicyTarget')
 
     def add_known_arguments(self, parser):
         parser.add_argument(
             '--description',
-            help=_('Description of the policy_target'))
+            help=_('Description of the Policy Target'))
         parser.add_argument(
-            '--endpoint-group', metavar='EPG',
+            '--policy-target-group', metavar='PTG',
             default='',
-            help=_('group uuid'))
+            help=_('Policy Target Group uuid'))
         parser.add_argument(
             '--port',
             default='',
             help=_('Neutron Port'))
         parser.add_argument(
             'name', metavar='NAME',
-            help=_('Name of policy_target to create'))
+            help=_('Name of policy target to create'))
 
     def args2body(self, parsed_args):
         body = {self.resource: {}, }
 
         neutronV20.update_dict(parsed_args, body[self.resource],
                                ['name', 'tenant_id', 'description'])
-        if parsed_args.endpoint_group:
-            body[self.resource]['endpoint_group_id'] = \
+        if parsed_args.policy_target_group:
+            body[self.resource]['policy_target_group_id'] = \
                 neutronV20.find_resourceid_by_name_or_id(
-                    self.get_client(), 'endpoint_group',
-                    parsed_args.endpoint_group)
+                    self.get_client(), 'policy_target_group',
+                    parsed_args.policy_target_group)
         if parsed_args.port:
             body[self.resource]['port_id'] = \
                 neutronV20.find_resourceid_by_name_or_id(
@@ -86,69 +86,69 @@ class CreateEndpoint(neutronV20.CreateCommand):
         return body
 
 
-class DeleteEndpoint(neutronV20.DeleteCommand):
-    """Delete a given policy_target."""
+class DeletePolicyTarget(neutronV20.DeleteCommand):
+    """Delete a given Policy Target."""
 
-    resource = 'endpoint'
-    log = logging.getLogger(__name__ + '.DeleteEndpoint')
-
-
-class UpdateEndpoint(neutronV20.UpdateCommand):
-    """Update policy_target's information."""
-
-    resource = 'endpoint'
-    log = logging.getLogger(__name__ + '.UpdateEndpoint')
+    resource = 'policy_target'
+    log = logging.getLogger(__name__ + '.DeletePolicyTarget')
 
 
-class ListEndpointGroup(neutronV20.ListCommand):
-    """List groups that belong to a given tenant."""
+class UpdatePolicyTarget(neutronV20.UpdateCommand):
+    """Update Policy Target's information."""
 
-    resource = 'endpoint_group'
-    log = logging.getLogger(__name__ + '.ListEndpointGroup')
+    resource = 'policy_target'
+    log = logging.getLogger(__name__ + '.UpdatePolicyTarget')
+
+
+class ListPolicyTargetGroup(neutronV20.ListCommand):
+    """List Policy Target Groups that belong to a given tenant."""
+
+    resource = 'policy_target_group'
+    log = logging.getLogger(__name__ + '.ListPolicyTargetGroup')
     list_columns = ['id', 'name', 'description']
     pagination_support = True
     sorting_support = True
 
 
-class ShowEndpointGroup(neutronV20.ShowCommand):
-    """Show information of a given group."""
+class ShowPolicyTargetGroup(neutronV20.ShowCommand):
+    """Show information of a given Policy Target Group."""
 
-    resource = 'endpoint_group'
-    log = logging.getLogger(__name__ + '.ShowEndpointGroup')
+    resource = 'policy_target_group'
+    log = logging.getLogger(__name__ + '.ShowPolicyTargetGroup')
 
 
-class CreateEndpointGroup(neutronV20.CreateCommand):
-    """Create a group for a given tenant."""
+class CreatePolicyTargetGroup(neutronV20.CreateCommand):
+    """Create a Policy Target Group for a given tenant."""
 
-    resource = 'endpoint_group'
-    log = logging.getLogger(__name__ + '.CreateEndpointGroup')
+    resource = 'policy_target_group'
+    log = logging.getLogger(__name__ + '.CreatePolicyTargetGroup')
 
     def add_known_arguments(self, parser):
         parser.add_argument(
             '--description',
-            help=_('Description of the group'))
+            help=_('Description of the Policy Target Group'))
         parser.add_argument(
             'name', metavar='NAME',
-            help=_('Name of group to create'))
+            help=_('Name of Policy Target Group to create'))
         parser.add_argument(
             '--l2-policy', metavar='L2_POLICY',
             default='',
             help=_('L2 policy uuid'))
         parser.add_argument(
-            '--provided-contracts', type=utils.str2dict,
+            '--provided-policy-rule-sets', type=utils.str2dict,
             default={},
-            help=_('Dictionary of provided contract uuids'))
+            help=_('Dictionary of provided policy rule set uuids'))
         parser.add_argument(
-            '--consumed-contracts', type=utils.str2dict,
+            '--consumed-policy-rule-sets', type=utils.str2dict,
             default={},
-            help=_('Dictionary of consumed contract uuids'))
+            help=_('Dictionary of consumed policy rule set uuids'))
         parser.add_argument(
             '--network-service-policy', metavar='NETWORK_SERVICE_POLICY',
             default='',
             help=_('Network service policy uuid'))
         parser.add_argument(
             '--subnets', type=string.split,
-            help=_('Subnet to map the group'))
+            help=_('List of neutron subnet uuids'))
 
     def args2body(self, parsed_args):
         body = {self.resource: {}, }
@@ -165,21 +165,21 @@ class CreateEndpointGroup(neutronV20.CreateCommand):
                     self.get_client(), 'network_service_policy',
                     parsed_args.network_service_policy)
 
-        if parsed_args.provided_contracts:
-            for key in parsed_args.provided_contracts.keys():
+        if parsed_args.provided_policy_rule_sets:
+            for key in parsed_args.provided_policy_rule_sets.keys():
                 id_key = neutronV20.find_resourceid_by_name_or_id(
-                    self.get_client(), 'contract',
+                    self.get_client(), 'policy_rule_set',
                     key)
-                parsed_args.provided_contracts[id_key] = \
-                    parsed_args.provided_contracts.pop(key)
+                parsed_args.provided_policy_rule_sets[id_key] = \
+                    parsed_args.provided_policy_rule_sets.pop(key)
 
-        if parsed_args.consumed_contracts:
-            for key in parsed_args.consumed_contracts.keys():
+        if parsed_args.consumed_policy_rule_sets:
+            for key in parsed_args.consumed_policy_rule_sets.keys():
                 id_key = neutronV20.find_resourceid_by_name_or_id(
-                    self.get_client(), 'contract',
+                    self.get_client(), 'policy_rule_set',
                     key)
-                parsed_args.consumed_contracts[id_key] = \
-                    parsed_args.consumed_contracts.pop(key)
+                parsed_args.consumed_policy_rule_sets[id_key] = \
+                    parsed_args.consumed_policy_rule_sets.pop(key)
 
         if parsed_args.subnets:
             for subnet in parsed_args.subnets:
@@ -190,29 +190,29 @@ class CreateEndpointGroup(neutronV20.CreateCommand):
                 parsed_args.subnets.append(subnet_id)
         neutronV20.update_dict(parsed_args, body[self.resource],
                                ['name', 'tenant_id', 'description',
-                                'provided_contracts', 'subnets',
-                                'consumed_contracts'])
+                                'provided_policy_rule_sets', 'subnets',
+                                'consumed_policy_rule_sets'])
 
         return body
 
 
-class DeleteEndpointGroup(neutronV20.DeleteCommand):
-    """Delete a given group."""
+class DeletePolicyTargetGroup(neutronV20.DeleteCommand):
+    """Delete a given Policy Target Group."""
 
-    resource = 'endpoint_group'
-    log = logging.getLogger(__name__ + '.DeleteEndpointGroup')
+    resource = 'policy_target_group'
+    log = logging.getLogger(__name__ + '.DeletePolicyTargetGroup')
 
 
-class UpdateEndpointGroup(neutronV20.UpdateCommand):
-    """Update group's information."""
+class UpdatePolicyTargetGroup(neutronV20.UpdateCommand):
+    """Update Policy Target Group's information."""
 
-    resource = 'endpoint_group'
-    log = logging.getLogger(__name__ + '.UpdateEndpointGroup')
+    resource = 'policy_target_group'
+    log = logging.getLogger(__name__ + '.UpdatePolicyTargetGroup')
 
     def add_known_arguments(self, parser):
         parser.add_argument(
             '--description',
-            help=_('Description of the group'))
+            help=_('Description of the Policy Target Group'))
         parser.add_argument(
             '--l2-policy', metavar='L2_POLICY',
             help=_('L2 policy uuid'))
@@ -220,14 +220,14 @@ class UpdateEndpointGroup(neutronV20.UpdateCommand):
             '--network-service-policy', metavar='NETWORK_SERVICE_POLICY',
             help=_('Network Service Policy uuid'))
         parser.add_argument(
-            '--provided-contracts', type=utils.str2dict,
-            help=_('Dictionary of provided contract uuids'))
+            '--provided-policy-rule-sets', type=utils.str2dict,
+            help=_('Dictionary of provided policy rule set uuids'))
         parser.add_argument(
-            '--consumed-contracts', type=utils.str2dict,
-            help=_('Dictionary of consumed contract uuids'))
+            '--consumed-policy-rule-sets', type=utils.str2dict,
+            help=_('Dictionary of consumed policy rule set uuids'))
         parser.add_argument(
             '--subnets', type=string.split,
-            help=_('Subnet to map the group'))
+            help=_('Subnet for the Policy Target Group'))
 
     def args2body(self, parsed_args):
         body = {self.resource: {}, }
@@ -244,21 +244,21 @@ class UpdateEndpointGroup(neutronV20.UpdateCommand):
                     self.get_client(), 'network_service_policy',
                     parsed_args.l2_policy)
 
-        if parsed_args.provided_contracts:
-            for key in parsed_args.provided_contracts.keys():
+        if parsed_args.provided_policy_rule_sets:
+            for key in parsed_args.provided_policy_rule_sets.keys():
                 id_key = neutronV20.find_resourceid_by_name_or_id(
-                    self.get_client(), 'contract',
+                    self.get_client(), 'policy_rule_set',
                     key)
-                parsed_args.provided_contracts[id_key] = \
-                    parsed_args.provided_contracts.pop(key)
+                parsed_args.provided_policy_rule_sets[id_key] = \
+                    parsed_args.provided_policy_rule_sets.pop(key)
 
-        if parsed_args.consumed_contracts:
-            for key in parsed_args.consumed_contracts.keys():
+        if parsed_args.consumed_policy_rule_sets:
+            for key in parsed_args.consumed_policy_rule_sets.keys():
                 id_key = neutronV20.find_resourceid_by_name_or_id(
-                    self.get_client(), 'contract',
+                    self.get_client(), 'policy_rule_set',
                     key)
-                parsed_args.consumed_contracts[id_key] = \
-                    parsed_args.consumed_contracts.pop(key)
+                parsed_args.consumed_policy_rule_sets[id_key] = \
+                    parsed_args.consumed_policy_rule_sets.pop(key)
 
         if parsed_args.subnets:
             for subnet in parsed_args.subnets:
@@ -270,8 +270,8 @@ class UpdateEndpointGroup(neutronV20.UpdateCommand):
 
         neutronV20.update_dict(parsed_args, body[self.resource],
                                ['name', 'tenant_id', 'description',
-                                'provided_contracts', 'subnets',
-                                'consumed_contracts'])
+                                'provided_policy_rule_sets', 'subnets',
+                                'consumed_policy_rule_sets'])
 
         return body
 
@@ -288,14 +288,14 @@ class ListL2Policy(neutronV20.ListCommand):
 
 
 class ShowL2Policy(neutronV20.ShowCommand):
-    """Show information of a given l2_policy."""
+    """Show information of a given L2 Policy."""
 
     resource = 'l2_policy'
     log = logging.getLogger(__name__ + '.ShowL2Policy')
 
 
 class CreateL2Policy(neutronV20.CreateCommand):
-    """Create a bridge_domain for a given tenant."""
+    """Create a L2 Policy for a given tenant."""
 
     resource = 'l2_policy'
     log = logging.getLogger(__name__ + '.CreateL2Policy')
@@ -303,17 +303,17 @@ class CreateL2Policy(neutronV20.CreateCommand):
     def add_known_arguments(self, parser):
         parser.add_argument(
             '--description',
-            help=_('Description of the l2_policy'))
+            help=_('Description of the L2 Policy'))
         parser.add_argument(
             '--network',
-            help=_('Network to map the l2_policy'))
+            help=_('Network to map the L2 Policy'))
         parser.add_argument(
             '--l3-policy',
             default='',
-            help=_('l3_policy uuid'))
+            help=_('L3 Policy uuid'))
         parser.add_argument(
             'name', metavar='NAME',
-            help=_('Name of l2_policy to create'))
+            help=_('Name of L2 Policy to create'))
 
     def args2body(self, parsed_args):
         body = {self.resource: {}, }
@@ -334,14 +334,14 @@ class CreateL2Policy(neutronV20.CreateCommand):
 
 
 class DeleteL2Policy(neutronV20.DeleteCommand):
-    """Delete a given l2_policy."""
+    """Delete a given L2 Policy."""
 
     resource = 'l2_policy'
     log = logging.getLogger(__name__ + '.DeleteL2Policy')
 
 
 class UpdateL2Policy(neutronV20.UpdateCommand):
-    """Update l2_policy's information."""
+    """Update L2 Policy's information."""
 
     resource = 'l2_policy'
     log = logging.getLogger(__name__ + '.UpdateL2Policy')
@@ -360,14 +360,14 @@ class ListL3Policy(neutronV20.ListCommand):
 
 
 class ShowL3Policy(neutronV20.ShowCommand):
-    """Show information of a given l3_policy."""
+    """Show information of a given L3 Policy."""
 
     resource = 'l3_policy'
     log = logging.getLogger(__name__ + '.ShowL3Policy')
 
 
 class CreateL3Policy(neutronV20.CreateCommand):
-    """Create a l3_policy for a given tenant."""
+    """Create a L3 Policy for a given tenant."""
 
     resource = 'l3_policy'
     log = logging.getLogger(__name__ + '.CreateL3Policy')
@@ -375,7 +375,7 @@ class CreateL3Policy(neutronV20.CreateCommand):
     def add_known_arguments(self, parser):
         parser.add_argument(
             '--description',
-            help=_('Description of the l3_policy'))
+            help=_('Description of the L3 Policy'))
         parser.add_argument(
             '--ip-version',
             type=int,
@@ -391,7 +391,7 @@ class CreateL3Policy(neutronV20.CreateCommand):
             help=_('Subnet prefix length, default is 24'))
         parser.add_argument(
             'name', metavar='NAME',
-            help=_('Name of l3_policy to create'))
+            help=_('Name of L3 policy to create'))
 
     def args2body(self, parsed_args):
         body = {self.resource: {}, }
@@ -405,14 +405,14 @@ class CreateL3Policy(neutronV20.CreateCommand):
 
 
 class DeleteL3Policy(neutronV20.DeleteCommand):
-    """Delete a given l3_policy."""
+    """Delete a given L3 Policy."""
 
     resource = 'l3_policy'
     log = logging.getLogger(__name__ + '.DeleteL3Policy')
 
 
 class UpdateL3Policy(neutronV20.UpdateCommand):
-    """Update l3_policy's information."""
+    """Update L3 Policy's information."""
 
     resource = 'l3_policy'
     log = logging.getLogger(__name__ + '.UpdateL3Policy')
@@ -757,43 +757,43 @@ class UpdatePolicyRule(neutronV20.UpdateCommand):
         return body
 
 
-class ListContract(neutronV20.ListCommand):
-    """List contracts that belong to a given tenant."""
+class ListPolicyRuleSet(neutronV20.ListCommand):
+    """List policy_rule_sets that belong to a given tenant."""
 
-    resource = 'contract'
-    log = logging.getLogger(__name__ + '.ListContract')
+    resource = 'policy_rule_set'
+    log = logging.getLogger(__name__ + '.ListPolicyRuleSet')
     _formatters = {}
     list_columns = ['id', 'name', 'ploicy_rules']
     pagination_support = True
     sorting_support = True
 
 
-class ShowContract(neutronV20.ShowCommand):
-    """Show information of a given contract."""
+class ShowPolicyRuleSet(neutronV20.ShowCommand):
+    """Show information of a given policy_rule_set."""
 
-    resource = 'contract'
-    log = logging.getLogger(__name__ + '.ShowContract')
+    resource = 'policy_rule_set'
+    log = logging.getLogger(__name__ + '.ShowPolicyRuleSet')
 
 
-class CreateContract(neutronV20.CreateCommand):
-    """Create a contract for a given tenant."""
+class CreatePolicyRuleSet(neutronV20.CreateCommand):
+    """Create a policy rule set for a given tenant."""
 
-    resource = 'contract'
-    log = logging.getLogger(__name__ + '.CreateContract')
+    resource = 'policy_rule_set'
+    log = logging.getLogger(__name__ + '.CreatePolicyRuleSet')
 
     def add_known_arguments(self, parser):
         parser.add_argument(
             '--description',
-            help=_('Description of the contract'))
+            help=_('Description of the policy rule set'))
         parser.add_argument(
             '--policy-rules', type=string.split,
             help=_('List of policy rules'))
         parser.add_argument(
-            '--child-contracts', type=string.split,
-            help=_('List of child contracts'))
+            '--child-policy-rule-sets', type=string.split,
+            help=_('List of child policy rule sets'))
         parser.add_argument(
             'name', metavar='NAME',
-            help=_('Name of contract to create'))
+            help=_('Name of policy rule set to create'))
 
     def args2body(self, parsed_args):
         body = {self.resource: {}, }
@@ -805,38 +805,38 @@ class CreateContract(neutronV20.CreateCommand):
                     'policy_rule',
                     elem) for elem in parsed_args.policy_rules]
 
-        if parsed_args.child_contracts:
-            body[self.resource]['child_contracts'] = [
+        if parsed_args.child_policy_rule_sets:
+            body[self.resource]['child_policy_rule_sets'] = [
                 neutronV20.find_resourceid_by_name_or_id(
                     self.get_client(),
-                    'contract',
-                    elem) for elem in parsed_args.child_contracts]
+                    'policy_rule_set',
+                    elem) for elem in parsed_args.child_policy_rule_sets]
 
         neutronV20.update_dict(parsed_args, body[self.resource],
                                ['name', 'tenant_id', 'description'])
         return body
 
 
-class DeleteContract(neutronV20.DeleteCommand):
-    """Delete a given contract."""
+class DeletePolicyRuleSet(neutronV20.DeleteCommand):
+    """Delete a given policy rule set."""
 
-    resource = 'contract'
-    log = logging.getLogger(__name__ + '.DeleteContract')
+    resource = 'policy_rule_set'
+    log = logging.getLogger(__name__ + '.DeletePolicyRuleSet')
 
 
-class UpdateContract(neutronV20.UpdateCommand):
-    """Update contract's information."""
+class UpdatePolicyRuleSet(neutronV20.UpdateCommand):
+    """Update policy rule set's information."""
 
-    resource = 'contract'
-    log = logging.getLogger(__name__ + '.UpdateContract')
+    resource = 'policy_rule_set'
+    log = logging.getLogger(__name__ + '.UpdatePolicyRuleSet')
 
     def add_known_arguments(self, parser):
         parser.add_argument(
             '--policy-rules', type=string.split,
             help=_('List of policy rules'))
         parser.add_argument(
-            '--child-contracts', type=string.split,
-            help=_('List of child contracts'))
+            '--child-policy-rule-sets', type=string.split,
+            help=_('List of child policy rule sets'))
 
     def args2body(self, parsed_args):
         body = {self.resource: {}, }
@@ -848,14 +848,15 @@ class UpdateContract(neutronV20.UpdateCommand):
                     elem) for elem in parsed_args.policy_rules]
             parsed_args.policy_rules = body[self.resource]['policy_rules']
 
-        if parsed_args.child_contracts:
-            body[self.resource]['child_contracts'] = [
+        if parsed_args.child_policy_rule_sets:
+            body[self.resource]['child_policy_rule_sets'] = [
                 neutronV20.find_resourceid_by_name_or_id(
                     self.get_client(),
-                    'contract',
-                    elem) for elem in parsed_args.child_contracts]
-            parsed_args.child_contracts = parsed_args.child_contracts
+                    'policy_rule_set',
+                    elem) for elem in parsed_args.child_policy_rule_sets]
+            parsed_args.child_policy_rule_sets = (
+                parsed_args.child_policy_rule_sets)
         neutronV20.update_dict(parsed_args, body[self.resource],
                                ['name', 'description', 'policy_rules',
-                                'child_contracts'])
+                                'child_policy_rule_sets'])
         return body
