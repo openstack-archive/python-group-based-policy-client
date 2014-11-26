@@ -136,11 +136,11 @@ class CreatePolicyTargetGroup(neutronV20.CreateCommand):
             help=_('L2 policy uuid'))
         parser.add_argument(
             '--provided-policy-rule-sets', type=utils.str2dict,
-            default={},
+            # default={},
             help=_('Dictionary of provided policy rule set uuids'))
         parser.add_argument(
             '--consumed-policy-rule-sets', type=utils.str2dict,
-            default={},
+            # default={},
             help=_('Dictionary of consumed policy rule set uuids'))
         parser.add_argument(
             '--network-service-policy', metavar='NETWORK_SERVICE_POLICY',
