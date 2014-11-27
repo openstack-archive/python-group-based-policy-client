@@ -60,11 +60,14 @@ class CreateServiceChainInstance(neutronV20.CreateCommand):
             '--service-chain-spec', dest='servicechain_spec',
             help=_('Service Chain Spec ID or the Service Chain Spec name'))
         parser.add_argument(
-            '--provider-ptg', dest='provider_ptg',
+            '--provider-ptg-id',
             help=_('Destination Policy Target Group ID of the Provider.'))
         parser.add_argument(
-            '--consumer-ptg', dest='consumer_ptg',
+            '--consumer-ptg-id',
             help=_('Source Policy Target Group ID of the Consumer.'))
+        parser.add_argument(
+            '--classifier-id',
+            help=_('Classifier ID for the Redirect.'))
         parser.add_argument(
             '--param-values', dest='param_values',
             help=_('Name,Value pairs of Service Configuration Parameters for '
@@ -77,20 +80,26 @@ class CreateServiceChainInstance(neutronV20.CreateCommand):
                 neutronV20.find_resourceid_by_name_or_id(
                     self.get_client(), 'servicechain_spec',
                     parsed_args.servicechain_spec)
-        if parsed_args.provider_ptg:
-            body[self.resource]['provider_ptg'] = \
+        if parsed_args.provider_ptg_id:
+            body[self.resource]['provider_ptg_id'] = \
                 neutronV20.find_resourceid_by_name_or_id(
                     self.get_client(), 'policy_target_group',
-                    parsed_args.provider_ptg)
-        if parsed_args.consumer_ptg:
-            body[self.resource]['consumer_ptg'] = \
+                    parsed_args.provider_ptg_id)
+        if parsed_args.consumer_ptg_id:
+            body[self.resource]['consumer_ptg_id'] = \
                 neutronV20.find_resourceid_by_name_or_id(
                     self.get_client(), 'policy_target_group',
-                    parsed_args.consumer_ptg)
+                    parsed_args.consumer_ptg_id)
+        if parsed_args.classifier_id:
+            body[self.resource]['classifier_id'] = \
+                neutronV20.find_resourceid_by_name_or_id(
+                    self.get_client(), 'policy_classifier',
+                    parsed_args.classifier_id)
         neutronV20.update_dict(parsed_args, body[self.resource],
                                ['name', 'tenant_id', 'description',
-                                'servicechain_spec', 'provider_ptg',
-                                'consumer_ptg', 'param_values'])
+                                'servicechain_spec', 'provider_ptg_id',
+                                'consumer_ptg_id', 'classifier_id',
+                                'param_values'])
         return body
 
 
@@ -105,11 +114,14 @@ class UpdateServiceChainInstance(neutronV20.UpdateCommand):
             '--service-chain-spec', dest='servicechain_spec',
             help=_('Service Chain Spec ID or the Service Chain Spec name'))
         parser.add_argument(
-            '--provider-ptg', dest='provider_ptg',
+            '--provider-ptg-id',
             help=_('Destination Policy Target Group ID of the Provider.'))
         parser.add_argument(
-            '--consumer-ptg', dest='consumer_ptg',
+            '--consumer-ptg-id',
             help=_('Source Policy Target Group ID of the Consumer.'))
+        parser.add_argument(
+            '--classifier-id',
+            help=_('Classifier ID for the Redirect.'))
         parser.add_argument(
             '--param-values', dest='param_values',
             help=_('Name,Value pairs of Service Configuration Parameters for '
@@ -122,20 +134,26 @@ class UpdateServiceChainInstance(neutronV20.UpdateCommand):
                 neutronV20.find_resourceid_by_name_or_id(
                     self.get_client(), 'servicechain_spec',
                     parsed_args.servicechain_spec)
-        if parsed_args.provider_ptg:
-            body[self.resource]['provider_ptg'] = \
+        if parsed_args.provider_ptg_id:
+            body[self.resource]['provider_ptg_id'] = \
                 neutronV20.find_resourceid_by_name_or_id(
                     self.get_client(), 'policy_target_group',
-                    parsed_args.provider_ptg)
-        if parsed_args.consumer_ptg:
-            body[self.resource]['consumer_ptg'] = \
+                    parsed_args.provider_ptg_id)
+        if parsed_args.consumer_ptg_id:
+            body[self.resource]['consumer_ptg_id'] = \
                 neutronV20.find_resourceid_by_name_or_id(
                     self.get_client(), 'policy_target_group',
-                    parsed_args.consumer_ptg)
+                    parsed_args.consumer_ptg_id)
+        if parsed_args.classifier_id:
+            body[self.resource]['classifier_id'] = \
+                neutronV20.find_resourceid_by_name_or_id(
+                    self.get_client(), 'policy_classifier',
+                    parsed_args.classifier_id)
         neutronV20.update_dict(parsed_args, body[self.resource],
                                ['name', 'description',
-                                'servicechain_spec', 'provider_ptg',
-                                'consumer_ptg', 'param_values'])
+                                'servicechain_spec', 'provider_ptg_id',
+                                'consumer_ptg_id', 'classifier_id',
+                                'param_values'])
         return body
 
 

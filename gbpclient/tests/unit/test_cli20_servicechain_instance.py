@@ -52,6 +52,9 @@ class CLITestV20ServiceChainInstanceJSON(test_cli20.CLITestV20Base):
                 '--tenant-id', tenant_id,
                 '--param-values', config_params,
                 '--description', description,
+                '--provider-ptg-id', my_id,
+                '--consumer-ptg-id', my_id,
+                '--classifier-id', my_id,
                 name]
         position_names = ['name', ]
         position_values = [name, ]
@@ -60,7 +63,10 @@ class CLITestV20ServiceChainInstanceJSON(test_cli20.CLITestV20Base):
                                    servicechain_spec=servicechain_spec_id,
                                    tenant_id=tenant_id,
                                    param_values=config_params,
-                                   description=description)
+                                   description=description,
+                                   provider_ptg_id=my_id,
+                                   consumer_ptg_id=my_id,
+                                   classifier_id=my_id)
 
     def test_list_servicechain_instances(self):
         """service-chain-instance-list."""
@@ -123,17 +129,17 @@ class CLITestV20ServiceChainInstanceJSON(test_cli20.CLITestV20Base):
         args = ['myid', '--service-chain-spec', 'my-spec-id']
         self._test_update_resource(resource, cmd, 'myid', args, body)
 
-    def test_update_servicechain_instance_with_chainspec_and_port(self):
+    def test_update_servicechain_instance_with_chainspec_and_classifier(self):
         resource = 'servicechain_instance'
         cmd = sc.UpdateServiceChainInstance(test_cli20.MyApp(sys.stdout), None)
         body = {
             'name': 'newname',
             'servicechain_spec': 'my-spec-id',
-            'port': 'my-port-id'
+            'classifier_id': 'my-classifier-id'
         }
         args = ['myid', '--name', 'newname',
                 '--service-chain-spec', 'my-spec-id',
-                '--port', 'my-port-id']
+                '--classifier-id', 'my-classifier-id']
         self._test_update_resource(resource, cmd, 'myid', args, body)
 
     def test_delete_servicechain_instance(self):
