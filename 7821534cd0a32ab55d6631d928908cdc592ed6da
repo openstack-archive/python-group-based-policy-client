@@ -1,0 +1,9 @@
+Verified+2: Jenkins
+Code-Review+2: Sumit Naiksatam <sumitnaiksatam@gmail.com>
+Code-Review+2: Ivar Lazzaro <ivarlazzaro@gmail.com>
+Workflow+1: Ivar Lazzaro <ivarlazzaro@gmail.com>
+Submitted-by: Jenkins
+Submitted-at: Sun, 30 Nov 2014 20:33:33 +0000
+Reviewed-on: https://review.openstack.org/137475
+Project: stackforge/python-group-based-policy-client
+Branch: refs/heads/master
