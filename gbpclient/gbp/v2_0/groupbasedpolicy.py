@@ -28,6 +28,14 @@ def _format_network_service_params(net_svc_policy):
         return ''
 
 
+def _format_host_routes(subnet):
+    try:
+        return '\n'.join([jsonutils.dumps(route) for route in
+                          subnet['host_routes']])
+    except (TypeError, KeyError):
+        return ''
+
+
 class ListPolicyTarget(neutronV20.ListCommand):
     """List policy_targets that belong to a given tenant."""
 
@@ -497,7 +505,7 @@ class UpdateNetworkServicePolicy(neutronV20.UpdateCommand):
             help=_('Description of the network_service_policy'))
         parser.add_argument(
             '--name',
-            help=_('Name of network_service_policy to create'))
+            help=_('New name of the network_service_policy'))
         parser.add_argument(
             '--network-service-params',
             metavar='type=PARAM_TYPE,name=PARAM_NAME,value=PARAM_VALUE',
@@ -859,4 +867,381 @@ class UpdatePolicyRuleSet(neutronV20.UpdateCommand):
         neutronV20.update_dict(parsed_args, body[self.resource],
                                ['name', 'description', 'policy_rules',
                                 'child_policy_rule_sets'])
+        return body
+
+
+class ListExternalPolicy(neutronV20.ListCommand):
+    """List External Policies that belong to a given tenant."""
+
+    resource = 'external_policy'
+    log = logging.getLogger(__name__ + '.ListExternalPolicy')
+    list_columns = ['id', 'name', 'description', 'shared']
+    pagination_support = True
+    sorting_support = True
+
+
+class ShowExternalPolicy(neutronV20.ShowCommand):
+    """Show information of a given External Policy."""
+
+    resource = 'external_policy'
+    log = logging.getLogger(__name__ + '.ShowExternalPolicy')
+
+
+class CreateExternalPolicy(neutronV20.CreateCommand):
+    """Create a External Policy for a given tenant."""
+
+    resource = 'external_policy'
+    log = logging.getLogger(__name__ + '.CreateExternalPolicy')
+
+    def add_known_arguments(self, parser):
+        parser.add_argument(
+            '--description',
+            help=_('Description of the External Policy'))
+        parser.add_argument(
+            'name', metavar='NAME',
+            help=_('Name of External Policy to create'))
+        parser.add_argument(
+            '--external-segments', type=string.split,
+            help=_('List of External Segment uuids'))
+        parser.add_argument(
+            '--provided-policy-rule-sets', type=utils.str2dict,
+            help=_('Dictionary of provided policy rule set uuids'))
+        parser.add_argument(
+            '--consumed-policy-rule-sets', type=utils.str2dict,
+            help=_('Dictionary of consumed policy rule set uuids'))
+        parser.add_argument(
+            '--shared', type=bool,
+            help=_('Shared flag'))
+
+    def args2body(self, parsed_args):
+        body = {self.resource: {}, }
+
+        if parsed_args.provided_policy_rule_sets:
+            for key in parsed_args.provided_policy_rule_sets.keys():
+                id_key = neutronV20.find_resourceid_by_name_or_id(
+                    self.get_client(), 'policy_rule_set',
+                    key)
+                parsed_args.provided_policy_rule_sets[id_key] = (
+                    parsed_args.provided_policy_rule_sets.pop(key))
+
+        if parsed_args.consumed_policy_rule_sets:
+            for key in parsed_args.consumed_policy_rule_sets.keys():
+                id_key = neutronV20.find_resourceid_by_name_or_id(
+                    self.get_client(), 'policy_rule_set',
+                    key)
+                parsed_args.consumed_policy_rule_sets[id_key] = (
+                    parsed_args.consumed_policy_rule_sets.pop(key))
+
+        if parsed_args.external_segments:
+            for external_segment in parsed_args.external_segments:
+                external_segment_id = neutronV20.find_resourceid_by_name_or_id(
+                    self.get_client(), 'external_segment', external_segment)
+                parsed_args.external_segments.remove(external_segment)
+                parsed_args.external_segments.append(external_segment_id)
+
+        neutronV20.update_dict(parsed_args, body[self.resource],
+                               ['name', 'tenant_id', 'description',
+                                'provided_policy_rule_sets',
+                                'external_segments',
+                                'consumed_policy_rule_sets', 'shared'])
+
+        return body
+
+
+class DeleteExternalPolicy(neutronV20.DeleteCommand):
+    """Delete a given External Policy."""
+
+    resource = 'external_policy'
+    log = logging.getLogger(__name__ + '.DeleteExternalPolicy')
+
+
+class UpdateExternalPolicy(neutronV20.UpdateCommand):
+    """Update External Policy's information."""
+
+    resource = 'external_policy'
+    log = logging.getLogger(__name__ + '.UpdateExternalPolicy')
+
+    def add_known_arguments(self, parser):
+        parser.add_argument(
+            '--description',
+            help=_('Description of the External Policy'))
+        parser.add_argument(
+            '--name',
+            help=_('New name of the External Policy'))
+        parser.add_argument(
+            '--external-segments', type=string.split,
+            help=_('List of External Segment uuids'))
+        parser.add_argument(
+            '--provided-policy-rule-sets', type=utils.str2dict,
+            help=_('Dictionary of provided policy rule set uuids'))
+        parser.add_argument(
+            '--consumed-policy-rule-sets', type=utils.str2dict,
+            help=_('Dictionary of consumed policy rule set uuids'))
+        parser.add_argument(
+            '--shared', type=bool,
+            help=_('Shared flag'))
+
+    def args2body(self, parsed_args):
+        body = {self.resource: {}, }
+
+        if parsed_args.provided_policy_rule_sets:
+            for key in parsed_args.provided_policy_rule_sets.keys():
+                id_key = neutronV20.find_resourceid_by_name_or_id(
+                    self.get_client(), 'policy_rule_set',
+                    key)
+                parsed_args.provided_policy_rule_sets[id_key] = (
+                    parsed_args.provided_policy_rule_sets.pop(key))
+
+        if parsed_args.consumed_policy_rule_sets:
+            for key in parsed_args.consumed_policy_rule_sets.keys():
+                id_key = neutronV20.find_resourceid_by_name_or_id(
+                    self.get_client(), 'policy_rule_set',
+                    key)
+                parsed_args.consumed_policy_rule_sets[id_key] = (
+                    parsed_args.consumed_policy_rule_sets.pop(key))
+
+        if parsed_args.external_segments:
+            for external_segment in parsed_args.external_segments:
+                external_segment_id = neutronV20.find_resourceid_by_name_or_id(
+                    self.get_client(), 'external_segment', external_segment)
+                parsed_args.external_segments.remove(external_segment)
+                parsed_args.external_segments.append(external_segment_id)
+
+        neutronV20.update_dict(parsed_args, body[self.resource],
+                               ['name', 'tenant_id', 'description',
+                                'provided_policy_rule_sets',
+                                'external_segments',
+                                'consumed_policy_rule_sets', 'shared'])
+
+        return body
+
+
+class ListExternalSegment(neutronV20.ListCommand):
+    """List External Segments that belong to a given tenant."""
+
+    resource = 'external_segment'
+    log = logging.getLogger(__name__ + '.ListExternalSegment')
+    _formatters = {'external_routes': _format_host_routes, }
+    list_columns = ['id', 'name', 'description', 'cidr',
+                    'external_routes', 'port_address_translation', 'shared']
+    pagination_support = True
+    sorting_support = True
+
+
+class ShowExternalSegment(neutronV20.ShowCommand):
+    """Show information of a given External Segment."""
+
+    resource = 'external_segment'
+    log = logging.getLogger(__name__ + '.ShowExternalSegment')
+
+
+class CreateExternalSegment(neutronV20.CreateCommand):
+    """Create a External Segment for a given tenant."""
+
+    resource = 'external_segment'
+    log = logging.getLogger(__name__ + '.CreateExternalSegment')
+
+    def add_known_arguments(self, parser):
+        parser.add_argument(
+            '--description',
+            help=_('Description of the External Segment'))
+        parser.add_argument(
+            'name', metavar='NAME',
+            help=_('Name of External Segment to create'))
+        parser.add_argument(
+            '--ip-version',
+            type=int, choices=[4, 6],
+            help=_('IP version, default is 4'))
+        parser.add_argument(
+            '--cidr',
+            help=_('CIDR of External Segment, default is 172.16.0.0/12'))
+        parser.add_argument(
+            '--external-route', metavar='destination=CIDR,nexthop=IP_ADDR',
+            action='append', dest='external_routes', type=utils.str2dict,
+            help=_('External route (This option can be repeated).'))
+        parser.add_argument(
+            '--port-address-translation', type=bool,
+            help=_('Perform port-based address translation, default is False'))
+        parser.add_argument(
+            '--shared', type=bool,
+            help=_('Shared flag'))
+
+    def args2body(self, parsed_args):
+        body = {self.resource: {}, }
+
+        if parsed_args.external_routes:
+            body['external_segment']['external_routes'] = (
+                parsed_args.external_routes)
+
+        neutronV20.update_dict(parsed_args, body[self.resource],
+                               ['name', 'tenant_id', 'description',
+                                'ip_version', 'cidr',
+                                'external_routes', 'port_address_translation',
+                                'shared'])
+
+        return body
+
+
+class DeleteExternalSegment(neutronV20.DeleteCommand):
+    """Delete a given External Segment."""
+
+    resource = 'external_segment'
+    log = logging.getLogger(__name__ + '.DeleteExternalSegment')
+
+
+class UpdateExternalSegment(neutronV20.UpdateCommand):
+    """Update External Segment's information."""
+
+    resource = 'external_segment'
+    log = logging.getLogger(__name__ + '.UpdateExternalSegment')
+
+    def add_known_arguments(self, parser):
+        parser.add_argument(
+            '--description',
+            help=_('Description of the External Segment'))
+        parser.add_argument(
+            '--name',
+            help=_('New name of External Segment'))
+        parser.add_argument(
+            '--ip-version',
+            type=int, choices=[4, 6],
+            help=_('IP version, default is 4'))
+        parser.add_argument(
+            '--cidr',
+            help=_('CIDR of External Segment, default is 172.16.0.0/12'))
+        parser.add_argument(
+            '--external-route', metavar='destination=CIDR,nexthop=IP_ADDR',
+            action='append', dest='external_routes', type=utils.str2dict,
+            help=_('External route (This option can be repeated).'))
+        parser.add_argument(
+            '--port-address-translation', type=bool,
+            help=_('Perform port-based address translation, default is False'))
+        parser.add_argument(
+            '--shared', type=bool,
+            help=_('Shared flag'))
+
+    def args2body(self, parsed_args):
+        body = {self.resource: {}, }
+
+        if parsed_args.external_routes:
+            body['external_segment']['external_routes'] = (
+                parsed_args.external_routes)
+
+        neutronV20.update_dict(parsed_args, body[self.resource],
+                               ['name', 'tenant_id', 'description',
+                                'ip_version', 'cidr',
+                                'external_routes', 'port_address_translation',
+                                'shared'])
+
+        return body
+
+
+class ListNatPool(neutronV20.ListCommand):
+    """List NAT Pools that belong to a given tenant."""
+
+    resource = 'nat_pool'
+    log = logging.getLogger(__name__ + '.ListNatPool')
+    list_columns = ['id', 'name', 'description', 'ip_pool',
+                    'external_segment_id', 'shared']
+    pagination_support = True
+    sorting_support = True
+
+
+class ShowNatPool(neutronV20.ShowCommand):
+    """Show information of a given NAT Pool."""
+
+    resource = 'nat_pool'
+    log = logging.getLogger(__name__ + '.ShowNatPool')
+
+
+class CreateNatPool(neutronV20.CreateCommand):
+    """Create a NAT Pool for a given tenant."""
+
+    resource = 'nat_pool'
+    log = logging.getLogger(__name__ + '.CreateNatPool')
+
+    def add_known_arguments(self, parser):
+        parser.add_argument(
+            '--description',
+            help=_('Description of the NAT Pool'))
+        parser.add_argument(
+            'name', metavar='NAME',
+            help=_('Name of NAT Pool to create'))
+        parser.add_argument(
+            '--ip-version',
+            type=int, choices=[4, 6],
+            help=_('IP version, default is 4'))
+        parser.add_argument(
+            '--ip-pool',
+            help=_('CIDR for NAT Pool'))
+        parser.add_argument(
+            '--external-segment',
+            help=_('External Segment name or UUID'))
+        parser.add_argument(
+            '--shared', type=bool,
+            help=_('Shared flag'))
+
+    def args2body(self, parsed_args):
+        body = {self.resource: {}, }
+
+        neutronV20.update_dict(parsed_args, body[self.resource],
+                               ['name', 'tenant_id', 'description',
+                                'ip_version', 'ip_pool', 'shared'])
+
+        if parsed_args.external_segment:
+            body[self.resource]['external_segment_id'] = (
+                neutronV20.find_resourceid_by_name_or_id(
+                    self.get_client(), 'external_segment',
+                    parsed_args.external_segment))
+
+        return body
+
+
+class DeleteNatPool(neutronV20.DeleteCommand):
+    """Delete a given NAT Pool."""
+
+    resource = 'nat_pool'
+    log = logging.getLogger(__name__ + '.DeleteNatPool')
+
+
+class UpdateNatPool(neutronV20.UpdateCommand):
+    """Update NAT Pool's information."""
+
+    resource = 'nat_pool'
+    log = logging.getLogger(__name__ + '.UpdateNatPool')
+
+    def add_known_arguments(self, parser):
+        parser.add_argument(
+            '--description',
+            help=_('Description of the NAT Pool'))
+        parser.add_argument(
+            '--name',
+            help=_('New name of NAT Pool'))
+        parser.add_argument(
+            '--ip-version',
+            type=int, choices=[4, 6],
+            help=_('IP version, default is 4'))
+        parser.add_argument(
+            '--ip-pool',
+            help=_('CIDR for NAT Pool'))
+        parser.add_argument(
+            '--external-segment',
+            help=_('External Segment name or UUID'))
+        parser.add_argument(
+            '--shared', type=bool,
+            help=_('Shared flag'))
+
+    def args2body(self, parsed_args):
+        body = {self.resource: {}, }
+
+        neutronV20.update_dict(parsed_args, body[self.resource],
+                               ['name', 'tenant_id', 'description',
+                                'ip_version', 'ip_pool', 'shared'])
+
+        if parsed_args.external_segment:
+            body[self.resource]['external_segment_id'] = (
+                neutronV20.find_resourceid_by_name_or_id(
+                    self.get_client(), 'external_segment',
+                    parsed_args.external_segment))
+
         return body
