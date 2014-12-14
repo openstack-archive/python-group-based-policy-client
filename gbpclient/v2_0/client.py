@@ -157,6 +157,9 @@ class Client(object):
     l3_policy_path = "/grouppolicy/l3_policies/%s"
     network_service_policies_path = "/grouppolicy/network_service_policies"
     network_service_policy_path = "/grouppolicy/network_service_policies/%s"
+    external_policy_path = "/grouppolicy/external_policies/%s"
+    external_segment_path = "/grouppolicy/external_segments/%s"
+    nat_pool_path = "/grouppolicy/nat_pools/%s"
     policy_classifiers_path = "/grouppolicy/policy_classifiers"
     policy_classifier_path = "/grouppolicy/policy_classifiers/%s"
     policy_actions_path = "/grouppolicy/policy_actions"
@@ -178,6 +181,9 @@ class Client(object):
                      'l2_policies': 'l2_policy',
                      'l3_policies': 'l3_policy',
                      'network_service_policies': 'network_service_policy',
+                     'external_policies': 'external_policy',
+                     'external_segments': 'external_segment',
+                     'nat_pools': 'nat_pool',
                      'policy_classifiers': 'policy_classifier',
                      'policy_actions': 'policy_action',
                      'policy_rules': 'policy_rule',
@@ -328,6 +334,67 @@ class Client(object):
         """Deletes the specified network_service_policy."""
         return self.delete(
             self.network_service_policy_path % (network_service_policy))
+
+    @APIParamsCall
+    def list_external_policies(self, retrieve_all=True, **_params):
+        """Fetches a list of all external_policies for a tenant."""
+        # Pass filters in "params" argument to do_request
+        return self.list('external_policies',
+                         self.external_policies_path,
+                         retrieve_all, **_params)
+
+    @APIParamsCall
+    def show_external_policy(self, external_policy, **_params):
+        """Fetches information of a certain external_policy."""
+        return self.get(
+            self.external_policy_path % (external_policy),
+            params=_params)
+
+    @APIParamsCall
+    def create_external_policy(self, body=None):
+        """Creates a new external_policy."""
+        return self.post(self.external_policies_path, body=body)
+
+    @APIParamsCall
+    def update_external_policy(self, external_policy, body=None):
+        """Updates a external_policy."""
+        return self.put(
+            self.external_policy_path % (external_policy),
+            body=body)
+
+    @APIParamsCall
+    def delete_external_policy(self, external_policy):
+        """Deletes the specified external_policy."""
+        return self.delete(
+            self.external_policy_path % (external_policy))
+
+    @APIParamsCall
+    def list_nat_pools(self, retrieve_all=True, **_params):
+        """Fetches a list of all nat_pools for a tenant."""
+        # Pass filters in "params" argument to do_request
+        return self.list('nat_pools',
+                         self.nat_pools_path,
+                         retrieve_all, **_params)
+
+    @APIParamsCall
+    def show_nat_pool(self, nat_pool, **_params):
+        """Fetches information of a certain nat_pool."""
+        return self.get(self.nat_pool_path % (nat_pool), params=_params)
+
+    @APIParamsCall
+    def create_nat_pool(self, body=None):
+        """Creates a new nat_pool."""
+        return self.post(self.nat_pools_path, body=body)
+
+    @APIParamsCall
+    def update_nat_pool(self, nat_pool, body=None):
+        """Updates a nat_pool."""
+        return self.put(self.nat_pool_path % (nat_pool), body=body)
+
+    @APIParamsCall
+    def delete_nat_pool(self, nat_pool):
+        """Deletes the specified nat_pool."""
+        return self.delete(self.nat_pool_path % (nat_pool))
 
     @APIParamsCall
     def list_l3_policies(self, retrieve_all=True, **_params):
