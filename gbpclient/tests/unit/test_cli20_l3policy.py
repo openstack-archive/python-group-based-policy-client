@@ -39,6 +39,38 @@ class CLITestV20L3PolicyJSON(test_cli20.CLITestV20Base):
                                    position_names, position_values,
                                    tenant_id=tenant_id)
 
+    def test_create_l3_policy_with_all_params(self):
+        """l3-policy-create with all params."""
+        resource = 'l3_policy'
+        cmd = gbp.CreateL3Policy(test_cli20.MyApp(sys.stdout), None)
+        name = 'myname'
+        tenant_id = 'mytenant'
+        description = 'My L3 Policy'
+        my_id = 'someid'
+        ip_version = '4'
+        ip_pool = '172.16.0.0/12'
+        subnet_prefix_length = '24'
+        external_segment = 'seg_uuid1=1.1.1.0:2.2.2.0'
+        expected_external_segments = {'seg_uuid1': ['1.1.1.0', '2.2.2.0']}
+        args = ['--tenant-id', tenant_id,
+                '--description', description,
+                '--ip-version', ip_version,
+                '--ip-pool', ip_pool,
+                '--subnet-prefix-length', subnet_prefix_length,
+                '--external-segment', external_segment,
+                name]
+        position_names = ['name', ]
+        position_values = [name, ]
+        self._test_create_resource(resource, cmd, name, my_id, args,
+                                   position_names, position_values,
+                                   tenant_id=tenant_id,
+                                   description=description,
+                                   ip_version=4,
+                                   ip_pool=ip_pool,
+                                   subnet_prefix_length=24,
+                                   external_segments=
+                                   expected_external_segments)
+
     def test_list_l3_policies(self):
         resource = 'l3_policies'
         cmd = gbp.ListL3Policy(test_cli20.MyApp(sys.stdout), None)
