@@ -379,7 +379,7 @@ class CreateL3Policy(neutronV20.CreateCommand):
         parser.add_argument(
             '--ip-version',
             type=int,
-            default=4, choices=[4, 6],
+            # default=4, choices=[4, 6],
             help=_('IP version, default is 4'))
         parser.add_argument(
             '--ip-pool',
@@ -387,7 +387,7 @@ class CreateL3Policy(neutronV20.CreateCommand):
         parser.add_argument(
             '--subnet-prefix-length',
             type=int,
-            default=24,
+            # default=24,
             help=_('Subnet prefix length, default is 24'))
         parser.add_argument(
             'name', metavar='NAME',
