@@ -61,9 +61,9 @@ class CreatePolicyTarget(neutronV20.CreateCommand):
             default='',
             help=_('Policy Target Group uuid'))
         parser.add_argument(
-            '--port',
+            '--port-id',
             default='',
-            help=_('Neutron Port'))
+            help=_('Neutron Port UUID'))
         parser.add_argument(
             'name', metavar='NAME',
             help=_('Name of policy target to create'))
@@ -72,17 +72,13 @@ class CreatePolicyTarget(neutronV20.CreateCommand):
         body = {self.resource: {}, }
 
         neutronV20.update_dict(parsed_args, body[self.resource],
-                               ['name', 'tenant_id', 'description'])
+                               ['name', 'tenant_id', 'description', 'port_id'])
         if parsed_args.policy_target_group:
             body[self.resource]['policy_target_group_id'] = \
                 neutronV20.find_resourceid_by_name_or_id(
                     self.get_client(), 'policy_target_group',
                     parsed_args.policy_target_group)
-        if parsed_args.port:
-            body[self.resource]['port_id'] = \
-                neutronV20.find_resourceid_by_name_or_id(
-                    self.get_client(), 'port',
-                    parsed_args.port)
+
         return body
 
 
