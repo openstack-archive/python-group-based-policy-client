@@ -21,6 +21,7 @@ import string
 
 from heatclient.common import template_utils
 
+from neutronclient.common import exceptions as exc
 from neutronclient.neutron import v2_0 as neutronV20
 from neutronclient.openstack.common.gettextutils import _
 
@@ -199,6 +200,10 @@ class CreateServiceChainNode(neutronV20.CreateCommand):
                 tpl_files, template = template_utils.get_template_contents(
                     parsed_args.template_file)
                 parsed_args.config = json.dumps(template)
+            else:
+                raise exc.NeutronClientException("File %s does not exist. "
+                                                 "Please check the path"
+                                                 % parsed_args.template_file)
         neutronV20.update_dict(parsed_args, body[self.resource],
                                ['name', 'service_type', 'config',
                                 'tenant_id', 'param_names', 'description'])
