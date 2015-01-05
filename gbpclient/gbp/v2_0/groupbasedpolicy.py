@@ -250,7 +250,7 @@ class UpdatePolicyTargetGroup(neutronV20.UpdateCommand):
             body[self.resource]['network_service_policy_id'] = \
                 neutronV20.find_resourceid_by_name_or_id(
                     self.get_client(), 'network_service_policy',
-                    parsed_args.l2_policy)
+                    parsed_args.network_service_policy)
 
         if parsed_args.provided_policy_rule_sets:
             for key in parsed_args.provided_policy_rule_sets.keys():
@@ -684,7 +684,7 @@ class CreatePolicyAction(neutronV20.CreateCommand):
             help=_('Type of action'))
         parser.add_argument(
             '--action-value',
-            help=_('uuid of service for redirect action'))
+            help=_('Name/UUID of servicechain spec for redirect action'))
         parser.add_argument(
             'name', metavar='NAME',
             help=_('Name of action to create'))
@@ -692,9 +692,15 @@ class CreatePolicyAction(neutronV20.CreateCommand):
     def args2body(self, parsed_args):
         body = {self.resource: {}, }
 
+        if parsed_args.action_value:
+            body[self.resource]['action_value'] = (
+                neutronV20.find_resourceid_by_name_or_id(
+                    self.get_client(), 'servicechain_spec',
+                    parsed_args.action_value))
+
         neutronV20.update_dict(parsed_args, body[self.resource],
                                ['name', 'tenant_id', 'description',
-                                'action_type', 'action_value'])
+                                'action_type'])
 
         return body
 
