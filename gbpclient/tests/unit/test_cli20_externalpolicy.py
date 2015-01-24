@@ -87,9 +87,11 @@ class CLITestV20ExternalPolicyJSON(test_cli20.CLITestV20Base):
         resource = 'external_policy'
         cmd = gbp.UpdateExternalPolicy(test_cli20.MyApp(sys.stdout), None)
         self._test_update_resource(resource, cmd, 'myid',
-                                   ['myid', '--name', 'myname',
+                                   ['myid', '--tenant-id', 'mytenant',
+                                    '--name', 'myname',
                                     '--tags', 'a', 'b'],
-                                   {'name': 'myname', 'tags': ['a', 'b'], })
+                                   {'name': 'myname', 'tenant-id': 'mytenant',
+                                    'tags': ['a', 'b'], })
 
     def test_update_external_policy_with_all_params(self):
         resource = 'external_policy'

@@ -81,11 +81,13 @@ class CreatePolicyTarget(neutronV20.CreateCommand):
 
         neutronV20.update_dict(parsed_args, body[self.resource],
                                ['name', 'tenant_id', 'description'])
+        project_id = parsed_args.tenant_id
         if parsed_args.policy_target_group:
             body[self.resource]['policy_target_group_id'] = \
                 neutronV20.find_resourceid_by_name_or_id(
                     self.get_client(), 'policy_target_group',
-                    parsed_args.policy_target_group)
+                    parsed_args.policy_target_group,
+                    project_id=project_id)
 
         if parsed_args.port_id:
             body[self.resource]['port_id'] = (
@@ -161,23 +163,26 @@ class CreatePolicyTargetGroup(neutronV20.CreateCommand):
     def args2body(self, parsed_args):
         body = {self.resource: {}, }
 
+        project_id = parsed_args.tenant_id
         if parsed_args.l2_policy:
             body[self.resource]['l2_policy_id'] = \
                 neutronV20.find_resourceid_by_name_or_id(
                     self.get_client(), 'l2_policy',
-                    parsed_args.l2_policy)
+                    parsed_args.l2_policy,
+                    project_id=project_id)
 
         if parsed_args.network_service_policy:
             body[self.resource]['network_service_policy_id'] = \
                 neutronV20.find_resourceid_by_name_or_id(
                     self.get_client(), 'network_service_policy',
-                    parsed_args.network_service_policy)
+                    parsed_args.network_service_policy,
+                    project_id=project_id)
 
         if parsed_args.provided_policy_rule_sets:
             for key in parsed_args.provided_policy_rule_sets.keys():
                 id_key = neutronV20.find_resourceid_by_name_or_id(
                     self.get_client(), 'policy_rule_set',
-                    key)
+                    key, project_id=project_id)
                 parsed_args.provided_policy_rule_sets[id_key] = \
                     parsed_args.provided_policy_rule_sets.pop(key)
 
@@ -185,7 +190,7 @@ class CreatePolicyTargetGroup(neutronV20.CreateCommand):
             for key in parsed_args.consumed_policy_rule_sets.keys():
                 id_key = neutronV20.find_resourceid_by_name_or_id(
                     self.get_client(), 'policy_rule_set',
-                    key)
+                    key, project_id=project_id)
                 parsed_args.consumed_policy_rule_sets[id_key] = \
                     parsed_args.consumed_policy_rule_sets.pop(key)
 
@@ -193,7 +198,7 @@ class CreatePolicyTargetGroup(neutronV20.CreateCommand):
             for subnet in parsed_args.subnets:
                 subnet_id = neutronV20.find_resourceid_by_name_or_id(
                     self.get_client(), 'subnet',
-                    subnet)
+                    subnet, project_id=project_id)
                 parsed_args.subnets.remove(subnet)
                 parsed_args.subnets.append(subnet_id)
         neutronV20.update_dict(parsed_args, body[self.resource],
@@ -240,23 +245,26 @@ class UpdatePolicyTargetGroup(neutronV20.UpdateCommand):
     def args2body(self, parsed_args):
         body = {self.resource: {}, }
 
+        project_id = parsed_args.tenant_id
         if parsed_args.l2_policy:
             body[self.resource]['l2_policy_id'] = \
                 neutronV20.find_resourceid_by_name_or_id(
                     self.get_client(), 'l2_policy',
-                    parsed_args.l2_policy)
+                    parsed_args.l2_policy,
+                    project_id=project_id)
 
         if parsed_args.network_service_policy:
             body[self.resource]['network_service_policy_id'] = \
                 neutronV20.find_resourceid_by_name_or_id(
                     self.get_client(), 'network_service_policy',
-                    parsed_args.network_service_policy)
+                    parsed_args.network_service_policy,
+                    project_id=project_id)
 
         if parsed_args.provided_policy_rule_sets:
             for key in parsed_args.provided_policy_rule_sets.keys():
                 id_key = neutronV20.find_resourceid_by_name_or_id(
                     self.get_client(), 'policy_rule_set',
-                    key)
+                    key, project_id=project_id)
                 parsed_args.provided_policy_rule_sets[id_key] = \
                     parsed_args.provided_policy_rule_sets.pop(key)
 
@@ -264,7 +272,7 @@ class UpdatePolicyTargetGroup(neutronV20.UpdateCommand):
             for key in parsed_args.consumed_policy_rule_sets.keys():
                 id_key = neutronV20.find_resourceid_by_name_or_id(
                     self.get_client(), 'policy_rule_set',
-                    key)
+                    key, project_id=project_id)
                 parsed_args.consumed_policy_rule_sets[id_key] = \
                     parsed_args.consumed_policy_rule_sets.pop(key)
 
@@ -272,7 +280,7 @@ class UpdatePolicyTargetGroup(neutronV20.UpdateCommand):
             for subnet in parsed_args.subnets:
                 subnet_id = neutronV20.find_resourceid_by_name_or_id(
                     self.get_client(), 'subnet',
-                    subnet)
+                    subnet, project_id=project_id)
                 parsed_args.subnets.remove(subnet)
                 parsed_args.subnets.append(subnet_id)
 
@@ -328,16 +336,17 @@ class CreateL2Policy(neutronV20.CreateCommand):
 
         neutronV20.update_dict(parsed_args, body[self.resource],
                                ['name', 'tenant_id', 'description'])
+        project_id = parsed_args.tenant_id
         if parsed_args.l3_policy:
             body[self.resource]['l3_policy_id'] = \
                 neutronV20.find_resourceid_by_name_or_id(
                     self.get_client(), 'l3_policy',
-                    parsed_args.l3_policy)
+                    parsed_args.l3_policy, project_id=project_id)
         if parsed_args.network:
             body[self.resource]['network_id'] = \
                 neutronV20.find_resourceid_by_name_or_id(
                     self.get_client(), 'network',
-                    parsed_args.network)
+                    parsed_args.network, project_id=project_id)
         return body
 
 
@@ -409,12 +418,13 @@ class CreateL3Policy(neutronV20.CreateCommand):
     def args2body(self, parsed_args):
         body = {self.resource: {}, }
 
+        project_id = parsed_args.tenant_id
         if parsed_args.external_segments:
             external_segments_dict = {}
             for external_segment in parsed_args.external_segments:
                 external_segment_id = neutronV20.find_resourceid_by_name_or_id(
                     self.get_client(), 'external_segment',
-                    external_segment.keys()[0])
+                    external_segment.keys()[0], project_id=project_id)
                 ipaddrs = external_segment.itervalues().next().split(':')
                 external_segments_dict[external_segment_id] = ipaddrs
 
@@ -468,12 +478,13 @@ class UpdateL3Policy(neutronV20.UpdateCommand):
     def args2body(self, parsed_args):
         body = {self.resource: {}, }
 
+        project_id = parsed_args.tenant_id
         if parsed_args.external_segments:
             external_segments_dict = {}
             for external_segment in parsed_args.external_segments:
                 external_segment_id = neutronV20.find_resourceid_by_name_or_id(
                     self.get_client(), 'external_segment',
-                    external_segment.keys()[0])
+                    external_segment.keys()[0], project_id=project_id)
                 ipaddrs = external_segment.itervalues().next().split(':')
                 external_segments_dict[external_segment_id] = ipaddrs
 
@@ -692,11 +703,12 @@ class CreatePolicyAction(neutronV20.CreateCommand):
     def args2body(self, parsed_args):
         body = {self.resource: {}, }
 
+        project_id = parsed_args.tenant_id
         if parsed_args.action_value:
             body[self.resource]['action_value'] = (
                 neutronV20.find_resourceid_by_name_or_id(
                     self.get_client(), 'servicechain_spec',
-                    parsed_args.action_value))
+                    parsed_args.action_value, project_id=project_id))
 
         neutronV20.update_dict(parsed_args, body[self.resource],
                                ['name', 'tenant_id', 'description',
@@ -764,19 +776,21 @@ class CreatePolicyRule(neutronV20.CreateCommand):
     def args2body(self, parsed_args):
         body = {self.resource: {}, }
 
+        project_id = parsed_args.tenant_id
         if parsed_args.actions:
             body[self.resource]['policy_actions'] = [
                 neutronV20.find_resourceid_by_name_or_id(
                     self.get_client(),
                     'policy_action',
-                    elem) for elem in parsed_args.actions]
+                    elem,
+                    project_id=project_id) for elem in parsed_args.actions]
 
         if parsed_args.classifier:
             body[self.resource]['policy_classifier_id'] = \
                 neutronV20.find_resourceid_by_name_or_id(
                     self.get_client(),
                     'policy_classifier',
-                    parsed_args.classifier)
+                    parsed_args.classifier, project_id=project_id)
 
         neutronV20.update_dict(parsed_args, body[self.resource],
                                ['name', 'tenant_id', 'description',
@@ -812,19 +826,18 @@ class UpdatePolicyRule(neutronV20.UpdateCommand):
     def args2body(self, parsed_args):
         body = {self.resource: {}, }
 
+        project_id = parsed_args.tenant_id
         if parsed_args.actions:
             body[self.resource]['policy_actions'] = [
                 neutronV20.find_resourceid_by_name_or_id(
-                    self.get_client(),
-                    'policy_action',
-                    elem) for elem in parsed_args.actions]
+                    self.get_client(), 'policy_action', elem,
+                    project_id=project_id) for elem in parsed_args.actions]
 
         if parsed_args.classifier:
             body[self.resource]['policy_classifier_id'] = \
                 neutronV20.find_resourceid_by_name_or_id(
-                    self.get_client(),
-                    'policy_classifier',
-                    parsed_args.classifier)
+                    self.get_client(), 'policy_classifier',
+                    parsed_args.classifier, project_id=project_id)
 
         neutronV20.update_dict(parsed_args, body[self.resource],
                                ['name', 'description',
@@ -873,19 +886,20 @@ class CreatePolicyRuleSet(neutronV20.CreateCommand):
     def args2body(self, parsed_args):
         body = {self.resource: {}, }
 
+        project_id = parsed_args.tenant_id
         if parsed_args.policy_rules:
             body[self.resource]['policy_rules'] = [
                 neutronV20.find_resourceid_by_name_or_id(
-                    self.get_client(),
-                    'policy_rule',
-                    elem) for elem in parsed_args.policy_rules]
+                    self.get_client(), 'policy_rule', elem,
+                    project_id=project_id
+                ) for elem in parsed_args.policy_rules]
 
         if parsed_args.child_policy_rule_sets:
             body[self.resource]['child_policy_rule_sets'] = [
                 neutronV20.find_resourceid_by_name_or_id(
-                    self.get_client(),
-                    'policy_rule_set',
-                    elem) for elem in parsed_args.child_policy_rule_sets]
+                    self.get_client(), 'policy_rule_set', elem,
+                    project_id=project_id
+                ) for elem in parsed_args.child_policy_rule_sets]
 
         neutronV20.update_dict(parsed_args, body[self.resource],
                                ['name', 'tenant_id', 'description'])
@@ -915,20 +929,21 @@ class UpdatePolicyRuleSet(neutronV20.UpdateCommand):
 
     def args2body(self, parsed_args):
         body = {self.resource: {}, }
+        project_id = parsed_args.tenant_id
         if parsed_args.policy_rules:
             body[self.resource]['policy_rules'] = [
                 neutronV20.find_resourceid_by_name_or_id(
-                    self.get_client(),
-                    'policy_rule',
-                    elem) for elem in parsed_args.policy_rules]
+                    self.get_client(), 'policy_rule', elem,
+                    project_id=project_id
+                ) for elem in parsed_args.policy_rules]
             parsed_args.policy_rules = body[self.resource]['policy_rules']
 
         if parsed_args.child_policy_rule_sets:
             body[self.resource]['child_policy_rule_sets'] = [
                 neutronV20.find_resourceid_by_name_or_id(
-                    self.get_client(),
-                    'policy_rule_set',
-                    elem) for elem in parsed_args.child_policy_rule_sets]
+                    self.get_client(), 'policy_rule_set', elem,
+                    project_id=project_id
+                ) for elem in parsed_args.child_policy_rule_sets]
             parsed_args.child_policy_rule_sets = (
                 parsed_args.child_policy_rule_sets)
         neutronV20.update_dict(parsed_args, body[self.resource],
@@ -983,26 +998,28 @@ class CreateExternalPolicy(neutronV20.CreateCommand):
     def args2body(self, parsed_args):
         body = {self.resource: {}, }
 
+        project_id = parsed_args.tenant_id
         if parsed_args.provided_policy_rule_sets:
             for key in parsed_args.provided_policy_rule_sets.keys():
                 id_key = neutronV20.find_resourceid_by_name_or_id(
-                    self.get_client(), 'policy_rule_set',
-                    key)
+                    self.get_client(), 'policy_rule_set', key,
+                    project_id=project_id)
                 parsed_args.provided_policy_rule_sets[id_key] = (
                     parsed_args.provided_policy_rule_sets.pop(key))
 
         if parsed_args.consumed_policy_rule_sets:
             for key in parsed_args.consumed_policy_rule_sets.keys():
                 id_key = neutronV20.find_resourceid_by_name_or_id(
-                    self.get_client(), 'policy_rule_set',
-                    key)
+                    self.get_client(), 'policy_rule_set', key,
+                    project_id=project_id)
                 parsed_args.consumed_policy_rule_sets[id_key] = (
                     parsed_args.consumed_policy_rule_sets.pop(key))
 
         if parsed_args.external_segments:
             for external_segment in parsed_args.external_segments:
                 external_segment_id = neutronV20.find_resourceid_by_name_or_id(
-                    self.get_client(), 'external_segment', external_segment)
+                    self.get_client(), 'external_segment', external_segment,
+                    project_id=project_id)
                 parsed_args.external_segments.remove(external_segment)
                 parsed_args.external_segments.append(external_segment_id)
 
@@ -1051,26 +1068,28 @@ class UpdateExternalPolicy(neutronV20.UpdateCommand):
     def args2body(self, parsed_args):
         body = {self.resource: {}, }
 
+        project_id = parsed_args.tenant_id
         if parsed_args.provided_policy_rule_sets:
             for key in parsed_args.provided_policy_rule_sets.keys():
                 id_key = neutronV20.find_resourceid_by_name_or_id(
-                    self.get_client(), 'policy_rule_set',
-                    key)
+                    self.get_client(), 'policy_rule_set', key,
+                    project_id=project_id)
                 parsed_args.provided_policy_rule_sets[id_key] = (
                     parsed_args.provided_policy_rule_sets.pop(key))
 
         if parsed_args.consumed_policy_rule_sets:
             for key in parsed_args.consumed_policy_rule_sets.keys():
                 id_key = neutronV20.find_resourceid_by_name_or_id(
-                    self.get_client(), 'policy_rule_set',
-                    key)
+                    self.get_client(), 'policy_rule_set', key,
+                    project_id=project_id)
                 parsed_args.consumed_policy_rule_sets[id_key] = (
                     parsed_args.consumed_policy_rule_sets.pop(key))
 
         if parsed_args.external_segments:
             for external_segment in parsed_args.external_segments:
                 external_segment_id = neutronV20.find_resourceid_by_name_or_id(
-                    self.get_client(), 'external_segment', external_segment)
+                    self.get_client(), 'external_segment', external_segment,
+                    project_id=project_id)
                 parsed_args.external_segments.remove(external_segment)
                 parsed_args.external_segments.append(external_segment_id)
 
@@ -1255,11 +1274,13 @@ class CreateNatPool(neutronV20.CreateCommand):
                                ['name', 'tenant_id', 'description',
                                 'ip_version', 'ip_pool', 'shared'])
 
+        project_id = parsed_args.tenant_id
         if parsed_args.external_segment:
             body[self.resource]['external_segment_id'] = (
                 neutronV20.find_resourceid_by_name_or_id(
                     self.get_client(), 'external_segment',
-                    parsed_args.external_segment))
+                    parsed_args.external_segment,
+                    project_id=project_id))
 
         return body
 
@@ -1305,10 +1326,12 @@ class UpdateNatPool(neutronV20.UpdateCommand):
                                ['name', 'tenant_id', 'description',
                                 'ip_version', 'ip_pool', 'shared'])
 
+        project_id = parsed_args.tenant_id
         if parsed_args.external_segment:
             body[self.resource]['external_segment_id'] = (
                 neutronV20.find_resourceid_by_name_or_id(
                     self.get_client(), 'external_segment',
-                    parsed_args.external_segment))
+                    parsed_args.external_segment,
+                    project_id=project_id))
 
         return body
