@@ -73,21 +73,25 @@ class CreateServiceChainInstance(neutronV20.CreateCommand):
 
     def args2body(self, parsed_args):
         body = {self.resource: {}, }
+        project_id = parsed_args.tenant_id
         if parsed_args.servicechain_spec:
             body[self.resource]['servicechain_spec'] = \
                 neutronV20.find_resourceid_by_name_or_id(
                     self.get_client(), 'servicechain_spec',
-                    parsed_args.servicechain_spec)
+                    parsed_args.servicechain_spec,
+                    project_id=project_id)
         if parsed_args.provider_ptg:
             body[self.resource]['provider_ptg'] = \
                 neutronV20.find_resourceid_by_name_or_id(
                     self.get_client(), 'policy_target_group',
-                    parsed_args.provider_ptg)
+                    parsed_args.provider_ptg,
+                    project_id=project_id)
         if parsed_args.consumer_ptg:
             body[self.resource]['consumer_ptg'] = \
                 neutronV20.find_resourceid_by_name_or_id(
                     self.get_client(), 'policy_target_group',
-                    parsed_args.consumer_ptg)
+                    parsed_args.consumer_ptg,
+                    project_id=project_id)
         neutronV20.update_dict(parsed_args, body[self.resource],
                                ['name', 'tenant_id', 'description',
                                 'servicechain_spec', 'provider_ptg',
@@ -118,21 +122,25 @@ class UpdateServiceChainInstance(neutronV20.UpdateCommand):
 
     def args2body(self, parsed_args):
         body = {self.resource: {}, }
+        project_id = parsed_args.tenant_id
         if parsed_args.servicechain_spec:
             body[self.resource]['servicechain_spec'] = \
                 neutronV20.find_resourceid_by_name_or_id(
                     self.get_client(), 'servicechain_spec',
-                    parsed_args.servicechain_spec)
+                    parsed_args.servicechain_spec,
+                    project_id=project_id)
         if parsed_args.provider_ptg:
             body[self.resource]['provider_ptg'] = \
                 neutronV20.find_resourceid_by_name_or_id(
                     self.get_client(), 'policy_target_group',
-                    parsed_args.provider_ptg)
+                    parsed_args.provider_ptg,
+                    project_id=project_id)
         if parsed_args.consumer_ptg:
             body[self.resource]['consumer_ptg'] = \
                 neutronV20.find_resourceid_by_name_or_id(
                     self.get_client(), 'policy_target_group',
-                    parsed_args.consumer_ptg)
+                    parsed_args.consumer_ptg,
+                    project_id=project_id)
         neutronV20.update_dict(parsed_args, body[self.resource],
                                ['name', 'description',
                                 'servicechain_spec', 'provider_ptg',
@@ -303,12 +311,12 @@ class UpdateServiceChainSpec(neutronV20.UpdateCommand):
 
     def args2body(self, parsed_args):
         body = {self.resource: {}, }
+        project_id = parsed_args.tenant_id
         if parsed_args.nodes:
             body[self.resource]['nodes'] = [
                 neutronV20.find_resourceid_by_name_or_id(
-                    self.get_client(),
-                    'servicechain_node',
-                    elem) for elem in parsed_args.nodes]
+                    self.get_client(), 'servicechain_node', elem,
+                    project_id=project_id) for elem in parsed_args.nodes]
         return body
 
 
