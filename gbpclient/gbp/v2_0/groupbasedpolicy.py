@@ -189,13 +189,6 @@ class CreatePolicyTargetGroup(neutronV20.CreateCommand):
                 parsed_args.consumed_policy_rule_sets[id_key] = \
                     parsed_args.consumed_policy_rule_sets.pop(key)
 
-        if parsed_args.subnets:
-            for subnet in parsed_args.subnets:
-                subnet_id = neutronV20.find_resourceid_by_name_or_id(
-                    self.get_client(), 'subnet',
-                    subnet)
-                parsed_args.subnets.remove(subnet)
-                parsed_args.subnets.append(subnet_id)
         neutronV20.update_dict(parsed_args, body[self.resource],
                                ['name', 'tenant_id', 'description',
                                 'provided_policy_rule_sets', 'subnets',
@@ -235,7 +228,7 @@ class UpdatePolicyTargetGroup(neutronV20.UpdateCommand):
             help=_('Dictionary of consumed policy rule set uuids'))
         parser.add_argument(
             '--subnets', type=string.split,
-            help=_('Subnet for the Policy Target Group'))
+            help=_('List of neutron subnet uuids'))
 
     def args2body(self, parsed_args):
         body = {self.resource: {}, }
@@ -267,14 +260,6 @@ class UpdatePolicyTargetGroup(neutronV20.UpdateCommand):
                     key)
                 parsed_args.consumed_policy_rule_sets[id_key] = \
                     parsed_args.consumed_policy_rule_sets.pop(key)
-
-        if parsed_args.subnets:
-            for subnet in parsed_args.subnets:
-                subnet_id = neutronV20.find_resourceid_by_name_or_id(
-                    self.get_client(), 'subnet',
-                    subnet)
-                parsed_args.subnets.remove(subnet)
-                parsed_args.subnets.append(subnet_id)
 
         neutronV20.update_dict(parsed_args, body[self.resource],
                                ['name', 'tenant_id', 'description',
@@ -314,7 +299,7 @@ class CreateL2Policy(neutronV20.CreateCommand):
             help=_('Description of the L2 Policy'))
         parser.add_argument(
             '--network',
-            help=_('Network to map the L2 Policy'))
+            help=_('Neutron network uuid to map the L2 Policy to'))
         parser.add_argument(
             '--l3-policy',
             default='',
@@ -334,10 +319,9 @@ class CreateL2Policy(neutronV20.CreateCommand):
                     self.get_client(), 'l3_policy',
                     parsed_args.l3_policy)
         if parsed_args.network:
-            body[self.resource]['network_id'] = \
-                neutronV20.find_resourceid_by_name_or_id(
-                    self.get_client(), 'network',
-                    parsed_args.network)
+            body[self.resource]['network_id'] = (
+                parsed_args.network)
+
         return body
 
 
@@ -528,18 +512,6 @@ class CreateNetworkServicePolicy(neutronV20.CreateCommand):
 
     def args2body(self, parsed_args):
         body = {self.resource: {}, }
-
-        """
-        if parsed_args.name:
-            body[self.resource].update({'name': parsed_args.name})
-
-        if parsed_args.description:
-            body[self.resource].update({'description': parsed_args.name})
-
-        if parsed_args.network_service_params:
-            body[self.resource]['network_service_params'] = (
-                parsed_args.network_sercice_params)
-        """
 
         neutronV20.update_dict(parsed_args, body[self.resource],
                                ['name', 'tenant_id', 'description',
