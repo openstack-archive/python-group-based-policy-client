@@ -455,6 +455,8 @@ class UpdateL3Policy(neutronV20.UpdateCommand):
         if parsed_args.external_segments:
             external_segments_dict = {}
             for external_segment in parsed_args.external_segments:
+                if not external_segment:
+                    break
                 external_segment_id = neutronV20.find_resourceid_by_name_or_id(
                     self.get_client(), 'external_segment',
                     external_segment.keys()[0])
