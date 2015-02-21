@@ -118,6 +118,34 @@ class CLITestV20L3PolicyJSON(test_cli20.CLITestV20Base):
         }
         self._test_update_resource(resource, cmd, my_id, args, params)
 
+    def test_update_l3_policy_unset_external_segment(self):
+        resource = 'l3_policy'
+        cmd = gbp.UpdateL3Policy(test_cli20.MyApp(sys.stdout), None)
+        name = 'myname'
+        description = 'My L3 Policy'
+        my_id = 'someid'
+        ip_version = '4'
+        ip_pool = '172.16.0.0/12'
+        subnet_prefix_length = '24'
+        external_segment = ''
+        expected_external_segments = {}
+        args = ['--name', name,
+                '--description', description,
+                '--ip-version', ip_version,
+                '--ip-pool', ip_pool,
+                '--subnet-prefix-length', subnet_prefix_length,
+                '--external-segment', external_segment,
+                my_id]
+        params = {
+            'name': name,
+            'description': description,
+            'ip_version': 4,
+            'ip_pool': ip_pool,
+            'subnet_prefix_length': 24,
+            'external_segments': expected_external_segments,
+        }
+        self._test_update_resource(resource, cmd, my_id, args, params)
+
     def test_delete_l3_policy_name(self):
         resource = 'l3_policy'
         cmd = gbp.DeleteL3Policy(test_cli20.MyApp(sys.stdout), None)
