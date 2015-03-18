@@ -338,6 +338,37 @@ class UpdateL2Policy(neutronV20.UpdateCommand):
     resource = 'l2_policy'
     log = logging.getLogger(__name__ + '.UpdateL2Policy')
 
+    def add_known_arguments(self, parser):
+        parser.add_argument(
+            '--description',
+            help=_('Description of the L2 Policy'))
+        parser.add_argument(
+            '--network',
+            help=_('Neutron network uuid to map the L2 Policy to'))
+        parser.add_argument(
+            '--l3-policy',
+            default='',
+            help=_('L3 Policy uuid'))
+        parser.add_argument(
+            'name', metavar='NAME',
+            help=_('Name of L2 Policy to create'))
+
+    def args2body(self, parsed_args):
+        body = {self.resource: {}, }
+
+        neutronV20.update_dict(parsed_args, body[self.resource],
+                               ['name', 'tenant_id', 'description'])
+        if parsed_args.l3_policy:
+            body[self.resource]['l3_policy_id'] = \
+                neutronV20.find_resourceid_by_name_or_id(
+                    self.get_client(), 'l3_policy',
+                    parsed_args.l3_policy)
+        if parsed_args.network:
+            body[self.resource]['network_id'] = (
+                parsed_args.network)
+
+        return body
+
 
 class ListL3Policy(neutronV20.ListCommand):
     """List l3_policies that belong to a given tenant."""
@@ -624,6 +655,34 @@ class UpdatePolicyClassifier(neutronV20.UpdateCommand):
     resource = 'policy_classifier'
     log = logging.getLogger(__name__ + '.UpdatePolicyClassifier')
 
+    def add_known_arguments(self, parser):
+        parser.add_argument(
+            '--description',
+            help=_('Description of the policy classifier'))
+        parser.add_argument(
+            '--protocol',
+            choices=['tcp', 'udp', 'icmp'],
+            help=_('Protocol'))
+        parser.add_argument(
+            '--port-range',
+            help=_('Port range'))
+        parser.add_argument(
+            '--direction',
+            choices=['in', 'out', 'bi', ''],
+            help=_('Direction'))
+        parser.add_argument(
+            'name', metavar='NAME',
+            help=_('Name of classifier to create'))
+
+    def args2body(self, parsed_args):
+        body = {self.resource: {}, }
+
+        neutronV20.update_dict(parsed_args, body[self.resource],
+                               ['name', 'tenant_id', 'description',
+                                'protocol', 'port_range', 'direction'])
+
+        return body
+
 
 class ListPolicyAction(neutronV20.ListCommand):
     """List actions that belong to a given tenant."""
@@ -691,6 +750,35 @@ class UpdatePolicyAction(neutronV20.UpdateCommand):
 
     resource = 'policy_action'
     log = logging.getLogger(__name__ + '.UpdatePolicyAction')
+
+    def add_known_arguments(self, parser):
+        parser.add_argument(
+            '--description',
+            help=_('Description of the policy action'))
+        parser.add_argument(
+            '--action-type',
+            help=_('Type of action'))
+        parser.add_argument(
+            '--action-value',
+            help=_('Name/UUID of servicechain spec for redirect action'))
+        parser.add_argument(
+            'name', metavar='NAME',
+            help=_('Name of action to create'))
+
+    def args2body(self, parsed_args):
+        body = {self.resource: {}, }
+
+        if parsed_args.action_value:
+            body[self.resource]['action_value'] = (
+                neutronV20.find_resourceid_by_name_or_id(
+                    self.get_client(), 'servicechain_spec',
+                    parsed_args.action_value))
+
+        neutronV20.update_dict(parsed_args, body[self.resource],
+                               ['name', 'tenant_id', 'description',
+                                'action_type'])
+
+        return body
 
 
 class ListPolicyRule(neutronV20.ListCommand):
