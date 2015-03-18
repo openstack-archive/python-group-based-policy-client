@@ -27,6 +27,7 @@ from keystoneclient.auth.identity import v3 as v3_auth
 from keystoneclient import discover
 from keystoneclient.openstack.common.apiclient import exceptions as ks_exc
 from keystoneclient import session
+from oslo.utils import encodeutils
 import six.moves.urllib.parse as urlparse
 
 from cliff import app
@@ -34,8 +35,7 @@ from cliff import commandmanager
 from neutronclient.common import clientmanager
 from neutronclient.common import exceptions as exc
 from neutronclient.common import utils
-from neutronclient.openstack.common.gettextutils import _
-from neutronclient.openstack.common import strutils
+from neutronclient.i18n import _
 from neutronclient.version import __version__
 
 from gbpclient.gbp.v2_0 import groupbasedpolicy as gbp
@@ -831,7 +831,7 @@ class GBPShell(app.App):
 
 def main(argv=sys.argv[1:]):
     try:
-        return GBPShell(NEUTRON_API_VERSION).run(map(strutils.safe_decode,
+        return GBPShell(NEUTRON_API_VERSION).run(map(encodeutils.safe_decode,
                                                      argv))
     except exc.NeutronClientException:
         return 1

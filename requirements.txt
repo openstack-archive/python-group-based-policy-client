@@ -1,7 +1,5 @@
 # The order of packages is significant, because pip processes them in the order
 # of appearance. Changing the order has an impact on the overall integration
 # process, which may cause wedges in the gate later.
-oslo.serialization>=1.2.0,<1.5  # uncapped by python-heatclient-0.3.0
-oslo.i18n>=1.3.0,<1.6  # uncapped by python-heatclient-0.3.0
-python-heatclient>=0.2.9,<0.4
-python-neutronclient>=2.3.0,<2.3.10
+python-heatclient>=0.2.9,<0.3.0
+python-neutronclient==2.3.12
