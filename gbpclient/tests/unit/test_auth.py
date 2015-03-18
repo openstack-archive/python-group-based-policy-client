@@ -33,7 +33,7 @@ from keystoneclient import session
 from neutronclient import client
 from neutronclient.common import exceptions
 from neutronclient.common import utils
-from neutronclient.openstack.common import jsonutils
+from oslo_serialization import jsonutils
 
 
 USERNAME = 'testuser'
@@ -450,7 +450,7 @@ class CLITestAuthKeystone(testtools.TestCase):
 
         self.assertRaises(
             ks_exceptions.EndpointNotFound,
-            self.client.authenticate)
+            getattr, self.client, 'endpoint_url')
 
     def test_strip_credentials_from_log(self):
         def verify_no_credentials(kwargs):

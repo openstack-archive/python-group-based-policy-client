@@ -1,7 +1,7 @@
 # The order of packages is significant, because pip processes them in the order
 # of appearance. Changing the order has an impact on the overall integration
 # process, which may cause wedges in the gate later.
--e git://github.com/openstack/python-neutronclient.git@f8e2e42835e6f3bc0ab321d3a7c25e0109ff5e0a#egg=python-neutronclient
+-e git://github.com/openstack/python-neutronclient.git#egg=python-neutronclient
 hacking>=0.8.0,<0.9
 
 cliff-tablib>=1.0
