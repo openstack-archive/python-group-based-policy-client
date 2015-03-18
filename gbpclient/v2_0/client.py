@@ -16,11 +16,11 @@ import time
 import urllib
 
 from neutronclient import client
-from neutronclient.common import _
 from neutronclient.common import constants
 from neutronclient.common import exceptions
 from neutronclient.common import serializer
 from neutronclient.common import utils
+from neutronclient.i18n import _
 import requests
 import six.moves.urllib.parse as urlparse
 
@@ -704,13 +704,13 @@ class Client(object):
             params = utils.safe_encode_dict(params)
             action += '?' + urllib.urlencode(params, doseq=1)
         # Ensure client always has correct uri - do not guesstimate anything
-        self.httpclient.authenticate_and_fetch_endpoint_url()
-        self._check_uri_length(action)
+        #self.httpclient.authenticate_and_fetch_endpoint_url()
+        #self._check_uri_length(action)
 
         if body:
             body = self.serialize(body)
-        self.httpclient.content_type = self.content_type()
-        resp, replybody = self.httpclient.do_request(action, method, body=body)
+        #self.httpclient.content_type = self.content_type()
+        resp, replybody = self.httpclient.do_request(action, method, body=body, content_type=self.content_type())
         status_code = resp.status_code
         if status_code in (requests.codes.ok,
                            requests.codes.created,
