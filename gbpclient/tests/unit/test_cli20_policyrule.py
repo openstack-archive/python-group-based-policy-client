@@ -48,11 +48,13 @@ class CLITestV20PolicyRuleJSON(test_cli20.CLITestV20Base):
         policy_classifier_id = 'pc-id'
         policy_actions_res = ["pa1", "pa2"]
         policy_actions_arg = "pa1 pa2"
+        shared = 'True'
         args = ['--tenant-id', tenant_id,
                 '--description', description,
                 '--enabled', "True",
                 '--classifier', policy_classifier_id,
                 '--actions', policy_actions_arg,
+                '--shared', shared,
                 name]
         position_names = ['name', ]
         position_values = [name, ]
@@ -62,7 +64,8 @@ class CLITestV20PolicyRuleJSON(test_cli20.CLITestV20Base):
                                    description=description,
                                    enabled=enabled,
                                    policy_classifier_id=policy_classifier_id,
-                                   policy_actions=policy_actions_res)
+                                   policy_actions=policy_actions_res,
+                                   shared=True)
 
     def test_list_policy_rules(self):
         """grouppolicy-policy-rule-list."""
@@ -122,16 +125,21 @@ class CLITestV20PolicyRuleJSON(test_cli20.CLITestV20Base):
         policy_classifier_id = 'pc-id'
         policy_actions_res = ["pa1", "pa2"]
         policy_actions_arg = "pa1 pa2"
+        my_id = 'someid'
+        shared = 'True'
         cmd = gbp.UpdatePolicyRule(test_cli20.MyApp(sys.stdout), None)
         body = {
             'policy_classifier_id': policy_classifier_id,
             'enabled': enabled,
-            'policy_actions': policy_actions_res
+            'policy_actions': policy_actions_res,
+            'shared': True
         }
-        args = ['myid', '--enabled', "True",
+        args = [my_id,
+                '--enabled', "True",
                 '--classifier', policy_classifier_id,
-                '--actions', policy_actions_arg, ]
-        self._test_update_resource(resource, cmd, 'myid', args, body)
+                '--actions', policy_actions_arg,
+                '--shared', shared, ]
+        self._test_update_resource(resource, cmd, my_id, args, body)
 
     def test_delete_policy_classifier(self):
         """grouppolicy-policy-rule-delete my-id."""

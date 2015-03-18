@@ -47,11 +47,13 @@ class CLITestV20PolicyClassifierJSON(test_cli20.CLITestV20Base):
         protocol = 'tcp'
         port_range = '10-80'
         direction = 'in'
+        shared = 'True'
         args = ['--tenant-id', tenant_id,
                 '--description', description,
                 '--protocol', protocol,
                 '--port-range', port_range,
                 '--direction', direction,
+                '--shared', shared,
                 name]
         position_names = ['name', ]
         position_values = [name, ]
@@ -61,7 +63,7 @@ class CLITestV20PolicyClassifierJSON(test_cli20.CLITestV20Base):
                                    description=description,
                                    protocol=protocol,
                                    port_range=port_range,
-                                   direction=direction)
+                                   direction=direction, shared=True)
 
     def test_list_policy_classifiers(self):
         """grouppolicy-policy-classifier-list."""
@@ -122,15 +124,20 @@ class CLITestV20PolicyClassifierJSON(test_cli20.CLITestV20Base):
         port_range = '10-80'
         direction = 'in'
         cmd = gbp.UpdatePolicyClassifier(test_cli20.MyApp(sys.stdout), None)
+        my_id = 'someid'
+        shared = 'True'
         body = {
             'protocol': protocol,
             'port_range': port_range,
-            'direction': direction
+            'direction': direction,
+            'shared': True
         }
-        args = ['myid', '--protocol', protocol,
+        args = [my_id,
+                '--protocol', protocol,
                 '--port-range', port_range,
-                '--direction', direction, ]
-        self._test_update_resource(resource, cmd, 'myid', args, body)
+                '--direction', direction,
+                '--shared', shared, ]
+        self._test_update_resource(resource, cmd, my_id, args, body)
 
     def test_delete_policy_classifier(self):
         """grouppolicy-policy-classifier-delete my-id."""

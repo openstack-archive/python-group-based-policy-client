@@ -46,10 +46,12 @@ class CLITestV20PolicyActionJSON(test_cli20.CLITestV20Base):
         my_id = 'my-id'
         action_type = "allow"
         action_value = "1234"
+        shared = 'True'
         args = ['--tenant-id', tenant_id,
                 '--description', description,
                 '--action-type', action_type,
                 '--action-value', action_value,
+                '--shared', shared,
                 name]
         position_names = ['name', ]
         position_values = [name, ]
@@ -58,7 +60,7 @@ class CLITestV20PolicyActionJSON(test_cli20.CLITestV20Base):
                                    tenant_id=tenant_id,
                                    description=description,
                                    action_type=action_type,
-                                   action_value=action_value)
+                                   action_value=action_value, shared=True)
 
     def test_list_policy_actions(self):
         """grouppolicy-policy-action-list."""
@@ -116,15 +118,19 @@ class CLITestV20PolicyActionJSON(test_cli20.CLITestV20Base):
         resource = 'policy_action'
         action_type = "allow"
         action_value = "1234"
+        shared = 'True'
+        my_id = 'someid'
         cmd = gbp.UpdatePolicyAction(test_cli20.MyApp(sys.stdout), None)
         body = {
             'action_type': action_type,
-            'action_value': action_value
+            'action_value': action_value,
+            'shared': True
         }
-        args = ['myid',
+        args = [my_id,
                 '--action-type', action_type,
-                '--action-value', action_value, ]
-        self._test_update_resource(resource, cmd, 'myid', args, body)
+                '--action-value', action_value,
+                '--shared', shared, ]
+        self._test_update_resource(resource, cmd, my_id, args, body)
 
     def test_delete_policy_action(self):
         """grouppolicy-policy-action-delete my-id."""

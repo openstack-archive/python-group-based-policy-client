@@ -39,6 +39,27 @@ class CLITestV20L2PolicyJSON(test_cli20.CLITestV20Base):
                                    position_names, position_values,
                                    tenant_id=tenant_id)
 
+    def test_create_l2_policy_with_all_params(self):
+        """l2-policy-create with all params."""
+        resource = 'l2_policy'
+        cmd = gbp.CreateL2Policy(test_cli20.MyApp(sys.stdout), None)
+        my_id = 'my-id'
+        tenant_id = 'my-tenant'
+        name = 'my-name'
+        description = 'l2p description'
+        l3_policy_id = 'l3p'
+        shared = 'True'
+        args = [name,
+                '--tenant-id', tenant_id,
+                '--description', description,
+                '--l3-policy-id', l3_policy_id,
+                '--shared', shared]
+        position_names = ['name', 'description', 'l3_policy_id']
+        position_values = [name, description, l3_policy_id]
+        self._test_create_resource(resource, cmd, name, my_id, args,
+                                   position_names, position_values,
+                                   tenant_id=tenant_id, shared=True)
+
     def test_list_l2_policies(self):
         resource = 'l2_policies'
         cmd = gbp.ListL2Policy(test_cli20.MyApp(sys.stdout), None)
@@ -57,6 +78,28 @@ class CLITestV20L2PolicyJSON(test_cli20.CLITestV20Base):
                                    ['myid', '--name', 'myname',
                                     '--tags', 'a', 'b'],
                                    {'name': 'myname', 'tags': ['a', 'b'], })
+
+    def test_update_l2_policy_with_all_params(self):
+        """l2-policy-update."""
+        resource = 'l2_policy'
+        cmd = gbp.UpdateL2Policy(test_cli20.MyApp(sys.stdout), None)
+        my_id = 'someid'
+        name = 'l2policy'
+        description = 'l2policy description'
+        l3_policy_id = 'l3p'
+        shared = 'True'
+        args = [my_id,
+                '--name', name,
+                '--description', description,
+                '--l3-policy-id', l3_policy_id,
+                '--shared', shared]
+        params = {
+            'name': name,
+            'description': description,
+            'l3_policy_id': l3_policy_id,
+            'shared': True
+        }
+        self._test_update_resource(resource, cmd, my_id, args, params)
 
     def test_delete_l2_policy_name(self):
         resource = 'l2_policy'
