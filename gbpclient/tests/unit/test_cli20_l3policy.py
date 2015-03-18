@@ -52,12 +52,14 @@ class CLITestV20L3PolicyJSON(test_cli20.CLITestV20Base):
         subnet_prefix_length = '24'
         external_segment = 'seg_uuid1=1.1.1.0:2.2.2.0'
         expected_external_segments = {'seg_uuid1': ['1.1.1.0', '2.2.2.0']}
+        shared = 'True'
         args = ['--tenant-id', tenant_id,
                 '--description', description,
                 '--ip-version', ip_version,
                 '--ip-pool', ip_pool,
                 '--subnet-prefix-length', subnet_prefix_length,
                 '--external-segment', external_segment,
+                '--shared', shared,
                 name]
         position_names = ['name', ]
         position_values = [name, ]
@@ -69,7 +71,7 @@ class CLITestV20L3PolicyJSON(test_cli20.CLITestV20Base):
                                    ip_pool=ip_pool,
                                    subnet_prefix_length=24,
                                    external_segments=
-                                   expected_external_segments)
+                                   expected_external_segments, shared=True)
 
     def test_list_l3_policies(self):
         resource = 'l3_policies'
@@ -101,12 +103,14 @@ class CLITestV20L3PolicyJSON(test_cli20.CLITestV20Base):
         subnet_prefix_length = '24'
         external_segment = 'seg_uuid1=1.1.1.0:2.2.2.0'
         expected_external_segments = {'seg_uuid1': ['1.1.1.0', '2.2.2.0']}
+        shared = 'True'
         args = ['--name', name,
                 '--description', description,
                 '--ip-version', ip_version,
                 '--ip-pool', ip_pool,
                 '--subnet-prefix-length', subnet_prefix_length,
                 '--external-segment', external_segment,
+                '--shared', shared,
                 my_id]
         params = {
             'name': name,
@@ -115,6 +119,7 @@ class CLITestV20L3PolicyJSON(test_cli20.CLITestV20Base):
             'ip_pool': ip_pool,
             'subnet_prefix_length': 24,
             'external_segments': expected_external_segments,
+            'shared': True
         }
         self._test_update_resource(resource, cmd, my_id, args, params)
 

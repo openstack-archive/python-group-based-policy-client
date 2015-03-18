@@ -47,9 +47,11 @@ class CLITestV20NetworkServicePolicyJSON(test_cli20.CLITestV20Base):
         description = 'Mynsp'
         my_id = 'someid'
         network_svc_params = "type=ip_single,name=vip,value=self_subnet"
+        shared = 'True'
         args = ['--tenant_id', tenant_id,
                 '--description', description,
                 '--network-service-params', network_svc_params,
+                '--shared', shared,
                 name]
         position_names = ['name', 'description', 'network_service_params']
         net_params = [{"type": "ip_single", "name": "vip",
@@ -57,7 +59,7 @@ class CLITestV20NetworkServicePolicyJSON(test_cli20.CLITestV20Base):
         position_values = [name, description, net_params]
         self._test_create_resource(resource, cmd, name, my_id, args,
                                    position_names, position_values,
-                                   tenant_id=tenant_id)
+                                   tenant_id=tenant_id, shared=True)
 
     def test_list_network_service_policies(self):
         """network-sercvice-policy-list."""
@@ -117,15 +119,29 @@ class CLITestV20NetworkServicePolicyJSON(test_cli20.CLITestV20Base):
                                    {'name': 'myname', 'tags': ['a', 'b'], })
 
     def test_update_network_service_policy_with_allparams(self):
+        """network-service-policy-update with all params."""
         resource = 'network_service_policy'
-        new_name = "new_name"
         cmd = gbp.UpdateNetworkServicePolicy(test_cli20.MyApp(sys.stdout),
                                              None)
-        body = {
-            'name': new_name
+        name = 'nsp'
+        description = 'nsp description'
+        my_id = 'someid'
+        network_svc_params = "type=ip_single,name=vip,value=self_subnet"
+        shared = 'True'
+        args = [my_id,
+                '--name', name,
+                '--description', description,
+                '--network-service-params', network_svc_params,
+                '--shared', shared,
+                '--request-format', 'json']
+        params = {
+            'name': name,
+            'description': description,
+            'network_service_params': [{"type": "ip_single", "name": "vip",
+                                   "value": "self_subnet"}],
+            'shared': True
         }
-        args = ['myid', '--name', new_name, '--request-format', 'json']
-        self._test_update_resource(resource, cmd, 'myid', args, body)
+        self._test_update_resource(resource, cmd, my_id, args, params)
 
     def test_delete_network_service_policy(self):
         """network-service-policy-delete my-id."""

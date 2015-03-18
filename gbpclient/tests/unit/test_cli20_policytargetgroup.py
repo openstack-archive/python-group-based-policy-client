@@ -40,6 +40,43 @@ class CLITestV20PolicyTargetGroupJSON(test_cli20.CLITestV20Base):
                                    position_names, position_values,
                                    tenant_id=tenant_id)
 
+    def test_create_policy_target_group_with_all_params(self):
+        """policy-target-group-create with all params."""
+        resource = 'policy_target_group'
+        cmd = gbp.CreatePolicyTargetGroup(test_cli20.MyApp(sys.stdout), None)
+        my_id = 'my-id'
+        tenant_id = 'my-tenant'
+        name = 'my-name'
+        description = 'ptg description'
+        l2_policy_id = 'l2_policy_id'
+        provided_prs = "icmp-prs=false,web-prs=true"
+        consumed_prs = "ssh-prs=true,ftp-prs=false"
+        network_service_policy_id = 'network_service_policy_id'
+        shared = 'True'
+        args = [name,
+                '--tenant-id', tenant_id,
+                '--description', description,
+                '--l2-policy-id', l2_policy_id,
+                '--provided-policy-rule-sets', provided_prs,
+                '--consumed-policy-rule-sets', consumed_prs,
+                '--network-service-policy-id', network_service_policy_id,
+                '--shared', shared]
+        position_names = ['name', 'description', 'l2_policy_id',
+        'provided_policy_rule_sets', 'consumed_policy_rule_sets',
+        'network_service_policy_id']
+        provided_policy_rule_sets = {
+            'icmp-prs': 'false',
+            'web-prs': 'true'}
+        consumed_policy_rule_sets = {
+            'ssh-prs': 'true',
+            'ftp-prs': 'false'}
+        position_values = [name, description, l2_policy_id,
+        provided_policy_rule_sets, consumed_policy_rule_sets,
+        network_service_policy_id]
+        self._test_create_resource(resource, cmd, name, my_id, args,
+                                   position_names, position_values,
+                                   tenant_id=tenant_id, shared=True)
+
     def test_list_policy_target_groups(self):
         """policy-target-group-list."""
         resource = 'policy_target_groups'
@@ -61,6 +98,43 @@ class CLITestV20PolicyTargetGroupJSON(test_cli20.CLITestV20Base):
                                    ['myid', '--name', 'myname',
                                     '--tags', 'a', 'b'],
                                    {'name': 'myname', 'tags': ['a', 'b'], })
+
+    def test_update_policy_target_group_with_all_params(self):
+        """policy-target-group-update."""
+        resource = 'policy_target_group'
+        cmd = gbp.UpdatePolicyTargetGroup(test_cli20.MyApp(sys.stdout), None)
+        my_id = 'my-id'
+        name = 'ptg'
+        description = 'ptg description'
+        l2_policy_id = 'l2_policy_id'
+        provided_prs = "icmp-prs=false,web-prs=true"
+        consumed_prs = "ssh-prs=true,ftp-prs=false"
+        network_service_policy_id = 'network_service_policy_id'
+        shared = 'True'
+        args = [my_id,
+                '--name', name,
+                '--description', description,
+                '--l2-policy-id', l2_policy_id,
+                '--provided-policy-rule-sets', provided_prs,
+                '--consumed-policy-rule-sets', consumed_prs,
+                '--network-service-policy-id', network_service_policy_id,
+                '--shared', shared]
+        provided_policy_rule_sets = {
+            'icmp-prs': 'false',
+            'web-prs': 'true'}
+        consumed_policy_rule_sets = {
+            'ssh-prs': 'true',
+            'ftp-prs': 'false'}
+        params = {
+            'name': name,
+            'description': description,
+            'l2_policy_id': l2_policy_id,
+            'provided_policy_rule_sets': provided_policy_rule_sets,
+            'consumed_policy_rule_sets': consumed_policy_rule_sets,
+            'network_service_policy_id': network_service_policy_id,
+            'shared': True
+        }
+        self._test_update_resource(resource, cmd, my_id, args, params)
 
     def test_delete_policy_target_group_name(self):
         """policy-target-group-delete."""

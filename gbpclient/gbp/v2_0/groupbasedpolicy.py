@@ -182,6 +182,9 @@ class CreatePolicyTargetGroup(neutronV20.CreateCommand):
         parser.add_argument(
             '--subnets', type=string.split,
             help=_('List of neutron subnet uuids'))
+        parser.add_argument(
+            '--shared', type=bool,
+            help=_('Shared flag'))
 
     def args2body(self, parsed_args):
         body = {self.resource: {}, }
@@ -217,7 +220,7 @@ class CreatePolicyTargetGroup(neutronV20.CreateCommand):
         neutronV20.update_dict(parsed_args, body[self.resource],
                                ['name', 'tenant_id', 'description',
                                 'provided_policy_rule_sets', 'subnets',
-                                'consumed_policy_rule_sets'])
+                                'consumed_policy_rule_sets', 'shared'])
 
         return body
 
@@ -254,6 +257,9 @@ class UpdatePolicyTargetGroup(neutronV20.UpdateCommand):
         parser.add_argument(
             '--subnets', type=string.split,
             help=_('List of neutron subnet uuids'))
+        parser.add_argument(
+            '--shared', type=bool,
+            help=_('Shared flag'))
 
     def args2body(self, parsed_args):
         body = {self.resource: {}, }
@@ -289,7 +295,7 @@ class UpdatePolicyTargetGroup(neutronV20.UpdateCommand):
         neutronV20.update_dict(parsed_args, body[self.resource],
                                ['name', 'tenant_id', 'description',
                                 'provided_policy_rule_sets', 'subnets',
-                                'consumed_policy_rule_sets'])
+                                'consumed_policy_rule_sets', 'shared'])
 
         return body
 
@@ -332,12 +338,15 @@ class CreateL2Policy(neutronV20.CreateCommand):
         parser.add_argument(
             'name', metavar='NAME',
             help=_('Name of L2 Policy to create'))
+        parser.add_argument(
+            '--shared', type=bool,
+            help=_('Shared flag'))
 
     def args2body(self, parsed_args):
         body = {self.resource: {}, }
 
         neutronV20.update_dict(parsed_args, body[self.resource],
-                               ['name', 'tenant_id', 'description'])
+                               ['name', 'tenant_id', 'description', 'shared'])
         if parsed_args.l3_policy:
             body[self.resource]['l3_policy_id'] = \
                 neutronV20.find_resourceid_by_name_or_id(
@@ -374,12 +383,15 @@ class UpdateL2Policy(neutronV20.UpdateCommand):
         parser.add_argument(
             '--name', metavar='NAME',
             help=_('New name of the L2 Policy'))
+        parser.add_argument(
+            '--shared', type=bool,
+            help=_('Shared flag'))
 
     def args2body(self, parsed_args):
         body = {self.resource: {}, }
 
         neutronV20.update_dict(parsed_args, body[self.resource],
-                               ['name', 'tenant_id', 'description'])
+                               ['name', 'tenant_id', 'description', 'shared'])
         if parsed_args.l3_policy:
             body[self.resource]['l3_policy_id'] = \
                 neutronV20.find_resourceid_by_name_or_id(
@@ -439,6 +451,9 @@ class CreateL3Policy(neutronV20.CreateCommand):
         parser.add_argument(
             'name', metavar='NAME',
             help=_('Name of L3 policy to create'))
+        parser.add_argument(
+            '--shared', type=bool,
+            help=_('Shared flag'))
 
     def args2body(self, parsed_args):
         body = {self.resource: {}, }
@@ -457,7 +472,7 @@ class CreateL3Policy(neutronV20.CreateCommand):
         neutronV20.update_dict(parsed_args, body[self.resource],
                                ['name', 'tenant_id', 'description',
                                 'ip_version', 'ip_pool',
-                                'subnet_prefix_length'])
+                                'subnet_prefix_length', 'shared'])
 
         return body
 
@@ -498,6 +513,9 @@ class UpdateL3Policy(neutronV20.UpdateCommand):
         parser.add_argument(
             '--name', metavar='NAME',
             help=_('New name of the L3 Policy'))
+        parser.add_argument(
+            '--shared', type=bool,
+            help=_('Shared flag'))
 
     def args2body(self, parsed_args):
         body = {self.resource: {}, }
@@ -518,7 +536,7 @@ class UpdateL3Policy(neutronV20.UpdateCommand):
         neutronV20.update_dict(parsed_args, body[self.resource],
                                ['name', 'tenant_id', 'description',
                                 'ip_version', 'ip_pool',
-                                'subnet_prefix_length'])
+                                'subnet_prefix_length', 'shared'])
 
         return body
 
@@ -561,13 +579,16 @@ class CreateNetworkServicePolicy(neutronV20.CreateCommand):
             type=utils.str2dict,
             help=_('Network service params for this network service policy'
                    '(This option can be repeated).'))
+        parser.add_argument(
+            '--shared', type=bool,
+            help=_('Shared flag'))
 
     def args2body(self, parsed_args):
         body = {self.resource: {}, }
 
         neutronV20.update_dict(parsed_args, body[self.resource],
                                ['name', 'tenant_id', 'description',
-                                'network_service_params'])
+                                'network_service_params', 'shared'])
         return body
 
 
@@ -598,13 +619,16 @@ class UpdateNetworkServicePolicy(neutronV20.UpdateCommand):
             type=utils.str2dict,
             help=_('Network service params for this network service policy'
                    '(This option can be repeated).'))
+        parser.add_argument(
+            '--shared', type=bool,
+            help=_('Shared flag'))
 
     def args2body(self, parsed_args):
         body = {self.resource: {}, }
 
         neutronV20.update_dict(parsed_args, body[self.resource],
                                ['name', 'tenant_id', 'description',
-                                'network_service_params'])
+                                'network_service_params', 'shared'])
         return body
 
 
@@ -650,13 +674,17 @@ class CreatePolicyClassifier(neutronV20.CreateCommand):
         parser.add_argument(
             'name', metavar='NAME',
             help=_('Name of classifier to create'))
+        parser.add_argument(
+            '--shared', type=bool,
+            help=_('Shared flag'))
 
     def args2body(self, parsed_args):
         body = {self.resource: {}, }
 
         neutronV20.update_dict(parsed_args, body[self.resource],
                                ['name', 'tenant_id', 'description',
-                                'protocol', 'port_range', 'direction'])
+                                'protocol', 'port_range',
+                                'direction', 'shared'])
 
         return body
 
@@ -692,13 +720,17 @@ class UpdatePolicyClassifier(neutronV20.UpdateCommand):
         parser.add_argument(
             '--name',
             help=_('New name of the classifier'))
+        parser.add_argument(
+            '--shared', type=bool,
+            help=_('Shared flag'))
 
     def args2body(self, parsed_args):
         body = {self.resource: {}, }
 
         neutronV20.update_dict(parsed_args, body[self.resource],
                                ['name', 'tenant_id', 'description',
-                                'protocol', 'port_range', 'direction'])
+                                'protocol', 'port_range',
+                                'direction', 'shared'])
 
         return body
 
@@ -740,6 +772,9 @@ class CreatePolicyAction(neutronV20.CreateCommand):
         parser.add_argument(
             'name', metavar='NAME',
             help=_('Name of action to create'))
+        parser.add_argument(
+            '--shared', type=bool,
+            help=_('Shared flag'))
 
     def args2body(self, parsed_args):
         body = {self.resource: {}, }
@@ -752,7 +787,7 @@ class CreatePolicyAction(neutronV20.CreateCommand):
 
         neutronV20.update_dict(parsed_args, body[self.resource],
                                ['name', 'tenant_id', 'description',
-                                'action_type'])
+                                'action_type', 'shared'])
 
         return body
 
@@ -780,6 +815,9 @@ class UpdatePolicyAction(neutronV20.UpdateCommand):
         parser.add_argument(
             '--name',
             help=_('New name of the action'))
+        parser.add_argument(
+            '--shared', type=bool,
+            help=_('Shared flag'))
 
     def args2body(self, parsed_args):
         body = {self.resource: {}, }
@@ -791,7 +829,8 @@ class UpdatePolicyAction(neutronV20.UpdateCommand):
                     parsed_args.action_value))
 
         neutronV20.update_dict(parsed_args, body[self.resource],
-                               ['name', 'tenant_id', 'description'])
+                               ['name', 'tenant_id', 'description',
+                                'shared'])
 
         return body
 
@@ -837,6 +876,9 @@ class CreatePolicyRule(neutronV20.CreateCommand):
         parser.add_argument(
             'name', metavar='NAME',
             help=_('Name of policy_rule to create'))
+        parser.add_argument(
+            '--shared', type=bool,
+            help=_('Shared flag'))
 
     def args2body(self, parsed_args):
         body = {self.resource: {}, }
@@ -857,7 +899,7 @@ class CreatePolicyRule(neutronV20.CreateCommand):
 
         neutronV20.update_dict(parsed_args, body[self.resource],
                                ['name', 'tenant_id', 'description',
-                                'enabled'])
+                                'enabled', 'shared'])
 
         return body
 
@@ -885,6 +927,9 @@ class UpdatePolicyRule(neutronV20.UpdateCommand):
         parser.add_argument(
             '--actions', type=string.split,
             help=_('List of policy actions'))
+        parser.add_argument(
+            '--shared', type=bool,
+            help=_('Shared flag'))
 
     def args2body(self, parsed_args):
         body = {self.resource: {}, }
@@ -905,7 +950,7 @@ class UpdatePolicyRule(neutronV20.UpdateCommand):
 
         neutronV20.update_dict(parsed_args, body[self.resource],
                                ['name', 'description',
-                                'enabled'])
+                                'enabled', 'shared'])
         return body
 
 
@@ -946,6 +991,9 @@ class CreatePolicyRuleSet(neutronV20.CreateCommand):
         parser.add_argument(
             'name', metavar='NAME',
             help=_('Name of policy rule set to create'))
+        parser.add_argument(
+            '--shared', type=bool,
+            help=_('Shared flag'))
 
     def args2body(self, parsed_args):
         body = {self.resource: {}, }
@@ -965,7 +1013,7 @@ class CreatePolicyRuleSet(neutronV20.CreateCommand):
                     elem) for elem in parsed_args.child_policy_rule_sets]
 
         neutronV20.update_dict(parsed_args, body[self.resource],
-                               ['name', 'tenant_id', 'description'])
+                               ['name', 'tenant_id', 'description', 'shared'])
         return body
 
 
@@ -989,6 +1037,9 @@ class UpdatePolicyRuleSet(neutronV20.UpdateCommand):
         parser.add_argument(
             '--child-policy-rule-sets', type=string.split,
             help=_('List of child policy rule sets'))
+        parser.add_argument(
+            '--shared', type=bool,
+            help=_('Shared flag'))
 
     def args2body(self, parsed_args):
         body = {self.resource: {}, }
@@ -1010,7 +1061,7 @@ class UpdatePolicyRuleSet(neutronV20.UpdateCommand):
                 parsed_args.child_policy_rule_sets)
         neutronV20.update_dict(parsed_args, body[self.resource],
                                ['name', 'description', 'policy_rules',
-                                'child_policy_rule_sets'])
+                                'child_policy_rule_sets', 'shared'])
         return body
 
 
