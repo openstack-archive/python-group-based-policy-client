@@ -171,6 +171,8 @@ class Client(object):
     policy_rule_path = "/grouppolicy/policy_rules/%s"
     policy_rule_sets_path = "/grouppolicy/policy_rule_sets"
     policy_rule_set_path = "/grouppolicy/policy_rule_sets/%s"
+    service_profiles_path = "/servicechain/service_profiles"
+    service_profile_path = "/servicechain/service_profiles/%s"
     servicechain_nodes_path = "/servicechain/servicechain_nodes"
     servicechain_node_path = "/servicechain/servicechain_nodes/%s"
     servicechain_specs_path = "/servicechain/servicechain_specs"
@@ -574,6 +576,38 @@ class Client(object):
         """Deletes the specified Policy Rule Set."""
         return self.delete(self.policy_rule_set_path % (policy_rule_set))
 
+    @APIParamsCall
+    def list_service_profiles(self, retrieve_all=True, **_params):
+
+        """Fetches a list of all service profiles for a tenant."""
+        # Pass filters in "params" argument to do_request
+
+        return self.list('service_profiles', self.service_profiles_path,
+                         retrieve_all, **_params)
+
+    @APIParamsCall
+    def show_service_profile(self, service_profile, **_params):
+        """Fetches information of a certain service profile."""
+        return self.get(self.service_profile_path % (service_profile),
+                        params=_params)
+
+    @APIParamsCall
+    def create_service_profile(self, body=None):
+        """Creates a new service profile."""
+        return self.post(self.service_profiles_path, body=body)
+
+    @APIParamsCall
+    def update_service_profile(self, service_profile, body=None):
+        """Updates a service profile."""
+        return self.put(self.service_profile_path % (service_profile),
+                        body=body)
+
+    @APIParamsCall
+    def delete_service_profile(self, service_profile):
+        """Deletes the specified service profile."""
+        return self.delete(self.service_profile_path % (service_profile))
+
+    @APIParamsCall
     def list_servicechain_nodes(self, retrieve_all=True, **_params):
 
         """Fetches a list of all service chain nodes for a tenant."""
