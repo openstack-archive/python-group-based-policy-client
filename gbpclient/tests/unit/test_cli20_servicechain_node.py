@@ -49,11 +49,15 @@ class CLITestV20ServiceChainNodeJSON(test_cli20.CLITestV20Base):
         config = 'config1'
         tenant_id = 'my-tenant'
         description = 'My Service Chain Node'
+        service_profile_id = 'my-service-profile'
         my_id = 'my-id'
+        shared = 'True'
         args = ['--servicetype', service_type,
                 '--config', config,
                 '--tenant-id', tenant_id,
                 '--description', description,
+                '--service-profile', service_profile_id,
+                '--shared', shared,
                 name]
         position_names = ['name', ]
         position_values = [name, ]
@@ -61,7 +65,9 @@ class CLITestV20ServiceChainNodeJSON(test_cli20.CLITestV20Base):
                                    position_names, position_values,
                                    service_type=service_type, config=config,
                                    tenant_id=tenant_id,
-                                   description=description)
+                                   description=description,
+                                   service_profile_id=service_profile_id,
+                                   shared=True)
 
     def test_list_servicechain_nodes(self):
         """service-chain-node-list."""
@@ -121,6 +127,26 @@ class CLITestV20ServiceChainNodeJSON(test_cli20.CLITestV20Base):
                                    ['myid', '--name', 'myname',
                                     '--tags', 'a', 'b'],
                                    {'name': 'myname', 'tags': ['a', 'b'], })
+
+    def test_update_servicechain_node_with_all_params(self):
+        resource = 'servicechain_node'
+        cmd = servicechain.UpdateServiceChainNode(test_cli20.MyApp(sys.stdout),
+                                                  None)
+        body = {
+            'name': 'new_name',
+            'description': 'new_description',
+            'service_profile_id': 'new_service_profile_id',
+            'shared': True,
+        }
+        args = ['myid', '--name', 'new_name',
+                '--description', 'new_description',
+                '--service-profile', 'new_service_profile_id',
+                '--shared', 'True']
+        self._test_update_resource(resource, cmd, 'myid', args, body)
+
+    # REVISIT(rkukura): Not sure why the following two methods are
+    # needed, since allow_put for both the service_type and config
+    # attributes is False.
 
     def test_update_servicechain_node_with_servicetype(self):
         resource = 'servicechain_node'

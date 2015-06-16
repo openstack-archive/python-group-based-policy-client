@@ -147,6 +147,107 @@ class DeleteServiceChainInstance(neutronV20.DeleteCommand):
     log = logging.getLogger(__name__ + '.DeleteServiceChainInstance')
 
 
+class ListServiceProfile(neutronV20.ListCommand):
+    """List service profiles that belong to a given tenant."""
+
+    resource = 'service_profile'
+    log = logging.getLogger(__name__ + '.ListServiceProfile')
+    _formatters = {}
+    list_columns = ['id', 'name', 'description', 'service_type']
+    pagination_support = True
+    sorting_support = True
+
+
+class ShowServiceProfile(neutronV20.ShowCommand):
+    """Show information of a given service profile."""
+
+    resource = 'service_profile'
+    log = logging.getLogger(__name__ + '.ShowServiceProfile')
+
+
+class CreateServiceProfile(neutronV20.CreateCommand):
+    """Create a service profile."""
+
+    resource = 'service_profile'
+    log = logging.getLogger(__name__ + '.CreateServiceProfile')
+
+    def add_known_arguments(self, parser):
+        parser.add_argument(
+            'name',
+            help=_('Name for the Service Profile.'))
+        parser.add_argument(
+            '--description',
+            help=_('Description of the Service Profile.'))
+        parser.add_argument(
+            '--shared', type=bool,
+            help=_('Shared flag'))
+        parser.add_argument(
+            '--vendor',
+            help=_('Vendor providing the service node'))
+        parser.add_argument(
+            '--insertion-mode',
+            help=_('Insertion mode of the service'))
+        parser.add_argument(
+            '--servicetype', dest='service_type',
+            help=_('Type of the service'))
+        parser.add_argument(
+            '--service-flavor',
+            help=_('Flavor of the service'))
+
+    def args2body(self, parsed_args):
+        body = {self.resource: {}, }
+        neutronV20.update_dict(parsed_args, body[self.resource],
+                               ['name', 'description', 'tenant_id', 'shared',
+                                'vendor', 'insertion_mode', 'service_type',
+                                'service_flavor'])
+        return body
+
+
+class UpdateServiceProfile(neutronV20.UpdateCommand):
+    """Update a given service profile."""
+
+    resource = 'service_profile'
+    log = logging.getLogger(__name__ + '.UpdateServiceProfile')
+
+    def add_known_arguments(self, parser):
+        parser.add_argument(
+            '--name',
+            help=_('Name for the Service Profile.'))
+        parser.add_argument(
+            '--description',
+            help=_('Description of the Service Profile.'))
+        parser.add_argument(
+            '--shared', type=bool,
+            help=_('Shared flag'))
+        parser.add_argument(
+            '--vendor',
+            help=_('Vendor providing the service node'))
+        parser.add_argument(
+            '--insertion-mode',
+            help=_('Insertion mode of the service'))
+        parser.add_argument(
+            '--servicetype', dest='service_type',
+            help=_('Type of the service'))
+        parser.add_argument(
+            '--service-flavor',
+            help=_('Flavor of the service'))
+
+    def args2body(self, parsed_args):
+        body = {self.resource: {}, }
+        neutronV20.update_dict(parsed_args, body[self.resource],
+                               ['name', 'description', 'shared', 'vendor',
+                                'insertion_mode', 'service_type',
+                                'service_flavor'])
+        return body
+
+
+class DeleteServiceProfile(neutronV20.DeleteCommand):
+    """Delete a given service profile."""
+
+    resource = 'service_profile'
+    log = logging.getLogger(__name__ + '.DeleteServiceProfile')
+
+
 class ListServiceChainNode(neutronV20.ListCommand):
     """List service chain nodes that belong to a given tenant."""
 
@@ -182,8 +283,14 @@ class CreateServiceChainNode(neutronV20.CreateCommand):
             '--servicetype', dest='service_type',
             help=_('Service type ID or the Service Type name'))
         parser.add_argument(
+            '--service-profile',
+            help=_('Service Profile name or UUID'))
+        parser.add_argument(
             '--config',
             help=_('Service Configuration for the Service Chain Node.'))
+        parser.add_argument(
+            '--shared', type=bool,
+            help=_('Shared flag'))
         parser.add_argument(
             '--template-file',
             help=_('Service Configuration Template for the Service Chain '
@@ -195,6 +302,11 @@ class CreateServiceChainNode(neutronV20.CreateCommand):
 
     def args2body(self, parsed_args):
         body = {self.resource: {}, }
+        if parsed_args.service_profile:
+            body[self.resource]['service_profile_id'] = \
+                neutronV20.find_resourceid_by_name_or_id(
+                    self.get_client(), 'service_profile',
+                    parsed_args.service_profile)
         if parsed_args.template_file:
             if os.path.isfile(parsed_args.template_file):
                 tpl_files, template = template_utils.get_template_contents(
@@ -205,7 +317,7 @@ class CreateServiceChainNode(neutronV20.CreateCommand):
                                                  "Please check the path"
                                                  % parsed_args.template_file)
         neutronV20.update_dict(parsed_args, body[self.resource],
-                               ['name', 'service_type', 'config',
+                               ['name', 'service_type', 'config', 'shared',
                                 'tenant_id', 'param_names', 'description'])
         return body
 
@@ -221,14 +333,25 @@ class UpdateServiceChainNode(neutronV20.UpdateCommand):
             '--servicetype', dest='service_type',
             help=_('Service type ID or the Service Type name'))
         parser.add_argument(
+            '--service-profile',
+            help=_('Service Profile name or UUID'))
+        parser.add_argument(
             '--config',
             help=_('Service Configuration for the Service Chain Node.'))
+        parser.add_argument(
+            '--shared', type=bool,
+            help=_('Shared flag'))
 
     def args2body(self, parsed_args):
         body = {self.resource: {}, }
+        if parsed_args.service_profile:
+            body[self.resource]['service_profile_id'] = \
+                neutronV20.find_resourceid_by_name_or_id(
+                    self.get_client(), 'service_profile',
+                    parsed_args.service_profile)
         neutronV20.update_dict(parsed_args, body[self.resource],
-                               ['name', 'service_type', 'config',
-                                'tenant_id', 'description'])
+                               ['name', 'service_type', 'config', 'shared',
+                                'description'])
         return body
 
 
@@ -273,6 +396,9 @@ class CreateServiceChainSpec(neutronV20.CreateCommand):
         parser.add_argument(
             '--nodes', metavar='NODES', type=string.split,
             help=_('Service Chain Node ID or name of the Service Chain Node'))
+        parser.add_argument(
+            '--shared', type=bool,
+            help=_('Shared flag'))
 
     def args2body(self, parsed_args):
         body = {self.resource: {}, }
@@ -285,7 +411,7 @@ class CreateServiceChainSpec(neutronV20.CreateCommand):
                     elem) for elem in parsed_args.nodes]
 
         neutronV20.update_dict(parsed_args, body[self.resource],
-                               ['name', 'tenant_id', 'description'])
+                               ['name', 'tenant_id', 'description', 'shared'])
         return body
 
 
@@ -300,6 +426,9 @@ class UpdateServiceChainSpec(neutronV20.UpdateCommand):
             '--nodes', type=string.split,
             help=_('List of Service Chain Node IDs or names of the Service '
                    'Chain Nodes'))
+        parser.add_argument(
+            '--shared', type=bool,
+            help=_('Shared flag'))
 
     def args2body(self, parsed_args):
         body = {self.resource: {}, }
@@ -309,6 +438,8 @@ class UpdateServiceChainSpec(neutronV20.UpdateCommand):
                     self.get_client(),
                     'servicechain_node',
                     elem) for elem in parsed_args.nodes]
+        neutronV20.update_dict(parsed_args, body[self.resource],
+                               ['name', 'description', 'shared'])
         return body
 
 

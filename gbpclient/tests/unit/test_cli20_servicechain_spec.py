@@ -50,16 +50,18 @@ class CLITestV20ServiceChainSpecJSON(test_cli20.CLITestV20Base):
         tenant_id = 'my-tenant'
         description = 'My Service Chain Spec'
         my_id = 'my-id'
+        shared = 'True'
         args = ['--nodes', nodes_arg,
                 '--tenant-id', tenant_id,
                 '--description', description,
+                '--shared', shared,
                 name]
         position_names = ['name', ]
         position_values = [name, ]
         self._test_create_resource(resource, cmd, name, my_id, args,
                                    position_names, position_values,
                                    nodes=nodes_res, tenant_id=tenant_id,
-                                   description=description)
+                                   description=description, shared=True)
 
     def test_list_servicechain_specs(self):
         """service-chain-spec-list."""
@@ -120,18 +122,22 @@ class CLITestV20ServiceChainSpecJSON(test_cli20.CLITestV20Base):
                                     '--tags', 'a', 'b'],
                                    {'name': 'myname', 'tags': ['a', 'b'], })
 
-    def test_update_servicechain_spec_with_nodes(self):
+    def test_update_servicechain_node_with_all_params(self):
         resource = 'servicechain_spec'
         cmd = servicechain.UpdateServiceChainSpec(test_cli20.MyApp(sys.stdout),
                                                   None)
         nodes_arg = 'node1 node2'
         nodes_res = ['node1', 'node2']
-        description = 'My Service Chain Spec'
         body = {
+            'name': 'new_name',
+            'description': 'new_description',
             'nodes': nodes_res,
-            'description': description
+            'shared': True,
         }
-        args = ['myid', '--nodes', nodes_arg, '--description', description]
+        args = ['myid', '--name', 'new_name',
+                '--description', 'new_description',
+                '--nodes', nodes_arg,
+                '--shared', 'True']
         self._test_update_resource(resource, cmd, 'myid', args, body)
 
     def test_delete_servicechain_spec(self):
