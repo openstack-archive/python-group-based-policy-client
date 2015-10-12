@@ -1129,16 +1129,15 @@ class CreateExternalPolicy(neutronV20.CreateCommand):
                     parsed_args.consumed_policy_rule_sets.pop(key))
 
         if parsed_args.external_segments:
-            for external_segment in parsed_args.external_segments:
-                external_segment_id = neutronV20.find_resourceid_by_name_or_id(
-                    self.get_client(), 'external_segment', external_segment)
-                parsed_args.external_segments.remove(external_segment)
-                parsed_args.external_segments.append(external_segment_id)
+            body[self.resource]['external_segments'] = [
+                neutronV20.find_resourceid_by_name_or_id(
+                    self.get_client(),
+                    'external_segment',
+                    elem) for elem in parsed_args.external_segments]
 
         neutronV20.update_dict(parsed_args, body[self.resource],
                                ['name', 'tenant_id', 'description',
                                 'provided_policy_rule_sets',
-                                'external_segments',
                                 'consumed_policy_rule_sets', 'shared'])
 
         return body
@@ -1197,16 +1196,15 @@ class UpdateExternalPolicy(neutronV20.UpdateCommand):
                     parsed_args.consumed_policy_rule_sets.pop(key))
 
         if parsed_args.external_segments:
-            for external_segment in parsed_args.external_segments:
-                external_segment_id = neutronV20.find_resourceid_by_name_or_id(
-                    self.get_client(), 'external_segment', external_segment)
-                parsed_args.external_segments.remove(external_segment)
-                parsed_args.external_segments.append(external_segment_id)
+            body[self.resource]['external_segments'] = [
+                neutronV20.find_resourceid_by_name_or_id(
+                    self.get_client(),
+                    'external_segment',
+                    elem) for elem in parsed_args.external_segments]
 
         neutronV20.update_dict(parsed_args, body[self.resource],
                                ['name', 'tenant_id', 'description',
                                 'provided_policy_rule_sets',
-                                'external_segments',
                                 'consumed_policy_rule_sets', 'shared'])
 
         return body
