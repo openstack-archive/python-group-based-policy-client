@@ -50,11 +50,13 @@ class CLITestV20ExternalPolicyJSON(test_cli20.CLITestV20Base):
         my_id = 'someid'
         provided_policy_rule_sets = "prs1=true,prs2=true"
         consumed_policy_rule_sets = "prs3=true,prs4=true"
+        external_segments = "ES1 ES2"
         shared = 'True'
         args = ['--tenant-id', tenant_id,
                 '--description', description,
                 '--provided-policy-rule-sets', provided_policy_rule_sets,
                 '--consumed-policy-rule-sets', consumed_policy_rule_sets,
+                '--external-segments', external_segments,
                 '--shared', shared,
                 name]
         position_names = ['name', ]
@@ -67,6 +69,8 @@ class CLITestV20ExternalPolicyJSON(test_cli20.CLITestV20Base):
                                    {'prs1': 'true', 'prs2': 'true'},
                                    consumed_policy_rule_sets=
                                    {'prs3': 'true', 'prs4': 'true'},
+                                   external_segments=
+                                   ['ES1', 'ES2'],
                                    shared=True)
 
     def test_list_external_policies(self):
@@ -99,11 +103,13 @@ class CLITestV20ExternalPolicyJSON(test_cli20.CLITestV20Base):
         my_id = 'someid'
         provided_policy_rule_sets = "prs1=true,prs2=true"
         consumed_policy_rule_sets = "prs3=true,prs4=true"
+        external_segments = "ES1 ES2"
         shared = 'True'
         args = ['--name', name,
                 '--description', description,
                 '--provided-policy-rule-sets', provided_policy_rule_sets,
                 '--consumed-policy-rule-sets', consumed_policy_rule_sets,
+                '--external-segments', external_segments,
                 '--shared', shared,
                 my_id]
         params = {
@@ -111,6 +117,7 @@ class CLITestV20ExternalPolicyJSON(test_cli20.CLITestV20Base):
             'description': description,
             'provided_policy_rule_sets': {'prs1': 'true', 'prs2': 'true'},
             'consumed_policy_rule_sets': {'prs3': 'true', 'prs4': 'true'},
+            'external_segments': ['ES1', 'ES2'],
             'shared': True
         }
         self._test_update_resource(resource, cmd, my_id, args, params)
