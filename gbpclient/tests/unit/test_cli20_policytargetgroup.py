@@ -138,6 +138,34 @@ class CLITestV20PolicyTargetGroupJSON(test_cli20.CLITestV20Base):
         }
         self._test_update_resource(resource, cmd, my_id, args, params)
 
+    def test_update_policy_target_group_unset_prs(self):
+        """policy-target-group-update."""
+        resource = 'policy_target_group'
+        cmd = gbp.UpdatePolicyTargetGroup(test_cli20.MyApp(sys.stdout), None)
+        my_id = 'my-id'
+        provided_prs = ""
+        consumed_prs = ""
+        args = [my_id,
+                '--provided-policy-rule-sets', provided_prs,
+                '--consumed-policy-rule-sets', consumed_prs
+                ]
+        params = {
+            'provided_policy_rule_sets': {},
+            'consumed_policy_rule_sets': {}
+        }
+        self._test_update_resource(resource, cmd, my_id, args, params)
+
+    def test_update_policy_target_group_unset_nsp(self):
+        """policy-target-group-update."""
+        resource = 'policy_target_group'
+        cmd = gbp.UpdatePolicyTargetGroup(test_cli20.MyApp(sys.stdout), None)
+        my_id = 'my-id'
+        network_service_policy_id = ''
+        args = [my_id,
+                '--network-service-policy', network_service_policy_id]
+        params = {'network_service_policy_id': None}
+        self._test_update_resource(resource, cmd, my_id, args, params)
+
     def test_delete_policy_target_group_name(self):
         """policy-target-group-delete."""
         resource = 'policy_target_group'

@@ -12,7 +12,6 @@
 #
 
 import logging
-import string
 
 from neutronclient.i18n import _
 from neutronclient.neutron import v2_0 as neutronV20
@@ -171,18 +170,20 @@ class CreatePolicyTargetGroup(neutronV20.CreateCommand):
         parser.add_argument(
             '--provided-policy-rule-sets', type=utils.str2dict,
             # default={},
-            help=_('Dictionary of provided policy rule set uuids'))
+            help=_('Comma separated list of policy rule set uuids. To '
+                   'unset use ""'))
         parser.add_argument(
             '--consumed-policy-rule-sets', type=utils.str2dict,
             # default={},
-            help=_('Dictionary of consumed policy rule set uuids'))
+            help=_('Comma separated list of policy rule set uuids. To '
+                   'unset use ""'))
         parser.add_argument(
             '--network-service-policy', metavar='NETWORK_SERVICE_POLICY',
             default='',
             help=_('Network service policy uuid'))
         parser.add_argument(
-            '--subnets', type=string.split,
-            help=_('List of neutron subnet uuids'))
+            '--subnets', type=utils.str2list,
+            help=_('Comma separated list of neutron subnet uuids'))
         parser.add_argument(
             '--shared', type=bool,
             help=_('Shared flag'))
@@ -251,13 +252,16 @@ class UpdatePolicyTargetGroup(neutronV20.UpdateCommand):
             help=_('Network Service Policy uuid'))
         parser.add_argument(
             '--provided-policy-rule-sets', type=utils.str2dict,
-            help=_('Dictionary of provided policy rule set uuids'))
+            help=_('Comma separated list of policy rule set uuids. To '
+                   'unset use ""'))
         parser.add_argument(
             '--consumed-policy-rule-sets', type=utils.str2dict,
-            help=_('Dictionary of consumed policy rule set uuids'))
+            help=_('Comma separated list of policy rule set uuids. To '
+                   'unset use ""'))
         parser.add_argument(
-            '--subnets', type=string.split,
-            help=_('List of neutron subnet uuids'))
+            '--subnets', type=utils.str2list,
+            help=_('Comma separated list of neutron subnet uuids. To unset '
+                   ' use ""'))
         parser.add_argument(
             '--shared', type=bool,
             help=_('Shared flag'))
@@ -271,7 +275,9 @@ class UpdatePolicyTargetGroup(neutronV20.UpdateCommand):
                     self.get_client(), 'l2_policy',
                     parsed_args.l2_policy)
 
-        if parsed_args.network_service_policy:
+        if parsed_args.network_service_policy == '':
+            body[self.resource]['network_service_policy_id'] = None
+        elif parsed_args.network_service_policy:
             body[self.resource]['network_service_policy_id'] = \
                 neutronV20.find_resourceid_by_name_or_id(
                     self.get_client(), 'network_service_policy',
@@ -447,7 +453,9 @@ class CreateL3Policy(neutronV20.CreateCommand):
         parser.add_argument(
             '--external-segment',
             action='append', dest='external_segments', type=utils.str2dict,
-            help=_('Use format <ext-segment-id-1>=<ip-addr1:ipaddr2:...>'
+            help=_('Use format: <ext-segment-id-1>=<ip-addr1:ipaddr2:...> '
+                   'If no IP addresses are to be provided, just provide '
+                   ' External Segment ID '
                    '(this option can be repeated)'))
         parser.add_argument(
             'name', metavar='NAME',
@@ -465,7 +473,11 @@ class CreateL3Policy(neutronV20.CreateCommand):
                 external_segment_id = neutronV20.find_resourceid_by_name_or_id(
                     self.get_client(), 'external_segment',
                     external_segment.keys()[0])
-                ipaddrs = external_segment.itervalues().next().split(':')
+                ipaddrs = external_segment.itervalues().next()
+                if ipaddrs is "":
+                    ipaddrs = []
+                else:
+                    ipaddrs = external_segment.itervalues().next().split(':')
                 external_segments_dict[external_segment_id] = ipaddrs
 
             body[self.resource]['external_segments'] = external_segments_dict
@@ -509,7 +521,9 @@ class UpdateL3Policy(neutronV20.UpdateCommand):
         parser.add_argument(
             '--external-segment',
             action='append', dest='external_segments', type=utils.str2dict,
-            help=_('Use format <ext-segment-id-1>=<ip-addr1:ipaddr2:...>'
+            help=_('Use format: <ext-segment-id-1>=<ip-addr1:ipaddr2:...> '
+                   'If no IP addresses are to be provided, just provide '
+                   ' External Segment ID '
                    '(this option can be repeated)'))
         parser.add_argument(
             '--name', metavar='NAME',
@@ -529,7 +543,11 @@ class UpdateL3Policy(neutronV20.UpdateCommand):
                 external_segment_id = neutronV20.find_resourceid_by_name_or_id(
                     self.get_client(), 'external_segment',
                     external_segment.keys()[0])
-                ipaddrs = external_segment.itervalues().next().split(':')
+                ipaddrs = external_segment.itervalues().next()
+                if ipaddrs is "":
+                    ipaddrs = []
+                else:
+                    ipaddrs = external_segment.itervalues().next().split(':')
                 external_segments_dict[external_segment_id] = ipaddrs
 
             body[self.resource]['external_segments'] = external_segments_dict
@@ -872,8 +890,8 @@ class CreatePolicyRule(neutronV20.CreateCommand):
             '--classifier',
             help=_('uuid of policy classifier'))
         parser.add_argument(
-            '--actions', type=string.split,
-            help=_('List of policy actions'))
+            '--actions', type=utils.str2list,
+            help=_('Comma separated list of policy actions'))
         parser.add_argument(
             'name', metavar='NAME',
             help=_('Name of policy_rule to create'))
@@ -926,8 +944,8 @@ class UpdatePolicyRule(neutronV20.UpdateCommand):
             '--classifier',
             help=_('uuid of policy classifier'))
         parser.add_argument(
-            '--actions', type=string.split,
-            help=_('List of policy actions'))
+            '--actions', type=utils.str2list,
+            help=_('Comma separated list of policy actions. To unset use ""'))
         parser.add_argument(
             '--shared', type=bool,
             help=_('Shared flag'))
@@ -935,7 +953,9 @@ class UpdatePolicyRule(neutronV20.UpdateCommand):
     def args2body(self, parsed_args):
         body = {self.resource: {}, }
 
-        if parsed_args.actions:
+        if parsed_args.actions == []:
+            body[self.resource]['policy_actions'] = []
+        elif parsed_args.actions:
             body[self.resource]['policy_actions'] = [
                 neutronV20.find_resourceid_by_name_or_id(
                     self.get_client(),
@@ -984,11 +1004,11 @@ class CreatePolicyRuleSet(neutronV20.CreateCommand):
             '--description',
             help=_('Description of the policy rule set'))
         parser.add_argument(
-            '--policy-rules', type=string.split,
-            help=_('List of policy rules'))
+            '--policy-rules', type=utils.str2list,
+            help=_('Comma separated list of policy rules'))
         parser.add_argument(
-            '--child-policy-rule-sets', type=string.split,
-            help=_('List of child policy rule sets'))
+            '--child-policy-rule-sets', type=utils.str2list,
+            help=_('Comma separated list of child policy rule sets'))
         parser.add_argument(
             'name', metavar='NAME',
             help=_('Name of policy rule set to create'))
@@ -1033,36 +1053,37 @@ class UpdatePolicyRuleSet(neutronV20.UpdateCommand):
 
     def add_known_arguments(self, parser):
         parser.add_argument(
-            '--policy-rules', type=string.split,
-            help=_('List of policy rules'))
+            '--policy-rules', type=utils.str2list,
+            help=_('Comma separated list of policy rules. To unset use ""'))
         parser.add_argument(
-            '--child-policy-rule-sets', type=string.split,
-            help=_('List of child policy rule sets'))
+            '--child-policy-rule-sets', type=utils.str2list,
+            help=_('Comma separated list of child policy rule sets. To unset '
+                   'use ""'))
         parser.add_argument(
             '--shared', type=bool,
             help=_('Shared flag'))
 
     def args2body(self, parsed_args):
         body = {self.resource: {}, }
-        if parsed_args.policy_rules:
+        if parsed_args.policy_rules == []:
+            body[self.resource]['policy_rules'] = []
+        elif parsed_args.policy_rules:
             body[self.resource]['policy_rules'] = [
                 neutronV20.find_resourceid_by_name_or_id(
                     self.get_client(),
                     'policy_rule',
                     elem) for elem in parsed_args.policy_rules]
-            parsed_args.policy_rules = body[self.resource]['policy_rules']
 
-        if parsed_args.child_policy_rule_sets:
+        if parsed_args.child_policy_rule_sets == []:
+            body[self.resource]['child_policy_rule_sets'] = []
+        elif parsed_args.child_policy_rule_sets:
             body[self.resource]['child_policy_rule_sets'] = [
                 neutronV20.find_resourceid_by_name_or_id(
                     self.get_client(),
                     'policy_rule_set',
                     elem) for elem in parsed_args.child_policy_rule_sets]
-            parsed_args.child_policy_rule_sets = (
-                parsed_args.child_policy_rule_sets)
         neutronV20.update_dict(parsed_args, body[self.resource],
-                               ['name', 'description', 'policy_rules',
-                                'child_policy_rule_sets', 'shared'])
+                               ['name', 'description', 'shared'])
         return body
 
 
@@ -1097,7 +1118,7 @@ class CreateExternalPolicy(neutronV20.CreateCommand):
             'name', metavar='NAME',
             help=_('Name of External Policy to create'))
         parser.add_argument(
-            '--external-segments', type=string.split,
+            '--external-segments', type=utils.str2list,
             help=_('List of External Segment uuids'))
         parser.add_argument(
             '--provided-policy-rule-sets', type=utils.str2dict,
@@ -1164,8 +1185,8 @@ class UpdateExternalPolicy(neutronV20.UpdateCommand):
             '--name',
             help=_('New name of the External Policy'))
         parser.add_argument(
-            '--external-segments', type=string.split,
-            help=_('List of External Segment uuids'))
+            '--external-segments', type=utils.str2list,
+            help=_('List of External Segment uuids. To unset use ""'))
         parser.add_argument(
             '--provided-policy-rule-sets', type=utils.str2dict,
             help=_('Dictionary of provided policy rule set uuids'))
@@ -1195,7 +1216,9 @@ class UpdateExternalPolicy(neutronV20.UpdateCommand):
                 parsed_args.consumed_policy_rule_sets[id_key] = (
                     parsed_args.consumed_policy_rule_sets.pop(key))
 
-        if parsed_args.external_segments:
+        if parsed_args.external_segments == []:
+            body[self.resource]['external_segments'] = []
+        elif parsed_args.external_segments:
             body[self.resource]['external_segments'] = [
                 neutronV20.find_resourceid_by_name_or_id(
                     self.get_client(),
@@ -1252,7 +1275,8 @@ class CreateExternalSegment(neutronV20.CreateCommand):
         parser.add_argument(
             '--external-route', metavar='destination=CIDR,nexthop=IP_ADDR',
             action='append', dest='external_routes', type=utils.str2dict,
-            help=_('External route (This option can be repeated).'))
+            help=_('If no nexthop, use format: destination=CIDR,nexthop '
+                   '(This option can be repeated)'))
         parser.add_argument(
             '--port-address-translation', type=bool,
             help=_('Perform port-based address translation, default is False'))
@@ -1264,14 +1288,18 @@ class CreateExternalSegment(neutronV20.CreateCommand):
         body = {self.resource: {}, }
 
         if parsed_args.external_routes:
-            body['external_segment']['external_routes'] = (
-                parsed_args.external_routes)
+            eroutes = []
+            for er in parsed_args.external_routes:
+                if 'nexthop' in er and er['nexthop'] == '':
+                    er['nexthop'] = None
+                if er:
+                    eroutes.append(er)
+            body['external_segment']['external_routes'] = eroutes
 
         neutronV20.update_dict(parsed_args, body[self.resource],
                                ['name', 'tenant_id', 'description',
                                 'ip_version', 'cidr',
-                                'external_routes', 'port_address_translation',
-                                'shared'])
+                                'port_address_translation', 'shared'])
 
         return body
 
@@ -1306,7 +1334,9 @@ class UpdateExternalSegment(neutronV20.UpdateCommand):
         parser.add_argument(
             '--external-route', metavar='destination=CIDR,nexthop=IP_ADDR',
             action='append', dest='external_routes', type=utils.str2dict,
-            help=_('External route (This option can be repeated).'))
+            help=_('If no nexthop, use format: destination=CIDR,nexthop '
+                   'To unset use "" '
+                   '(This option can be repeated)'))
         parser.add_argument(
             '--port-address-translation', type=bool,
             help=_('Perform port-based address translation, default is False'))
@@ -1317,15 +1347,21 @@ class UpdateExternalSegment(neutronV20.UpdateCommand):
     def args2body(self, parsed_args):
         body = {self.resource: {}, }
 
-        if parsed_args.external_routes:
-            body['external_segment']['external_routes'] = (
-                parsed_args.external_routes)
+        if parsed_args.external_routes == [{}]:
+            body[self.resource]['external_routes'] = []
+        elif parsed_args.external_routes:
+            eroutes = []
+            for er in parsed_args.external_routes:
+                if 'nexthop' in er and er['nexthop'] == '':
+                    er['nexthop'] = None
+                if er:
+                    eroutes.append(er)
+            body[self.resource]['external_routes'] = eroutes
 
         neutronV20.update_dict(parsed_args, body[self.resource],
                                ['name', 'tenant_id', 'description',
                                 'ip_version', 'cidr',
-                                'external_routes', 'port_address_translation',
-                                'shared'])
+                                'port_address_translation', 'shared'])
 
         return body
 
