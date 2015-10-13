@@ -50,7 +50,7 @@ class CLITestV20ExternalPolicyJSON(test_cli20.CLITestV20Base):
         my_id = 'someid'
         provided_policy_rule_sets = "prs1=true,prs2=true"
         consumed_policy_rule_sets = "prs3=true,prs4=true"
-        external_segments = "ES1 ES2"
+        external_segments = "ES1,ES2"
         shared = 'True'
         args = ['--tenant-id', tenant_id,
                 '--description', description,
@@ -103,7 +103,7 @@ class CLITestV20ExternalPolicyJSON(test_cli20.CLITestV20Base):
         my_id = 'someid'
         provided_policy_rule_sets = "prs1=true,prs2=true"
         consumed_policy_rule_sets = "prs3=true,prs4=true"
-        external_segments = "ES1 ES2"
+        external_segments = "ES1,ES2"
         shared = 'True'
         args = ['--name', name,
                 '--description', description,
@@ -119,6 +119,30 @@ class CLITestV20ExternalPolicyJSON(test_cli20.CLITestV20Base):
             'consumed_policy_rule_sets': {'prs3': 'true', 'prs4': 'true'},
             'external_segments': ['ES1', 'ES2'],
             'shared': True
+        }
+        self._test_update_resource(resource, cmd, my_id, args, params)
+
+    def test_update_external_policy_unset_external_segment(self):
+        resource = 'external_policy'
+        cmd = gbp.UpdateExternalPolicy(test_cli20.MyApp(sys.stdout), None)
+        my_id = 'someid'
+        external_segments = ""
+        args = ['--external-segments', external_segments, my_id]
+        params = {'external_segments': []}
+        self._test_update_resource(resource, cmd, my_id, args, params)
+
+    def test_update_external_policy_unset_prs(self):
+        resource = 'external_policy'
+        cmd = gbp.UpdateExternalPolicy(test_cli20.MyApp(sys.stdout), None)
+        my_id = 'someid'
+        provided_policy_rule_sets = ""
+        consumed_policy_rule_sets = ""
+        args = ['--provided-policy-rule-sets', provided_policy_rule_sets,
+                '--consumed-policy-rule-sets', consumed_policy_rule_sets,
+                my_id]
+        params = {
+            'provided_policy_rule_sets': {},
+            'consumed_policy_rule_sets': {},
         }
         self._test_update_resource(resource, cmd, my_id, args, params)
 

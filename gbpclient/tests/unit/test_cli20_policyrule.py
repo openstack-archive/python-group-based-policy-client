@@ -47,7 +47,7 @@ class CLITestV20PolicyRuleJSON(test_cli20.CLITestV20Base):
         enabled = True
         policy_classifier_id = 'pc-id'
         policy_actions_res = ["pa1", "pa2"]
-        policy_actions_arg = "pa1 pa2"
+        policy_actions_arg = "pa1,pa2"
         shared = 'True'
         args = ['--tenant-id', tenant_id,
                 '--description', description,
@@ -124,7 +124,7 @@ class CLITestV20PolicyRuleJSON(test_cli20.CLITestV20Base):
         enabled = True
         policy_classifier_id = 'pc-id'
         policy_actions_res = ["pa1", "pa2"]
-        policy_actions_arg = "pa1 pa2"
+        policy_actions_arg = "pa1,pa2"
         my_id = 'someid'
         shared = 'True'
         cmd = gbp.UpdatePolicyRule(test_cli20.MyApp(sys.stdout), None)
@@ -139,6 +139,16 @@ class CLITestV20PolicyRuleJSON(test_cli20.CLITestV20Base):
                 '--classifier', policy_classifier_id,
                 '--actions', policy_actions_arg,
                 '--shared', shared, ]
+        self._test_update_resource(resource, cmd, my_id, args, body)
+
+    def test_update_policy_rule_unset_actions(self):
+        resource = 'policy_rule'
+        policy_actions_res = []
+        policy_actions_arg = ""
+        my_id = 'someid'
+        cmd = gbp.UpdatePolicyRule(test_cli20.MyApp(sys.stdout), None)
+        body = {'policy_actions': policy_actions_res}
+        args = [my_id, '--actions', policy_actions_arg]
         self._test_update_resource(resource, cmd, my_id, args, body)
 
     def test_delete_policy_classifier(self):

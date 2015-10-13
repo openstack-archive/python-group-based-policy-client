@@ -75,6 +75,26 @@ class CLITestV20ExternalSegmentJSON(test_cli20.CLITestV20Base):
                                    port_address_translation=True,
                                    shared=True)
 
+    def test_create_external_segment_with_external_route_no_nexthop(self):
+        """external-segment-create with all params."""
+        resource = 'external_segment'
+        cmd = gbp.CreateExternalSegment(test_cli20.MyApp(sys.stdout), None)
+        name = 'myname'
+        tenant_id = 'mytenant'
+        my_id = 'someid'
+        external_route = 'destination=172.16.1.0/24,nexthop'
+        expected_external_routes = [{'destination': '172.16.1.0/24', 'nexthop':
+                                     None}]
+        args = ['--tenant-id', tenant_id,
+                '--external-route', external_route,
+                name]
+        position_names = ['name', ]
+        position_values = [name, ]
+        self._test_create_resource(resource, cmd, name, my_id, args,
+                                   position_names, position_values,
+                                   tenant_id=tenant_id,
+                                   external_routes=expected_external_routes)
+
     def test_list_external_segments(self):
         """external-segment-list."""
         resource = 'external_segments'
@@ -126,6 +146,33 @@ class CLITestV20ExternalSegmentJSON(test_cli20.CLITestV20Base):
             'external_routes': expected_external_routes,
             'port_address_translation': True,
             'shared': True
+        }
+        self._test_update_resource(resource, cmd, my_id, args, params)
+
+    def test_update_external_segment_with_external_route_no_nexthop(self):
+        resource = 'external_segment'
+        cmd = gbp.UpdateExternalSegment(test_cli20.MyApp(sys.stdout), None)
+        my_id = 'someid'
+        external_route = 'destination=172.16.1.0/24,nexthop'
+        expected_external_routes = [{'destination': '172.16.1.0/24', 'nexthop':
+                                    None}]
+        args = ['--external-route', external_route,
+                my_id]
+        params = {
+            'external_routes': expected_external_routes,
+        }
+        self._test_update_resource(resource, cmd, my_id, args, params)
+
+    def test_update_external_segment_with_unset_external_route(self):
+        resource = 'external_segment'
+        cmd = gbp.UpdateExternalSegment(test_cli20.MyApp(sys.stdout), None)
+        my_id = 'someid'
+        external_route = ''
+        expected_external_routes = []
+        args = ['--external-route', external_route,
+                my_id]
+        params = {
+            'external_routes': expected_external_routes,
         }
         self._test_update_resource(resource, cmd, my_id, args, params)
 
