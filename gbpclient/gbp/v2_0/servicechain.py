@@ -17,12 +17,13 @@
 import json
 import logging
 import os
-import string
 
 from heatclient.common import template_utils
 
 from neutronclient.common import exceptions as exc
 from neutronclient.neutron import v2_0 as neutronV20
+
+from gbpclient.common import utils
 
 
 try:
@@ -95,8 +96,7 @@ class CreateServiceChainInstance(neutronV20.CreateCommand):
                     parsed_args.consumer_ptg)
         neutronV20.update_dict(parsed_args, body[self.resource],
                                ['name', 'tenant_id', 'description',
-                                'servicechain_spec', 'provider_ptg',
-                                'consumer_ptg', 'param_values'])
+                                'param_values'])
         return body
 
 
@@ -139,9 +139,7 @@ class UpdateServiceChainInstance(neutronV20.UpdateCommand):
                     self.get_client(), 'policy_target_group',
                     parsed_args.consumer_ptg)
         neutronV20.update_dict(parsed_args, body[self.resource],
-                               ['name', 'description',
-                                'servicechain_spec', 'provider_ptg',
-                                'consumer_ptg', 'param_values'])
+                               ['name', 'description', 'param_values'])
         return body
 
 
@@ -399,8 +397,8 @@ class CreateServiceChainSpec(neutronV20.CreateCommand):
             '--description',
             help=_('Description of the Service Chain Specification.'))
         parser.add_argument(
-            '--nodes', metavar='NODES', type=string.split,
-            help=_('Service Chain Node ID or name of the Service Chain Node'))
+            '--nodes', metavar='NODES', type=utils.str2list,
+            help=_('Comma separated list of Service Chain Nodes'))
         parser.add_argument(
             '--shared', type=bool,
             help=_('Shared flag'))
@@ -428,16 +426,19 @@ class UpdateServiceChainSpec(neutronV20.UpdateCommand):
 
     def add_known_arguments(self, parser):
         parser.add_argument(
-            '--nodes', type=string.split,
-            help=_('List of Service Chain Node IDs or names of the Service '
-                   'Chain Nodes'))
+            '--nodes', type=utils.str2list,
+            help=_('New comma separated list of Service Chain Nodes '
+                   '(to unset use "")'))
         parser.add_argument(
             '--shared', type=bool,
             help=_('Shared flag'))
 
     def args2body(self, parsed_args):
         body = {self.resource: {}, }
-        if parsed_args.nodes:
+
+        if parsed_args.nodes == []:
+            body[self.resource]['nodes'] = []
+        elif parsed_args.nodes:
             body[self.resource]['nodes'] = [
                 neutronV20.find_resourceid_by_name_or_id(
                     self.get_client(),
