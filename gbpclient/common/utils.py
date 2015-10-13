@@ -12,6 +12,9 @@
 #
 
 
+import re
+
+
 def str2dict(strdict):
     """Convert key1=value1,key2=value2,... string into dictionary.
 
@@ -29,3 +32,16 @@ def str2dict(strdict):
         return {}
     return dict([kv.split('=', 1) if '=' in kv else [kv, ""]
                  for kv in strdict.split(',')])
+
+
+def str2list(strlist):
+    """Convert key1,key2,... string into list.
+
+    :param strlist: key1,key2
+    strlist can be comma or space separated.
+    """
+    if strlist is not None:
+        strlist = strlist.strip(', ')
+    if not strlist:
+        return []
+    return re.split("[, ]+", strlist)

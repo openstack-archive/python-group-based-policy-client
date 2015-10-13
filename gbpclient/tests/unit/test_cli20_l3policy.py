@@ -73,6 +73,26 @@ class CLITestV20L3PolicyJSON(test_cli20.CLITestV20Base):
                                    external_segments=
                                    expected_external_segments, shared=True)
 
+    def test_create_l3_policy_with_external_segment(self):
+        """l3-policy-create with all params."""
+        resource = 'l3_policy'
+        cmd = gbp.CreateL3Policy(test_cli20.MyApp(sys.stdout), None)
+        name = 'name'
+        tenant_id = 'mytenant'
+        my_id = 'someid'
+        external_segment = 'seg_uuid1'
+        expected_external_segments = {'seg_uuid1': []}
+        args = ['--tenant-id', tenant_id,
+                '--external-segment', external_segment,
+                name]
+        position_names = ['name', ]
+        position_values = [name, ]
+        self._test_create_resource(resource, cmd, name, my_id, args,
+                                   position_names, position_values,
+                                   tenant_id=tenant_id,
+                                   external_segments=
+                                   expected_external_segments)
+
     def test_list_l3_policies(self):
         resource = 'l3_policies'
         cmd = gbp.ListL3Policy(test_cli20.MyApp(sys.stdout), None)
