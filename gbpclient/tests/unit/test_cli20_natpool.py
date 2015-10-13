@@ -98,22 +98,16 @@ class CLITestV20NatPoolJSON(test_cli20.CLITestV20Base):
         name = 'myname'
         description = 'My Nat Pool'
         my_id = 'someid'
-        ip_version = '4'
-        ip_pool = '192.168.0.0/24'
         external_segment_id = "segmentid"
         shared = 'True'
         args = ['--name', name,
                 '--description', description,
-                '--ip-version', ip_version,
-                '--ip-pool', ip_pool,
                 '--external-segment', external_segment_id,
                 '--shared', shared,
                 my_id]
         params = {
             'name': name,
             'description': description,
-            'ip_version': 4,
-            'ip_pool': ip_pool,
             'external_segment_id': external_segment_id,
             'shared': True
         }

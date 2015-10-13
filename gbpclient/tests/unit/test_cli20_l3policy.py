@@ -52,6 +52,7 @@ class CLITestV20L3PolicyJSON(test_cli20.CLITestV20Base):
         subnet_prefix_length = '24'
         external_segment = 'seg_uuid1=1.1.1.0:2.2.2.0'
         expected_external_segments = {'seg_uuid1': ['1.1.1.0', '2.2.2.0']}
+        routers = 'uuid1,uuid2'
         shared = 'True'
         args = ['--tenant-id', tenant_id,
                 '--description', description,
@@ -59,6 +60,7 @@ class CLITestV20L3PolicyJSON(test_cli20.CLITestV20Base):
                 '--ip-pool', ip_pool,
                 '--subnet-prefix-length', subnet_prefix_length,
                 '--external-segment', external_segment,
+                '--routers', routers,
                 '--shared', shared,
                 name]
         position_names = ['name', ]
@@ -70,8 +72,29 @@ class CLITestV20L3PolicyJSON(test_cli20.CLITestV20Base):
                                    ip_version=4,
                                    ip_pool=ip_pool,
                                    subnet_prefix_length=24,
+                                   routers=routers,
                                    external_segments=
                                    expected_external_segments, shared=True)
+
+    def test_create_l3_policy_with_external_segment(self):
+        """l3-policy-create with all params."""
+        resource = 'l3_policy'
+        cmd = gbp.CreateL3Policy(test_cli20.MyApp(sys.stdout), None)
+        name = 'name'
+        tenant_id = 'mytenant'
+        my_id = 'someid'
+        external_segment = 'seg_uuid1'
+        expected_external_segments = {'seg_uuid1': []}
+        args = ['--tenant-id', tenant_id,
+                '--external-segment', external_segment,
+                name]
+        position_names = ['name', ]
+        position_values = [name, ]
+        self._test_create_resource(resource, cmd, name, my_id, args,
+                                   position_names, position_values,
+                                   tenant_id=tenant_id,
+                                   external_segments=
+                                   expected_external_segments)
 
     def test_list_l3_policies(self):
         resource = 'l3_policies'
@@ -98,27 +121,24 @@ class CLITestV20L3PolicyJSON(test_cli20.CLITestV20Base):
         name = 'myname'
         description = 'My L3 Policy'
         my_id = 'someid'
-        ip_version = '4'
-        ip_pool = '172.16.0.0/12'
         subnet_prefix_length = '24'
         external_segment = 'seg_uuid1=1.1.1.0:2.2.2.0'
         expected_external_segments = {'seg_uuid1': ['1.1.1.0', '2.2.2.0']}
         shared = 'True'
+        routers = 'uuid1,uuid2'
         args = ['--name', name,
                 '--description', description,
-                '--ip-version', ip_version,
-                '--ip-pool', ip_pool,
                 '--subnet-prefix-length', subnet_prefix_length,
                 '--external-segment', external_segment,
+                '--routers', routers,
                 '--shared', shared,
                 my_id]
         params = {
             'name': name,
             'description': description,
-            'ip_version': 4,
-            'ip_pool': ip_pool,
             'subnet_prefix_length': 24,
             'external_segments': expected_external_segments,
+            'routers': routers,
             'shared': True
         }
         self._test_update_resource(resource, cmd, my_id, args, params)
@@ -129,25 +149,31 @@ class CLITestV20L3PolicyJSON(test_cli20.CLITestV20Base):
         name = 'myname'
         description = 'My L3 Policy'
         my_id = 'someid'
-        ip_version = '4'
-        ip_pool = '172.16.0.0/12'
         subnet_prefix_length = '24'
         external_segment = ''
         expected_external_segments = {}
         args = ['--name', name,
                 '--description', description,
-                '--ip-version', ip_version,
-                '--ip-pool', ip_pool,
                 '--subnet-prefix-length', subnet_prefix_length,
                 '--external-segment', external_segment,
                 my_id]
         params = {
             'name': name,
             'description': description,
-            'ip_version': 4,
-            'ip_pool': ip_pool,
             'subnet_prefix_length': 24,
             'external_segments': expected_external_segments,
+        }
+        self._test_update_resource(resource, cmd, my_id, args, params)
+
+    def test_update_l3_policy_unset_routers(self):
+        resource = 'l3_policy'
+        cmd = gbp.UpdateL3Policy(test_cli20.MyApp(sys.stdout), None)
+        my_id = 'someid'
+        routers = ''
+        args = ['--routers', routers,
+                my_id]
+        params = {
+            'routers': routers,
         }
         self._test_update_resource(resource, cmd, my_id, args, params)
 
