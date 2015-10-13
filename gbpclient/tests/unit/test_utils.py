@@ -37,3 +37,43 @@ class TestUtils(testtools.TestCase):
         input_str = None
         expected = {}
         self.assertEqual(expected, utils.str2dict(input_str))
+
+    def test_string_to_list(self):
+        input_str = 'key1'
+        expected = ['key1']
+        self.assertEqual(expected, utils.str2list(input_str))
+        input_str = 'key1, key2'
+        expected = ['key1', 'key2']
+        self.assertEqual(expected, utils.str2list(input_str))
+        input_str = 'key1,key2'
+        expected = ['key1', 'key2']
+        self.assertEqual(expected, utils.str2list(input_str))
+        input_str = 'key1,key2,'
+        expected = ['key1', 'key2']
+        self.assertEqual(expected, utils.str2list(input_str))
+        input_str = 'key1,key2,'
+        expected = ['key1', 'key2']
+        self.assertEqual(expected, utils.str2list(input_str))
+        input_str = ',key1,key2 '
+        expected = ['key1', 'key2']
+        self.assertEqual(expected, utils.str2list(input_str))
+        input_str = 'key1 key2'
+        expected = ['key1', 'key2']
+        self.assertEqual(expected, utils.str2list(input_str))
+        input_str = ' key1 key2 '
+        expected = ['key1', 'key2']
+        self.assertEqual(expected, utils.str2list(input_str))
+        input_str = 'key1 key2, key3 '
+        expected = ['key1', 'key2', 'key3']
+        self.assertEqual(expected, utils.str2list(input_str))
+        input_str = ' , key1 key2, , key3 '
+        expected = ['key1', 'key2', 'key3']
+        self.assertEqual(expected, utils.str2list(input_str))
+
+    def test_none_string_to_list(self):
+        input_str = ''
+        expected = []
+        self.assertEqual(expected, utils.str2list(input_str))
+        input_str = None
+        expected = []
+        self.assertEqual(expected, utils.str2list(input_str))
