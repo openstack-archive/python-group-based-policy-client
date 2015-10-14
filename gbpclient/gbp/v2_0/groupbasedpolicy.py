@@ -14,11 +14,16 @@
 import logging
 import string
 
-from neutronclient.i18n import _
 from neutronclient.neutron import v2_0 as neutronV20
 from oslo.serialization import jsonutils
 
 from gbpclient.common import utils
+
+
+try:
+    from neutronclient.i18n import _
+except ImportError:
+    from neutronclient.openstack.common.gettextutils import _
 
 
 def _format_network_service_params(net_svc_policy):

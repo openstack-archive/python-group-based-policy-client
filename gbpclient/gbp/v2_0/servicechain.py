@@ -22,8 +22,13 @@ import string
 from heatclient.common import template_utils
 
 from neutronclient.common import exceptions as exc
-from neutronclient.i18n import _
 from neutronclient.neutron import v2_0 as neutronV20
+
+
+try:
+    from neutronclient.i18n import _
+except ImportError:
+    from neutronclient.openstack.common.gettextutils import _
 
 
 class ListServiceChainInstance(neutronV20.ListCommand):
