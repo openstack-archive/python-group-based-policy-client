@@ -20,9 +20,14 @@ from neutronclient.common import constants
 from neutronclient.common import exceptions
 from neutronclient.common import serializer
 from neutronclient.common import utils
-from neutronclient.i18n import _
 import requests
 import six.moves.urllib.parse as urlparse
+
+
+try:
+    from neutronclient.i18n import _
+except ImportError:
+    from neutronclient.openstack.common.gettextutils import _
 
 
 _logger = logging.getLogger(__name__)

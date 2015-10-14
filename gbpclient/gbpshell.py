@@ -27,7 +27,6 @@ from keystoneclient.auth.identity import v3 as v3_auth
 from keystoneclient import discover
 from keystoneclient.openstack.common.apiclient import exceptions as ks_exc
 from keystoneclient import session
-from oslo.utils import encodeutils
 import six.moves.urllib.parse as urlparse
 
 from cliff import app
@@ -35,11 +34,23 @@ from cliff import commandmanager
 from neutronclient.common import clientmanager
 from neutronclient.common import exceptions as exc
 from neutronclient.common import utils
-from neutronclient.i18n import _
 from neutronclient.version import __version__
 
 from gbpclient.gbp.v2_0 import groupbasedpolicy as gbp
 from gbpclient.gbp.v2_0 import servicechain
+
+
+try:
+    from oslo.utils import encodeutils
+except ImportError:
+    from neutronclient.openstack.common import strutils as encodeutils
+
+
+try:
+    from neutronclient.i18n import _
+except ImportError:
+    from neutronclient.openstack.common.gettextutils import _
+
 
 VERSION = '2.0'
 NEUTRON_API_VERSION = '2.0'
