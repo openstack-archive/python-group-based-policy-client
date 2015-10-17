@@ -1,4 +1,5 @@
 [gerrit]
 host=review.openstack.org
 port=29418
-project=stackforge/python-group-based-policy-client.git
+project=openstack/python-group-based-policy-client.git
+defaultbranch=stable/kilo
