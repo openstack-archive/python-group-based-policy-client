@@ -48,7 +48,7 @@ class CLITestV20L2PolicyJSON(test_cli20.CLITestV20Base):
         name = 'my-name'
         description = 'l2p description'
         l3_policy_id = 'l3p'
-        shared = 'True'
+        shared = 'true'
         args = [name,
                 '--tenant-id', tenant_id,
                 '--description', description,
@@ -58,7 +58,7 @@ class CLITestV20L2PolicyJSON(test_cli20.CLITestV20Base):
         position_values = [name, description, l3_policy_id]
         self._test_create_resource(resource, cmd, name, my_id, args,
                                    position_names, position_values,
-                                   tenant_id=tenant_id, shared=True)
+                                   tenant_id=tenant_id, shared=shared)
 
     def test_list_l2_policies(self):
         resource = 'l2_policies'
@@ -87,7 +87,7 @@ class CLITestV20L2PolicyJSON(test_cli20.CLITestV20Base):
         name = 'l2policy'
         description = 'l2policy description'
         l3_policy_id = 'l3p'
-        shared = 'True'
+        shared = 'true'
         args = [my_id,
                 '--name', name,
                 '--description', description,
@@ -97,7 +97,7 @@ class CLITestV20L2PolicyJSON(test_cli20.CLITestV20Base):
             'name': name,
             'description': description,
             'l3_policy_id': l3_policy_id,
-            'shared': True
+            'shared': shared
         }
         self._test_update_resource(resource, cmd, my_id, args, params)
 
