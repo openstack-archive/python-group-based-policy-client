@@ -51,7 +51,7 @@ class CLITestV20ExternalPolicyJSON(test_cli20.CLITestV20Base):
         provided_policy_rule_sets = "prs1=true,prs2=true"
         consumed_policy_rule_sets = "prs3=true,prs4=true"
         external_segments = "ES1,ES2"
-        shared = 'True'
+        shared = 'true'
         args = ['--tenant-id', tenant_id,
                 '--description', description,
                 '--provided-policy-rule-sets', provided_policy_rule_sets,
@@ -71,7 +71,7 @@ class CLITestV20ExternalPolicyJSON(test_cli20.CLITestV20Base):
                                    {'prs3': 'true', 'prs4': 'true'},
                                    external_segments=
                                    ['ES1', 'ES2'],
-                                   shared=True)
+                                   shared=shared)
 
     def test_list_external_policies(self):
         """external-policy-list."""
@@ -104,7 +104,7 @@ class CLITestV20ExternalPolicyJSON(test_cli20.CLITestV20Base):
         provided_policy_rule_sets = "prs1=true,prs2=true"
         consumed_policy_rule_sets = "prs3=true,prs4=true"
         external_segments = "ES1,ES2"
-        shared = 'True'
+        shared = 'true'
         args = ['--name', name,
                 '--description', description,
                 '--provided-policy-rule-sets', provided_policy_rule_sets,
@@ -118,7 +118,7 @@ class CLITestV20ExternalPolicyJSON(test_cli20.CLITestV20Base):
             'provided_policy_rule_sets': {'prs1': 'true', 'prs2': 'true'},
             'consumed_policy_rule_sets': {'prs3': 'true', 'prs4': 'true'},
             'external_segments': ['ES1', 'ES2'],
-            'shared': True
+            'shared': shared
         }
         self._test_update_resource(resource, cmd, my_id, args, params)
 
