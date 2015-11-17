@@ -21,6 +21,7 @@ import os
 from heatclient.common import template_utils
 
 from neutronclient.common import exceptions as exc
+from neutronclient.common import utils as n_utils
 from neutronclient.neutron import v2_0 as neutronV20
 
 from gbpclient.common import utils
@@ -181,8 +182,8 @@ class CreateServiceProfile(neutronV20.CreateCommand):
         parser.add_argument(
             '--description',
             help=_('Description of the Service Profile.'))
-        parser.add_argument(
-            '--shared', type=bool,
+        n_utils.add_boolean_argument(
+            parser, '--shared', dest='shared',
             help=_('Shared flag'))
         parser.add_argument(
             '--vendor',
@@ -219,8 +220,8 @@ class UpdateServiceProfile(neutronV20.UpdateCommand):
         parser.add_argument(
             '--description',
             help=_('Description of the Service Profile.'))
-        parser.add_argument(
-            '--shared', type=bool,
+        n_utils.add_boolean_argument(
+            parser, '--shared', dest='shared',
             help=_('Shared flag'))
         parser.add_argument(
             '--vendor',
@@ -291,8 +292,8 @@ class CreateServiceChainNode(neutronV20.CreateCommand):
         parser.add_argument(
             '--config',
             help=_('Service Configuration for the Service Chain Node.'))
-        parser.add_argument(
-            '--shared', type=bool,
+        n_utils.add_boolean_argument(
+            parser, '--shared', dest='shared',
             help=_('Shared flag'))
         parser.add_argument(
             '--template-file',
@@ -341,8 +342,8 @@ class UpdateServiceChainNode(neutronV20.UpdateCommand):
         parser.add_argument(
             '--config',
             help=_('Service Configuration for the Service Chain Node.'))
-        parser.add_argument(
-            '--shared', type=bool,
+        n_utils.add_boolean_argument(
+            parser, '--shared', dest='shared',
             help=_('Shared flag'))
 
     def args2body(self, parsed_args):
@@ -399,8 +400,8 @@ class CreateServiceChainSpec(neutronV20.CreateCommand):
         parser.add_argument(
             '--nodes', metavar='NODES', type=utils.str2list,
             help=_('Comma separated list of Service Chain Nodes'))
-        parser.add_argument(
-            '--shared', type=bool,
+        n_utils.add_boolean_argument(
+            parser, '--shared', dest='shared',
             help=_('Shared flag'))
 
     def args2body(self, parsed_args):
@@ -429,8 +430,8 @@ class UpdateServiceChainSpec(neutronV20.UpdateCommand):
             '--nodes', type=utils.str2list,
             help=_('New comma separated list of Service Chain Nodes '
                    '(to unset use "")'))
-        parser.add_argument(
-            '--shared', type=bool,
+        n_utils.add_boolean_argument(
+            parser, '--shared', dest='shared',
             help=_('Shared flag'))
 
     def args2body(self, parsed_args):

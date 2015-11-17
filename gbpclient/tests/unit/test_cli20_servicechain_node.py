@@ -51,7 +51,7 @@ class CLITestV20ServiceChainNodeJSON(test_cli20.CLITestV20Base):
         description = 'My Service Chain Node'
         service_profile_id = 'my-service-profile'
         my_id = 'my-id'
-        shared = 'True'
+        shared = 'true'
         args = ['--servicetype', service_type,
                 '--config', config,
                 '--tenant-id', tenant_id,
@@ -67,7 +67,7 @@ class CLITestV20ServiceChainNodeJSON(test_cli20.CLITestV20Base):
                                    tenant_id=tenant_id,
                                    description=description,
                                    service_profile_id=service_profile_id,
-                                   shared=True)
+                                   shared=shared)
 
     def test_list_servicechain_nodes(self):
         """service-chain-node-list."""
@@ -132,16 +132,17 @@ class CLITestV20ServiceChainNodeJSON(test_cli20.CLITestV20Base):
         resource = 'servicechain_node'
         cmd = servicechain.UpdateServiceChainNode(test_cli20.MyApp(sys.stdout),
                                                   None)
+        shared = 'true'
         body = {
             'name': 'new_name',
             'description': 'new_description',
             'service_profile_id': 'new_service_profile_id',
-            'shared': True,
+            'shared': shared,
         }
         args = ['myid', '--name', 'new_name',
                 '--description', 'new_description',
                 '--service-profile', 'new_service_profile_id',
-                '--shared', 'True']
+                '--shared', shared]
         self._test_update_resource(resource, cmd, 'myid', args, body)
 
     # REVISIT(rkukura): Not sure why the following two methods are
