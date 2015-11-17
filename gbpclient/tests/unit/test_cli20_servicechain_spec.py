@@ -50,7 +50,7 @@ class CLITestV20ServiceChainSpecJSON(test_cli20.CLITestV20Base):
         tenant_id = 'my-tenant'
         description = 'My Service Chain Spec'
         my_id = 'my-id'
-        shared = 'True'
+        shared = 'true'
         args = ['--nodes', nodes_arg,
                 '--tenant-id', tenant_id,
                 '--description', description,
@@ -61,7 +61,7 @@ class CLITestV20ServiceChainSpecJSON(test_cli20.CLITestV20Base):
         self._test_create_resource(resource, cmd, name, my_id, args,
                                    position_names, position_values,
                                    nodes=nodes_res, tenant_id=tenant_id,
-                                   description=description, shared=True)
+                                   description=description, shared=shared)
 
     def test_list_servicechain_specs(self):
         """service-chain-spec-list."""
@@ -126,18 +126,19 @@ class CLITestV20ServiceChainSpecJSON(test_cli20.CLITestV20Base):
         resource = 'servicechain_spec'
         cmd = servicechain.UpdateServiceChainSpec(test_cli20.MyApp(sys.stdout),
                                                   None)
+        shared = 'true'
         nodes_arg = 'node1,node2'
         nodes_res = ['node1', 'node2']
         body = {
             'name': 'new_name',
             'description': 'new_description',
             'nodes': nodes_res,
-            'shared': True,
+            'shared': shared
         }
         args = ['myid', '--name', 'new_name',
                 '--description', 'new_description',
                 '--nodes', nodes_arg,
-                '--shared', 'True']
+                '--shared', shared]
         self._test_update_resource(resource, cmd, 'myid', args, body)
 
     def test_update_servicechain_node_unset_nodes(self):

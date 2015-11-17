@@ -51,7 +51,7 @@ class CLITestV20NatPoolJSON(test_cli20.CLITestV20Base):
         ip_version = '4'
         ip_pool = '192.168.0.0/24'
         external_segment_id = "segmentid"
-        shared = 'True'
+        shared = 'true'
         args = ['--tenant-id', tenant_id,
                 '--description', description,
                 '--ip-version', ip_version,
@@ -68,7 +68,7 @@ class CLITestV20NatPoolJSON(test_cli20.CLITestV20Base):
                                    ip_version=4,
                                    ip_pool=ip_pool,
                                    external_segment_id=external_segment_id,
-                                   shared=True)
+                                   shared=shared)
 
     def test_list_nat_pools(self):
         """nat-pool-list."""
@@ -99,7 +99,7 @@ class CLITestV20NatPoolJSON(test_cli20.CLITestV20Base):
         description = 'My Nat Pool'
         my_id = 'someid'
         external_segment_id = "segmentid"
-        shared = 'True'
+        shared = 'true'
         args = ['--name', name,
                 '--description', description,
                 '--external-segment', external_segment_id,
@@ -109,7 +109,7 @@ class CLITestV20NatPoolJSON(test_cli20.CLITestV20Base):
             'name': name,
             'description': description,
             'external_segment_id': external_segment_id,
-            'shared': True
+            'shared': shared
         }
         self._test_update_resource(resource, cmd, my_id, args, params)
 
