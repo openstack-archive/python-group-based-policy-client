@@ -54,7 +54,7 @@ class CLITestV20ExternalSegmentJSON(test_cli20.CLITestV20Base):
         expected_external_routes = [{'destination': '172.16.1.0/24', 'nexthop':
                                     '192.168.0.10'}]
         port_address_translation = 'True'
-        shared = 'True'
+        shared = 'true'
         args = ['--tenant-id', tenant_id,
                 '--description', description,
                 '--ip-version', ip_version,
@@ -127,7 +127,7 @@ class CLITestV20ExternalSegmentJSON(test_cli20.CLITestV20Base):
         expected_external_routes = [{'destination': '172.16.1.0/24', 'nexthop':
                                     '192.168.0.10'}]
         port_address_translation = 'True'
-        shared = 'True'
+        shared = 'true'
         args = ['--name', name,
                 '--description', description,
                 '--external-route', external_route,
