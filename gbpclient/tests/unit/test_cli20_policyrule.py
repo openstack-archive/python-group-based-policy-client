@@ -44,14 +44,14 @@ class CLITestV20PolicyRuleJSON(test_cli20.CLITestV20Base):
         tenant_id = 'my-tenant'
         description = 'My PolicyRule'
         my_id = 'my-id'
-        enabled = True
+        enabled = "true"
         policy_classifier_id = 'pc-id'
         policy_actions_res = ["pa1", "pa2"]
         policy_actions_arg = "pa1,pa2"
-        shared = 'True'
+        shared = 'true'
         args = ['--tenant-id', tenant_id,
                 '--description', description,
-                '--enabled', "True",
+                '--enabled', enabled,
                 '--classifier', policy_classifier_id,
                 '--actions', policy_actions_arg,
                 '--shared', shared,
@@ -65,7 +65,7 @@ class CLITestV20PolicyRuleJSON(test_cli20.CLITestV20Base):
                                    enabled=enabled,
                                    policy_classifier_id=policy_classifier_id,
                                    policy_actions=policy_actions_res,
-                                   shared=True)
+                                   shared=shared)
 
     def test_list_policy_rules(self):
         """grouppolicy-policy-rule-list."""
@@ -121,21 +121,21 @@ class CLITestV20PolicyRuleJSON(test_cli20.CLITestV20Base):
 
     def test_update_policy_rule_with_allparams(self):
         resource = 'policy_rule'
-        enabled = True
+        enabled = "true"
         policy_classifier_id = 'pc-id'
         policy_actions_res = ["pa1", "pa2"]
         policy_actions_arg = "pa1,pa2"
         my_id = 'someid'
-        shared = 'True'
+        shared = 'true'
         cmd = gbp.UpdatePolicyRule(test_cli20.MyApp(sys.stdout), None)
         body = {
             'policy_classifier_id': policy_classifier_id,
             'enabled': enabled,
             'policy_actions': policy_actions_res,
-            'shared': True
+            'shared': shared
         }
         args = [my_id,
-                '--enabled', "True",
+                '--enabled', enabled,
                 '--classifier', policy_classifier_id,
                 '--actions', policy_actions_arg,
                 '--shared', shared, ]

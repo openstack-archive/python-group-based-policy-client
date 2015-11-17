@@ -53,7 +53,7 @@ class CLITestV20L3PolicyJSON(test_cli20.CLITestV20Base):
         external_segment = 'seg_uuid1=1.1.1.0:2.2.2.0'
         expected_external_segments = {'seg_uuid1': ['1.1.1.0', '2.2.2.0']}
         routers = 'uuid1,uuid2'
-        shared = 'True'
+        shared = 'true'
         args = ['--tenant-id', tenant_id,
                 '--description', description,
                 '--ip-version', ip_version,
@@ -74,7 +74,7 @@ class CLITestV20L3PolicyJSON(test_cli20.CLITestV20Base):
                                    subnet_prefix_length=24,
                                    routers=['uuid1', 'uuid2'],
                                    external_segments=
-                                   expected_external_segments, shared=True)
+                                   expected_external_segments, shared=shared)
 
     def test_create_l3_policy_with_external_segment(self):
         """l3-policy-create with all params."""
@@ -124,7 +124,7 @@ class CLITestV20L3PolicyJSON(test_cli20.CLITestV20Base):
         subnet_prefix_length = '24'
         external_segment = 'seg_uuid1=1.1.1.0:2.2.2.0'
         expected_external_segments = {'seg_uuid1': ['1.1.1.0', '2.2.2.0']}
-        shared = 'True'
+        shared = 'true'
         routers = 'uuid1,uuid2'
         args = ['--name', name,
                 '--description', description,
@@ -140,7 +140,7 @@ class CLITestV20L3PolicyJSON(test_cli20.CLITestV20Base):
             'external_segments': expected_external_segments,
             'routers': routers,
             'routers': ['uuid1', 'uuid2'],
-            'shared': True
+            'shared': shared
         }
         self._test_update_resource(resource, cmd, my_id, args, params)
 

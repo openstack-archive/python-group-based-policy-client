@@ -53,8 +53,8 @@ class CLITestV20ExternalSegmentJSON(test_cli20.CLITestV20Base):
         external_route = 'destination=172.16.1.0/24,nexthop=192.168.0.10'
         expected_external_routes = [{'destination': '172.16.1.0/24', 'nexthop':
                                     '192.168.0.10'}]
-        port_address_translation = 'True'
-        shared = 'True'
+        port_address_translation = 'true'
+        shared = 'true'
         args = ['--tenant-id', tenant_id,
                 '--description', description,
                 '--ip-version', ip_version,
@@ -72,8 +72,9 @@ class CLITestV20ExternalSegmentJSON(test_cli20.CLITestV20Base):
                                    ip_version=4,
                                    cidr=cidr,
                                    external_routes=expected_external_routes,
-                                   port_address_translation=True,
-                                   shared=True)
+                                   port_address_translation=
+                                   port_address_translation,
+                                   shared=shared)
 
     def test_create_external_segment_with_external_route_no_nexthop(self):
         """external-segment-create with all params."""
@@ -126,8 +127,8 @@ class CLITestV20ExternalSegmentJSON(test_cli20.CLITestV20Base):
         external_route = 'destination=172.16.1.0/24,nexthop=192.168.0.10'
         expected_external_routes = [{'destination': '172.16.1.0/24', 'nexthop':
                                     '192.168.0.10'}]
-        port_address_translation = 'True'
-        shared = 'True'
+        port_address_translation = 'true'
+        shared = 'true'
         args = ['--name', name,
                 '--description', description,
                 '--external-route', external_route,
@@ -138,8 +139,8 @@ class CLITestV20ExternalSegmentJSON(test_cli20.CLITestV20Base):
             'name': name,
             'description': description,
             'external_routes': expected_external_routes,
-            'port_address_translation': True,
-            'shared': True
+            'port_address_translation': port_address_translation,
+            'shared': shared
         }
         self._test_update_resource(resource, cmd, my_id, args, params)
 
