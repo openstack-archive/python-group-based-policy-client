@@ -47,7 +47,7 @@ class CLITestV20ServiceProfileJSON(test_cli20.CLITestV20Base):
         name = 'my-name'
         description = 'My Service Profile'
         tenant_id = 'my-tenant'
-        shared = 'True'
+        shared = 'true'
         vendor = 'vendor'
         insertion_mode = 'some mode'
         service_type = 'servicetype1'
@@ -67,7 +67,7 @@ class CLITestV20ServiceProfileJSON(test_cli20.CLITestV20Base):
                                    position_names, position_values,
                                    description=description,
                                    tenant_id=tenant_id,
-                                   shared=True,
+                                   shared=shared,
                                    vendor=vendor,
                                    insertion_mode=insertion_mode,
                                    service_type=service_type,
@@ -138,7 +138,7 @@ class CLITestV20ServiceProfileJSON(test_cli20.CLITestV20Base):
                                                 None)
         name = 'new-name'
         description = 'My Updated Service Profile'
-        shared = 'True'
+        shared = 'true'
         vendor = 'open-source'
         insertion_mode = 'another mode'
         service_type = 'servicetype2'
@@ -146,7 +146,7 @@ class CLITestV20ServiceProfileJSON(test_cli20.CLITestV20Base):
         body = {
             'name': name,
             'description': description,
-            'shared': True,
+            'shared': shared,
             'vendor': vendor,
             'insertion_mode': insertion_mode,
             'service_type': service_type,

@@ -52,7 +52,7 @@ class CLITestV20PolicyTargetGroupJSON(test_cli20.CLITestV20Base):
         provided_prs = "icmp-prs=false,web-prs=true"
         consumed_prs = "ssh-prs=true,ftp-prs=false"
         network_service_policy_id = 'network_service_policy_id'
-        shared = 'True'
+        shared = 'true'
         args = [name,
                 '--tenant-id', tenant_id,
                 '--description', description,
@@ -77,7 +77,7 @@ class CLITestV20PolicyTargetGroupJSON(test_cli20.CLITestV20Base):
                            network_service_policy_id]
         self._test_create_resource(resource, cmd, name, my_id, args,
                                    position_names, position_values,
-                                   tenant_id=tenant_id, shared=True)
+                                   tenant_id=tenant_id, shared=shared)
 
     def test_list_policy_target_groups(self):
         """policy-target-group-list."""
@@ -112,7 +112,7 @@ class CLITestV20PolicyTargetGroupJSON(test_cli20.CLITestV20Base):
         provided_prs = "icmp-prs=false,web-prs=true"
         consumed_prs = "ssh-prs=true,ftp-prs=false"
         network_service_policy_id = 'network_service_policy_id'
-        shared = 'True'
+        shared = 'true'
         args = [my_id,
                 '--name', name,
                 '--description', description,
@@ -134,7 +134,7 @@ class CLITestV20PolicyTargetGroupJSON(test_cli20.CLITestV20Base):
             'provided_policy_rule_sets': provided_policy_rule_sets,
             'consumed_policy_rule_sets': consumed_policy_rule_sets,
             'network_service_policy_id': network_service_policy_id,
-            'shared': True
+            'shared': shared
         }
         self._test_update_resource(resource, cmd, my_id, args, params)
 

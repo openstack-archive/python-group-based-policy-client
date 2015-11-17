@@ -47,7 +47,7 @@ class CLITestV20NetworkServicePolicyJSON(test_cli20.CLITestV20Base):
         description = 'Mynsp'
         my_id = 'someid'
         network_svc_params = "type=ip_single,name=vip,value=self_subnet"
-        shared = 'True'
+        shared = 'true'
         args = ['--tenant_id', tenant_id,
                 '--description', description,
                 '--network-service-params', network_svc_params,
@@ -59,7 +59,7 @@ class CLITestV20NetworkServicePolicyJSON(test_cli20.CLITestV20Base):
         position_values = [name, description, net_params]
         self._test_create_resource(resource, cmd, name, my_id, args,
                                    position_names, position_values,
-                                   tenant_id=tenant_id, shared=True)
+                                   tenant_id=tenant_id, shared=shared)
 
     def test_list_network_service_policies(self):
         """network-sercvice-policy-list."""
@@ -127,7 +127,7 @@ class CLITestV20NetworkServicePolicyJSON(test_cli20.CLITestV20Base):
         description = 'nsp description'
         my_id = 'someid'
         network_svc_params = "type=ip_single,name=vip,value=self_subnet"
-        shared = 'True'
+        shared = 'true'
         args = [my_id,
                 '--name', name,
                 '--description', description,
@@ -139,7 +139,7 @@ class CLITestV20NetworkServicePolicyJSON(test_cli20.CLITestV20Base):
             'description': description,
             'network_service_params': [{"type": "ip_single", "name": "vip",
                                         "value": "self_subnet"}],
-            'shared': True
+            'shared': shared
         }
         self._test_update_resource(resource, cmd, my_id, args, params)
 

@@ -26,15 +26,16 @@ class CLITestV20PolicyClassifierJSON(test_cli20.CLITestV20Base):
         resource = 'policy_classifier'
         cmd = gbp.CreatePolicyClassifier(test_cli20.MyApp(sys.stdout), None)
         name = 'my-name'
+        direction = 'bi'
         tenant_id = 'my-tenant'
         my_id = 'my-id'
-        args = ['--tenant-id', tenant_id,
+        args = ['--tenant-id', tenant_id, '--direction', direction,
                 name]
         position_names = ['name', ]
         position_values = [name, ]
         self._test_create_resource(resource, cmd, name, my_id, args,
                                    position_names, position_values,
-                                   tenant_id=tenant_id)
+                                   tenant_id=tenant_id, direction=direction)
 
     def test_create_policy_classifier_with_all_params(self):
         """grouppolicy-policy-classifier-create with all params."""
@@ -47,7 +48,7 @@ class CLITestV20PolicyClassifierJSON(test_cli20.CLITestV20Base):
         protocol = 'tcp'
         port_range = '10-80'
         direction = 'in'
-        shared = 'True'
+        shared = 'true'
         args = ['--tenant-id', tenant_id,
                 '--description', description,
                 '--protocol', protocol,
@@ -63,7 +64,7 @@ class CLITestV20PolicyClassifierJSON(test_cli20.CLITestV20Base):
                                    description=description,
                                    protocol=protocol,
                                    port_range=port_range,
-                                   direction=direction, shared=True)
+                                   direction=direction, shared=shared)
 
     def test_list_policy_classifiers(self):
         """grouppolicy-policy-classifier-list."""
@@ -125,12 +126,12 @@ class CLITestV20PolicyClassifierJSON(test_cli20.CLITestV20Base):
         direction = 'in'
         cmd = gbp.UpdatePolicyClassifier(test_cli20.MyApp(sys.stdout), None)
         my_id = 'someid'
-        shared = 'True'
+        shared = 'true'
         body = {
             'protocol': protocol,
             'port_range': port_range,
             'direction': direction,
-            'shared': True
+            'shared': shared
         }
         args = [my_id,
                 '--protocol', protocol,
