@@ -11,8 +11,21 @@
 #    under the License.
 #
 
-
+import argparse
+from neutronclient.common import utils as n_utils
 import re
+
+
+if not hasattr(n_utils, 'add_boolean_argument'):
+    def add_boolean_argument(parser, name, **kwargs):
+        for keyword in ('metavar', 'choices'):
+            kwargs.pop(keyword, None)
+        default = kwargs.pop('default', argparse.SUPPRESS)
+        parser.add_argument(name,
+                metavar='{True,False}',
+                choices=['True', 'true', 'False', 'false'],
+                default=default, **kwargs)
+    n_utils.add_boolean_argument = add_boolean_argument
 
 
 def str2dict(strdict):
