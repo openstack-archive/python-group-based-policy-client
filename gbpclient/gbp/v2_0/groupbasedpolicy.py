@@ -680,8 +680,8 @@ class CreatePolicyClassifier(neutronV20.CreateCommand):
             help=_('A description for the policy classifier'))
         parser.add_argument(
             '--protocol',
-            choices=['tcp', 'udp', 'icmp', ''],
-            help=_('A protocol value. When not set, all protocols are '
+            help=_('A protocol value: tcp, udp, icmp or a protocol number '
+                   'between 0 and 255. When not set, all protocols are '
                    'matched'))
         parser.add_argument(
             '--port-range',
@@ -731,8 +731,8 @@ class UpdatePolicyClassifier(neutronV20.UpdateCommand):
             help=_('New description for the policy classifier'))
         parser.add_argument(
             '--protocol',
-            choices=['tcp', 'udp', 'icmp', ''],
-            help=_('New protocol value '
+            help=_('New protocol value: tcp, udp, icmp or a protocol number '
+                   'between 0 and 255 '
                    '(use empty string \'\' to unset and match all protocols)'))
         parser.add_argument(
             '--port-range',
