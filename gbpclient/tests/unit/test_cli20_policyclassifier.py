@@ -45,26 +45,26 @@ class CLITestV20PolicyClassifierJSON(test_cli20.CLITestV20Base):
         tenant_id = 'my-tenant'
         description = 'My PolicyClassifier'
         my_id = 'my-id'
-        protocol = 'tcp'
         port_range = '10-80'
         direction = 'in'
         shared = 'true'
-        args = ['--tenant-id', tenant_id,
-                '--description', description,
-                '--protocol', protocol,
-                '--port-range', port_range,
-                '--direction', direction,
-                '--shared', shared,
-                name]
-        position_names = ['name', ]
-        position_values = [name, ]
-        self._test_create_resource(resource, cmd, name, my_id, args,
-                                   position_names, position_values,
-                                   tenant_id=tenant_id,
-                                   description=description,
-                                   protocol=protocol,
-                                   port_range=port_range,
-                                   direction=direction, shared=shared)
+        for protocol in ['tcp', 'icmp', 'udp', '50']:
+            args = ['--tenant-id', tenant_id,
+                    '--description', description,
+                    '--protocol', protocol,
+                    '--port-range', port_range,
+                    '--direction', direction,
+                    '--shared', shared,
+                    name]
+            position_names = ['name', ]
+            position_values = [name, ]
+            self._test_create_resource(resource, cmd, name, my_id, args,
+                                       position_names, position_values,
+                                       tenant_id=tenant_id,
+                                       description=description,
+                                       protocol=protocol,
+                                       port_range=port_range,
+                                       direction=direction, shared=shared)
 
     def test_list_policy_classifiers(self):
         """grouppolicy-policy-classifier-list."""
@@ -121,24 +121,24 @@ class CLITestV20PolicyClassifierJSON(test_cli20.CLITestV20Base):
 
     def test_update_policy_classifier_with_allparams(self):
         resource = 'policy_classifier'
-        protocol = 'tcp'
         port_range = '10-80'
         direction = 'in'
         cmd = gbp.UpdatePolicyClassifier(test_cli20.MyApp(sys.stdout), None)
         my_id = 'someid'
         shared = 'true'
-        body = {
-            'protocol': protocol,
-            'port_range': port_range,
-            'direction': direction,
-            'shared': shared
-        }
-        args = [my_id,
-                '--protocol', protocol,
-                '--port-range', port_range,
-                '--direction', direction,
-                '--shared', shared, ]
-        self._test_update_resource(resource, cmd, my_id, args, body)
+        for protocol in ['tcp', 'icmp', 'udp', '50']:
+            body = {
+                'protocol': protocol,
+                'port_range': port_range,
+                'direction': direction,
+                'shared': shared
+            }
+            args = [my_id,
+                    '--protocol', protocol,
+                    '--port-range', port_range,
+                    '--direction', direction,
+                    '--shared', shared, ]
+            self._test_update_resource(resource, cmd, my_id, args, body)
 
     def test_delete_policy_classifier(self):
         """grouppolicy-policy-classifier-delete my-id."""
