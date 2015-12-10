@@ -48,17 +48,20 @@ class CLITestV20L2PolicyJSON(test_cli20.CLITestV20Base):
         name = 'my-name'
         description = 'l2p description'
         l3_policy_id = 'l3p'
+        inject_default_route = 'false'
         shared = 'true'
         args = [name,
                 '--tenant-id', tenant_id,
                 '--description', description,
                 '--l3-policy-id', l3_policy_id,
+                '--inject-default-route', inject_default_route,
                 '--shared', shared]
         position_names = ['name', 'description', 'l3_policy_id']
         position_values = [name, description, l3_policy_id]
         self._test_create_resource(resource, cmd, name, my_id, args,
                                    position_names, position_values,
-                                   tenant_id=tenant_id, shared=shared)
+                                   tenant_id=tenant_id, shared=shared,
+                                   inject_default_route=inject_default_route)
 
     def test_list_l2_policies(self):
         resource = 'l2_policies'
@@ -87,16 +90,19 @@ class CLITestV20L2PolicyJSON(test_cli20.CLITestV20Base):
         name = 'l2policy'
         description = 'l2policy description'
         l3_policy_id = 'l3p'
+        inject_default_route = 'false'
         shared = 'true'
         args = [my_id,
                 '--name', name,
                 '--description', description,
                 '--l3-policy-id', l3_policy_id,
+                '--inject-default-route', inject_default_route,
                 '--shared', shared]
         params = {
             'name': name,
             'description': description,
             'l3_policy_id': l3_policy_id,
+            'inject_default_route': inject_default_route,
             'shared': shared
         }
         self._test_update_resource(resource, cmd, my_id, args, params)
