@@ -301,7 +301,8 @@ class ListL2Policy(neutronV20.ListCommand):
     resource = 'l2_policy'
     log = logging.getLogger(__name__ + '.ListL2Policy')
     _formatters = {}
-    list_columns = ['id', 'name', 'description', 'l3_policy_id', 'network_id']
+    list_columns = ['id', 'name', 'description', 'l3_policy_id', 'network_id',
+                    'inject_default_route']
     pagination_support = True
     sorting_support = True
 
@@ -336,6 +337,10 @@ class CreateL2Policy(neutronV20.CreateCommand):
             'name', metavar='NAME',
             help=_('Name of L2 Policy to create (required argument)'))
         n_utils.add_boolean_argument(
+            parser, '--inject-default-route', dest='inject_default_route',
+            help=_('Enable or disable injecting default route, '
+                   'default is True'))
+        n_utils.add_boolean_argument(
             parser, '--shared', dest='shared',
             help=_('Enable or disable resource sharing, default is False'))
 
@@ -343,7 +348,8 @@ class CreateL2Policy(neutronV20.CreateCommand):
         body = {self.resource: {}, }
 
         neutronV20.update_dict(parsed_args, body[self.resource],
-                               ['name', 'tenant_id', 'description', 'shared'])
+                               ['name', 'tenant_id', 'description', 'shared',
+                                'inject_default_route'])
         if parsed_args.l3_policy:
             body[self.resource]['l3_policy_id'] = \
                 neutronV20.find_resourceid_by_name_or_id(
@@ -381,6 +387,9 @@ class UpdateL2Policy(neutronV20.UpdateCommand):
             '--name',
             help=_('New name of the L2 Policy'))
         n_utils.add_boolean_argument(
+            parser, '--inject-default-route', dest='inject_default_route',
+            help=_('Enable or disable injecting of default route'))
+        n_utils.add_boolean_argument(
             parser, '--shared', dest='shared',
             help=_('Enable or disable resource sharing'))
 
@@ -388,7 +397,8 @@ class UpdateL2Policy(neutronV20.UpdateCommand):
         body = {self.resource: {}, }
 
         neutronV20.update_dict(parsed_args, body[self.resource],
-                               ['name', 'tenant_id', 'description', 'shared'])
+                               ['name', 'tenant_id', 'description', 'shared',
+                                'inject_default_route'])
         if parsed_args.l3_policy:
             body[self.resource]['l3_policy_id'] = \
                 neutronV20.find_resourceid_by_name_or_id(
