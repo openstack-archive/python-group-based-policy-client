@@ -1,0 +1,9 @@
+Code-Review+2: Robert Kukura <kukura@noironetworks.com>
+Code-Review+2: Subrahmanyam Ongole <songole@oneconvergence.com>
+Workflow+1: Subrahmanyam Ongole <songole@oneconvergence.com>
+Verified+2: Jenkins
+Submitted-by: Jenkins
+Submitted-at: Fri, 08 Jan 2016 18:54:41 +0000
+Reviewed-on: https://review.openstack.org/261773
+Project: openstack/python-group-based-policy-client
+Branch: refs/heads/master
