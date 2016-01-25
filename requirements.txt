@@ -2,4 +2,4 @@
 # of appearance. Changing the order has an impact on the overall integration
 # process, which may cause wedges in the gate later.
 python-heatclient>=0.8.0
-python-neutronclient>=3.0.0
+python-neutronclient<4.0.0
