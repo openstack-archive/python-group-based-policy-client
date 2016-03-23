@@ -4,7 +4,7 @@
 hacking<0.11,>=0.10.0
 
 # REVISIT: After mitaka release remove this dependency on python-neutronclient and add a dependency on release version inside requirements.txt
--e git+https://git.openstack.org/openstack/python-neutronclient@master#egg=neutronclient
+-e git+https://git.openstack.org/openstack/python-neutronclient@stable/mitaka#egg=neutronclient
 cliff-tablib>=1.0
 coverage>=3.6 # Apache-2.0
 discover # BSD
