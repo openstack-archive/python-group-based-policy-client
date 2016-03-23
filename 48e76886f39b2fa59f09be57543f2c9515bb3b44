@@ -1,0 +1,9 @@
+Code-Review+2: Hemanth Ravi <hemanth.ravi@oneconvergence.com>
+Code-Review+2: Robert Kukura <kukura@noironetworks.com>
+Workflow+1: Robert Kukura <kukura@noironetworks.com>
+Verified+2: Jenkins
+Submitted-by: Jenkins
+Submitted-at: Wed, 23 Mar 2016 16:42:08 +0000
+Reviewed-on: https://review.openstack.org/296191
+Project: openstack/python-group-based-policy-client
+Branch: refs/heads/master
