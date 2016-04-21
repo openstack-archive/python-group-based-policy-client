@@ -3,4 +3,6 @@
 # process, which may cause wedges in the gate later.
 pbr>=1.6 # Apache-2.0
 python-heatclient>=0.8.0
+oslo.serialization>=1.10.0 # Apache-2.0
+oslo.utils>=3.5.0 # Apache-2.0
 # REVISIT: After mitaka release add dependency on released version of python-neutronclient
