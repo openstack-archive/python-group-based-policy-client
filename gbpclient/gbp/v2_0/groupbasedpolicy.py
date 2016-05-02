@@ -11,6 +11,7 @@
 #    under the License.
 #
 
+import argparse
 import logging
 
 from neutronclient.common import utils as n_utils
@@ -18,6 +19,13 @@ from neutronclient.neutron import v2_0 as neutronV20
 from oslo.serialization import jsonutils
 
 from gbpclient.common import utils
+
+
+def _format_fixed_ips(pt):
+    try:
+        return '\n'.join([jsonutils.dumps(ip) for ip in pt['fixed_ips']])
+    except (TypeError, KeyError):
+        return ''
 
 
 try:
@@ -47,9 +55,9 @@ class ListPolicyTarget(neutronV20.ListCommand):
 
     resource = 'policy_target'
     log = logging.getLogger(__name__ + '.ListPolicyTarget')
-    _formatters = {}
+    _formatters = {'fixed_ips': _format_fixed_ips, }
     list_columns = ['id', 'name', 'description', 'policy_target_group_id',
-                    'port_id']
+                    'port_id', 'fixed_ips']
     pagination_support = True
     sorting_support = True
 
@@ -75,6 +83,14 @@ class CreatePolicyTarget(neutronV20.CreateCommand):
             '--policy-target-group',
             help=_('Policy Target Group (required argument)'))
         parser.add_argument(
+            '--fixed-ip', metavar='subnet_id=SUBNET,ip_address=IP_ADDR',
+            action='append',
+            help=_('Desired IP and/or subnet for this Policy Target: '
+                   'subnet_id=<nid>,ip_address=<ip>. '
+                   'You can repeat this option.'))
+        parser.add_argument(
+            '--fixed_ip', action='append', help=argparse.SUPPRESS)
+        parser.add_argument(
             '--port-id', default='',
             help=_('Neutron Port UUID'))
         parser.add_argument(
@@ -95,6 +111,13 @@ class CreatePolicyTarget(neutronV20.CreateCommand):
         if parsed_args.port_id:
             body[self.resource]['port_id'] = (
                 parsed_args.port_id)
+
+        ips = []
+        if parsed_args.fixed_ip:
+            for ip_spec in parsed_args.fixed_ip:
+                ip_dict = n_utils.str2dict(ip_spec)
+                ips.append(ip_dict)
+            body[self.resource]['fixed_ips'] = ips
 
         return body
 
@@ -119,12 +142,27 @@ class UpdatePolicyTarget(neutronV20.UpdateCommand):
         parser.add_argument(
             '--name',
             help=_('New name of the Policy Target'))
+        parser.add_argument(
+            '--fixed-ip', metavar='subnet_id=SUBNET,ip_address=IP_ADDR',
+            action='append',
+            help=_('Desired IP and/or subnet for this Policy Target: '
+                   'subnet_id=<nid>,ip_address=<ip>. '
+                   'You can repeat this option.'))
+        parser.add_argument(
+            '--fixed_ip', action='append', help=argparse.SUPPRESS)
 
     def args2body(self, parsed_args):
         body = {self.resource: {}, }
 
         neutronV20.update_dict(parsed_args, body[self.resource],
                                ['name', 'tenant_id', 'description'])
+
+        ips = []
+        if parsed_args.fixed_ip:
+            for ip_spec in parsed_args.fixed_ip:
+                ip_dict = n_utils.str2dict(ip_spec)
+                ips.append(ip_dict)
+            body[self.resource]['fixed_ips'] = ips
 
         return body
 
