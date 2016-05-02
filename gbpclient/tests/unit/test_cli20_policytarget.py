@@ -44,6 +44,17 @@ class CLITestV20PolicyTargetJSON(test_cli20.CLITestV20Base):
         cmd = gbp.ListPolicyTarget(test_cli20.MyApp(sys.stdout), None)
         self._test_list_resources(resource, cmd, True)
 
+    def test_list_policy_targets_with_fixed_ips(self):
+        resources = "policy_targets"
+        cmd = gbp.ListPolicyTarget(test_cli20.MyApp(sys.stdout), None)
+        fixed_ips = [{"subnet_id": "30422057-d6df-4c90-8314-aefb5e326666",
+                      "ip_address": "10.0.0.12"},
+                     {"subnet_id": "30422057-d6df-4c90-8314-aefb5e326666",
+                      "ip_address": "10.0.0.4"}]
+        contents = [{'name': 'name1', 'fixed_ips': fixed_ips}]
+        self._test_list_resources(resources, cmd, True,
+                                  response_contents=contents)
+
     def test_show_policy_target_name(self):
         resource = 'policy_target'
         cmd = gbp.ShowPolicyTarget(test_cli20.MyApp(sys.stdout), None)
@@ -57,6 +68,21 @@ class CLITestV20PolicyTargetJSON(test_cli20.CLITestV20Base):
                                    ['myid', '--name', 'myname',
                                     '--tags', 'a', 'b'],
                                    {'name': 'myname', 'tags': ['a', 'b'], })
+
+    def test_update_policy_target_fixed_ip(self):
+        resource = 'policy_target'
+        cmd = gbp.UpdatePolicyTarget(test_cli20.MyApp(sys.stdout), None)
+        myid = 'myid'
+        subnet_id = 'subnet_id'
+        ip_addr = '123.123.123.123'
+        args = [myid,
+                '--fixed-ip',
+                "subnet_id=%(subnet_id)s,ip_address=%(ip_addr)s" %
+                {'subnet_id': subnet_id,
+                 'ip_addr': ip_addr}]
+        updated_fields = {"fixed_ips": [{'subnet_id': subnet_id,
+                                         'ip_address': ip_addr}]}
+        self._test_update_resource(resource, cmd, myid, args, updated_fields)
 
     def test_delete_policy_target_name(self):
         resource = 'policy_target'
