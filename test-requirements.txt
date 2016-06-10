@@ -7,7 +7,6 @@ hacking<0.11,>=0.10.0
 -e git+https://git.openstack.org/openstack/python-neutronclient@stable/mitaka#egg=neutronclient
 cliff-tablib>=1.0
 coverage>=3.6 # Apache-2.0
-discover # BSD
 fixtures>=1.3.1 # Apache-2.0/BSD
 httpretty>=0.8.0,!=0.8.1,!=0.8.2,!=0.8.3
 mox3>=0.7.0 # Apache-2.0
