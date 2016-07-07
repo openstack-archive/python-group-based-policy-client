@@ -1,0 +1,10 @@
+Code-Review+2: Hemanth Ravi <hemanth.ravi@oneconvergence.com>
+Code-Review+1: Amit Bose <amitbose@gmail.com>
+Workflow+1: Sumit Naiksatam <sumitnaiksatam@gmail.com>
+Code-Review+2: Sumit Naiksatam <sumitnaiksatam@gmail.com>
+Verified+2: Jenkins
+Submitted-by: Jenkins
+Submitted-at: Thu, 07 Jul 2016 19:13:07 +0000
+Reviewed-on: https://review.openstack.org/308809
+Project: openstack/python-group-based-policy-client
+Branch: refs/heads/master
