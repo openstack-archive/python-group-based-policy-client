@@ -39,6 +39,29 @@ class CLITestV20PolicyTargetJSON(test_cli20.CLITestV20Base):
                                    position_names, position_values,
                                    tenant_id=tenant_id)
 
+    def test_create_policy_target_with_segmentation_labels(self):
+        """policy-target-create with segmentation labels."""
+        resource = 'policy_target'
+        cmd = gbp.CreatePolicyTarget(test_cli20.MyApp(sys.stdout), None)
+        my_id = 'my-id'
+        tenant_id = 'my-tenant'
+        name = 'my-name'
+        description = 'pt description'
+        policy_target_id = 'policy_target_id'
+        segmentation_labels = "label1,label2"
+        args = [name,
+                '--tenant-id', tenant_id,
+                '--description', description,
+                '--policy-target-id', policy_target_id,
+                '--segmentation-labels', segmentation_labels]
+        position_names = ['name', 'description', 'policy_target_id',
+                          'segmentation_labels']
+        position_values = [name, description, policy_target_id,
+                           segmentation_labels]
+        self._test_create_resource(resource, cmd, name, my_id, args,
+                                   position_names, position_values,
+                                   tenant_id=tenant_id)
+
     def test_list_policy_targets(self):
         resource = 'policy_targets'
         cmd = gbp.ListPolicyTarget(test_cli20.MyApp(sys.stdout), None)

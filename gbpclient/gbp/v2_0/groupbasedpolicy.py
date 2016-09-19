@@ -93,6 +93,11 @@ class CreatePolicyTarget(neutronV20.CreateCommand):
         parser.add_argument(
             'name', metavar='NAME',
             help=_('Name of Policy Target to create (required argument)'))
+        parser.add_argument(
+            '--segmentation-labels', type=utils.str2list,
+            help=_('Comma separated list of segmentation labels, each label '
+                   'can be upto 255 characters. This option is currently '
+                   'only available with the APIC backend.'))
 
     def args2body(self, parsed_args):
         body = {self.resource: {}, }
@@ -145,6 +150,11 @@ class UpdatePolicyTarget(neutronV20.UpdateCommand):
                    'You can repeat this option.'))
         parser.add_argument(
             '--fixed_ip', action='append', help=argparse.SUPPRESS)
+        parser.add_argument(
+            '--segmentation-labels', type=utils.str2list,
+            help=_('Comma separated list of segmentation labels, each label '
+                   'can be upto 255 characters. This option is currently '
+                   'only available with the APIC backend.'))
 
     def args2body(self, parsed_args):
         body = {self.resource: {}, }
