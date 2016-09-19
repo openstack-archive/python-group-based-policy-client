@@ -39,6 +39,29 @@ class CLITestV20PolicyTargetJSON(test_cli20.CLITestV20Base):
                                    position_names, position_values,
                                    tenant_id=tenant_id)
 
+    def test_create_policy_target_with_segmentation_labels(self):
+        """policy-target-create with segmentation labels."""
+        resource = 'policy_target'
+        cmd = gbp.CreatePolicyTarget(test_cli20.MyApp(sys.stdout), None)
+        my_id = 'my-id'
+        tenant_id = 'my-tenant'
+        name = 'my-name'
+        description = 'pt description'
+        policy_target_group_id = 'policy_target_group_id'
+        segmentation_labels = "label1,label2"
+        args = [name,
+                '--tenant-id', tenant_id,
+                '--description', description,
+                '--policy-target-group-id', policy_target_group_id,
+                '--segmentation-labels', segmentation_labels]
+        position_names = ['name', 'description', 'policy_target_group_id',
+                          'segmentation_labels']
+        position_values = [name, description, policy_target_group_id,
+                           segmentation_labels]
+        self._test_create_resource(resource, cmd, name, my_id, args,
+                                   position_names, position_values,
+                                   tenant_id=tenant_id)
+
     def test_list_policy_targets(self):
         resource = 'policy_targets'
         cmd = gbp.ListPolicyTarget(test_cli20.MyApp(sys.stdout), None)
@@ -83,6 +106,18 @@ class CLITestV20PolicyTargetJSON(test_cli20.CLITestV20Base):
         updated_fields = {"fixed_ips": [{'subnet_id': subnet_id,
                                          'ip_address': ip_addr}]}
         self._test_update_resource(resource, cmd, myid, args, updated_fields)
+
+    def test_update_policy_target_with_segmentation_labels(self):
+        """policy-target-update with segmentation labels."""
+        resource = 'policy_target'
+        cmd = gbp.UpdatePolicyTarget(test_cli20.MyApp(sys.stdout), None)
+        my_id = 'my-id'
+        segmentation_labels = "label3,label4"
+        args = [my_id,
+                '--segmentation-labels', segmentation_labels]
+        updated_fields = {"segmentation_labels": ['label3', 'label4']}
+        self._test_create_resource(resource, cmd, my_id, args,
+                                   updated_fields)
 
     def test_delete_policy_target_name(self):
         resource = 'policy_target'
