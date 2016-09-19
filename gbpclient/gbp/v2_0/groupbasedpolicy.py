@@ -91,12 +91,18 @@ class CreatePolicyTarget(neutronV20.CreateCommand):
         parser.add_argument(
             'name', metavar='NAME',
             help=_('Name of Policy Target to create (required argument)'))
+        parser.add_argument(
+            '--segmentation-labels', type=utils.str2list,
+            help=_('Comma separated list of segmentation labels, each label '
+                   'can be upto 255 characters. This option is currently '
+                   'only available with the APIC backend.'))
 
     def args2body(self, parsed_args):
         body = {self.resource: {}, }
 
         neutronV20.update_dict(parsed_args, body[self.resource],
-                               ['name', 'tenant_id', 'description'])
+                               ['name', 'tenant_id', 'description',
+                                'segmentation_labels'])
         if parsed_args.policy_target_group:
             body[self.resource]['policy_target_group_id'] = \
                 neutronV20.find_resourceid_by_name_or_id(
@@ -145,12 +151,18 @@ class UpdatePolicyTarget(neutronV20.UpdateCommand):
                    'You can repeat this option.'))
         parser.add_argument(
             '--fixed_ip', action='append', help=argparse.SUPPRESS)
+        parser.add_argument(
+            '--segmentation-labels', type=utils.str2list,
+            help=_('Comma separated list of segmentation labels, each label '
+                   'can be upto 255 characters. This option is currently '
+                   'only available with the APIC backend.'))
 
     def args2body(self, parsed_args):
         body = {self.resource: {}, }
 
         neutronV20.update_dict(parsed_args, body[self.resource],
-                               ['name', 'tenant_id', 'description'])
+                               ['name', 'tenant_id', 'description',
+                                'segmentation_labels'])
 
         ips = []
         if parsed_args.fixed_ip:
