@@ -22,6 +22,10 @@ from oslo_serialization import jsonutils
 from gbpclient.common import utils
 
 
+neutronV20.UUID_PATTERN = neutronV20.UUID_PATTERN + (
+    '|auto' + neutronV20.HEX_ELEM + '{32}')
+
+
 def _format_fixed_ips(pt):
     try:
         return '\n'.join([jsonutils.dumps(ip) for ip in pt['fixed_ips']])
