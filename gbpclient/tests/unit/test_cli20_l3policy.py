@@ -96,6 +96,23 @@ class CLITestV20L3PolicyJSON(test_cli20.CLITestV20Base):
                                    external_segments=
                                    expected_external_segments)
 
+    def test_create_l3_policy_with_allowed_vm_names(self):
+        resource = 'l3_policy'
+        cmd = gbp.CreateL3Policy(test_cli20.MyApp(sys.stdout), None)
+        name = 'name'
+        tenant_id = 'mytenant'
+        my_id = 'someid'
+        allowed_vm_names = "^safe_vm*,good_vm*"
+        args = ['--tenant-id', tenant_id,
+                '--allowed-vm-names', allowed_vm_names,
+                name]
+        position_names = ['name', ]
+        position_values = [name, ]
+        self._test_create_resource(resource, cmd, name, my_id, args,
+                                   position_names, position_values,
+                                   tenant_id=tenant_id,
+                                   allowed_vm_names=['^safe_vm*', 'good_vm*'])
+
     def test_list_l3_policies(self):
         resource = 'l3_policies'
         cmd = gbp.ListL3Policy(test_cli20.MyApp(sys.stdout), None)
@@ -175,6 +192,18 @@ class CLITestV20L3PolicyJSON(test_cli20.CLITestV20Base):
                 my_id]
         params = {
             'routers': [],
+        }
+        self._test_update_resource(resource, cmd, my_id, args, params)
+
+    def test_update_l3_policy_with_allowed_vm_names(self):
+        resource = 'l3_policy'
+        cmd = gbp.UpdateL3Policy(test_cli20.MyApp(sys.stdout), None)
+        my_id = 'someid'
+        allowed_vm_names = "bad_vm*,^worse_vm*"
+        args = ['--allowed-vm-names', allowed_vm_names,
+                my_id]
+        params = {
+            'allowed_vm_names': ['bad_vm*', '^worse_vm*'],
         }
         self._test_update_resource(resource, cmd, my_id, args, params)
 
