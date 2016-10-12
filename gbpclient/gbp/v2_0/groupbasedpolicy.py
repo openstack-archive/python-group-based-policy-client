@@ -518,6 +518,10 @@ class CreateL3Policy(neutronV20.CreateCommand):
         parser.add_argument(
             'name', metavar='NAME',
             help=_('Name of L3 policy to create (required argument)'))
+        parser.add_argument(
+            '--allowed-vm-names', type=utils.str2list,
+            help=_('Comma separated list of allowed VM name regexes, each '
+                   'regex can be up to 255 characters.'))
         n_utils.add_boolean_argument(
             parser, '--shared', dest='shared',
             help=_('Enable or disable resource sharing, default is False'))
@@ -543,7 +547,8 @@ class CreateL3Policy(neutronV20.CreateCommand):
         neutronV20.update_dict(parsed_args, body[self.resource],
                                ['name', 'tenant_id', 'description',
                                 'ip_version', 'ip_pool', 'routers',
-                                'subnet_prefix_length', 'shared'])
+                                'subnet_prefix_length', 'shared',
+                                'allowed_vm_names'])
 
         return body
 
@@ -584,6 +589,10 @@ class UpdateL3Policy(neutronV20.UpdateCommand):
         parser.add_argument(
             '--name',
             help=_('New name of the L3 Policy'))
+        parser.add_argument(
+            '--allowed-vm-names', type=utils.str2list,
+            help=_('Comma separated list of allowed VM name regexes, each '
+                   'regex can be up to 255 characters.'))
         n_utils.add_boolean_argument(
             parser, '--shared', dest='shared',
             help=_('Enable or disable resource sharing'))
@@ -611,7 +620,8 @@ class UpdateL3Policy(neutronV20.UpdateCommand):
         neutronV20.update_dict(parsed_args, body[self.resource],
                                ['name', 'tenant_id', 'description',
                                 'ip_version', 'ip_pool', 'routers',
-                                'subnet_prefix_length', 'shared'])
+                                'subnet_prefix_length', 'shared',
+                                'allowed_vm_names'])
 
         return body
 
