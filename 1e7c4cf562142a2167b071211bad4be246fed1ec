@@ -1,0 +1,9 @@
+Code-Review+2: Subrahmanyam Ongole <songole@oneconvergence.com>
+Code-Review+2: Amit Bose <amitbose@gmail.com>
+Workflow+1: Amit Bose <amitbose@gmail.com>
+Verified+2: Jenkins
+Submitted-by: Jenkins
+Submitted-at: Wed, 12 Oct 2016 23:10:44 +0000
+Reviewed-on: https://review.openstack.org/385668
+Project: openstack/python-group-based-policy-client
+Branch: refs/heads/master
