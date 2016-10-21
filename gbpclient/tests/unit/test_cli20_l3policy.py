@@ -50,6 +50,8 @@ class CLITestV20L3PolicyJSON(test_cli20.CLITestV20Base):
         ip_version = '4'
         ip_pool = '172.16.0.0/12'
         subnet_prefix_length = '24'
+        address_scope_v4_id = 'ascpid'
+        subnetpools_v4 = 'sp1,sp2'
         external_segment = 'seg_uuid1=1.1.1.0:2.2.2.0'
         expected_external_segments = {'seg_uuid1': ['1.1.1.0', '2.2.2.0']}
         routers = 'uuid1,uuid2'
@@ -59,6 +61,8 @@ class CLITestV20L3PolicyJSON(test_cli20.CLITestV20Base):
                 '--ip-version', ip_version,
                 '--ip-pool', ip_pool,
                 '--subnet-prefix-length', subnet_prefix_length,
+                '--address-scope-v4-id', address_scope_v4_id,
+                '--subnetpools-v4', subnetpools_v4,
                 '--external-segment', external_segment,
                 '--routers', routers,
                 '--shared', shared,
@@ -72,9 +76,38 @@ class CLITestV20L3PolicyJSON(test_cli20.CLITestV20Base):
                                    ip_version=4,
                                    ip_pool=ip_pool,
                                    subnet_prefix_length=24,
+                                   address_scope_v4_id=address_scope_v4_id,
+                                   subnetpools_v4=['sp1', 'sp2'],
                                    routers=['uuid1', 'uuid2'],
                                    external_segments=
                                    expected_external_segments, shared=shared)
+
+    def test_create_l3_policy_with_ipv6(self):
+        """l3-policy-create with ipv6 params."""
+        resource = 'l3_policy'
+        cmd = gbp.CreateL3Policy(test_cli20.MyApp(sys.stdout), None)
+        name = 'myname'
+        tenant_id = 'mytenant'
+        description = 'My L3 Policy'
+        my_id = 'someid'
+        ip_version = '6'
+        address_scope_v6_id = 'ascpid'
+        subnetpools_v6 = 'sp1,sp2'
+        args = ['--tenant-id', tenant_id,
+                '--description', description,
+                '--ip-version', ip_version,
+                '--address-scope-v6-id', address_scope_v6_id,
+                '--subnetpools-v6', subnetpools_v6,
+                name]
+        position_names = ['name', ]
+        position_values = [name, ]
+        self._test_create_resource(resource, cmd, name, my_id, args,
+                                   position_names, position_values,
+                                   tenant_id=tenant_id,
+                                   description=description,
+                                   ip_version=6,
+                                   address_scope_v6_id=address_scope_v6_id,
+                                   subnetpools_v6=['sp1', 'sp2'])
 
     def test_create_l3_policy_with_external_segment(self):
         """l3-policy-create with all params."""
@@ -142,10 +175,12 @@ class CLITestV20L3PolicyJSON(test_cli20.CLITestV20Base):
         external_segment = 'seg_uuid1=1.1.1.0:2.2.2.0'
         expected_external_segments = {'seg_uuid1': ['1.1.1.0', '2.2.2.0']}
         shared = 'true'
+        subnetpools_v4 = 'sp1,sp2'
         routers = 'uuid1,uuid2'
         args = ['--name', name,
                 '--description', description,
                 '--subnet-prefix-length', subnet_prefix_length,
+                '--subnetpools-v4', subnetpools_v4,
                 '--external-segment', external_segment,
                 '--routers', routers,
                 '--shared', shared,
@@ -154,10 +189,23 @@ class CLITestV20L3PolicyJSON(test_cli20.CLITestV20Base):
             'name': name,
             'description': description,
             'subnet_prefix_length': 24,
+            'subnetpools_v4': ['sp1', 'sp2'],
             'external_segments': expected_external_segments,
             'routers': routers,
             'routers': ['uuid1', 'uuid2'],
             'shared': shared
+        }
+        self._test_update_resource(resource, cmd, my_id, args, params)
+
+    def test_update_l3_policy_ipv6_subnetpools(self):
+        resource = 'l3_policy'
+        cmd = gbp.UpdateL3Policy(test_cli20.MyApp(sys.stdout), None)
+        my_id = 'someid'
+        subnetpools_v6 = 'sp1,sp2'
+        args = ['--subnetpools-v6', subnetpools_v6,
+                my_id]
+        params = {
+            'subnetpools_v6': ['sp1', 'sp2'],
         }
         self._test_update_resource(resource, cmd, my_id, args, params)
 
