@@ -50,6 +50,8 @@ class CLITestV20L3PolicyJSON(test_cli20.CLITestV20Base):
         ip_version = '4'
         ip_pool = '172.16.0.0/12'
         subnet_prefix_length = '24'
+        address_scope_v4_id = 'ascpid'
+        subnetpools_v4 = 'sp1,sp2'
         external_segment = 'seg_uuid1=1.1.1.0:2.2.2.0'
         expected_external_segments = {'seg_uuid1': ['1.1.1.0', '2.2.2.0']}
         routers = 'uuid1,uuid2'
@@ -59,6 +61,8 @@ class CLITestV20L3PolicyJSON(test_cli20.CLITestV20Base):
                 '--ip-version', ip_version,
                 '--ip-pool', ip_pool,
                 '--subnet-prefix-length', subnet_prefix_length,
+                '--address-scope-v4-id', address_scope_v4_id,
+                '--subnetpools-v4', subnetpools_v4,
                 '--external-segment', external_segment,
                 '--routers', routers,
                 '--shared', shared,
@@ -72,6 +76,8 @@ class CLITestV20L3PolicyJSON(test_cli20.CLITestV20Base):
                                    ip_version=4,
                                    ip_pool=ip_pool,
                                    subnet_prefix_length=24,
+                                   address_scope_v4_id=address_scope_v4_id,
+                                   subnetpools_v4=['sp1', 'sp2'],
                                    routers=['uuid1', 'uuid2'],
                                    external_segments=
                                    expected_external_segments, shared=shared)
@@ -142,10 +148,12 @@ class CLITestV20L3PolicyJSON(test_cli20.CLITestV20Base):
         external_segment = 'seg_uuid1=1.1.1.0:2.2.2.0'
         expected_external_segments = {'seg_uuid1': ['1.1.1.0', '2.2.2.0']}
         shared = 'true'
+        subnetpools_v4 = 'sp1,sp2'
         routers = 'uuid1,uuid2'
         args = ['--name', name,
                 '--description', description,
                 '--subnet-prefix-length', subnet_prefix_length,
+                '--subnetpools-v4', subnetpools_v4,
                 '--external-segment', external_segment,
                 '--routers', routers,
                 '--shared', shared,
@@ -154,6 +162,7 @@ class CLITestV20L3PolicyJSON(test_cli20.CLITestV20Base):
             'name': name,
             'description': description,
             'subnet_prefix_length': 24,
+            'subnetpools_v4': ['sp1', 'sp2'],
             'external_segments': expected_external_segments,
             'routers': routers,
             'routers': ['uuid1', 'uuid2'],

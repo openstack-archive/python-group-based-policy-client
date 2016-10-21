@@ -500,6 +500,24 @@ class CreateL3Policy(neutronV20.CreateCommand):
             type=int,
             help=_('Subnet prefix length, default is 24'))
         parser.add_argument(
+            '--address-scope-v4-id',
+            help=_('Neutron Address-scope v4 UUID '
+                   '(if not specified, new Neutron Address-scope is '
+                   'created implicitly based on ip_version)'))
+        parser.add_argument(
+            '--address-scope-v6-id',
+            help=_('Neutron Address-scope v6 UUID '
+                   '(if not specified, new Neutron Address-scope is '
+                   'created implicitly based on ip_version)'))
+        parser.add_argument(
+            '--subnetpools-v4', type=utils.str2list,
+            help=_('Comma separated list of Neutron Subnetpool v4 UUIDs '
+                   'if ip_version and address scope is v4'))
+        parser.add_argument(
+            '--subnetpools-v6', type=utils.str2list,
+            help=_('Comma separated list of Neutron Subnetpool v6 UUIDs '
+                   'if ip_version and address scope is v6'))
+        parser.add_argument(
             '--external-segment',
             action='append', dest='external_segments', type=utils.str2dict,
             # Note: The following format is also supported but we do not
@@ -542,8 +560,10 @@ class CreateL3Policy(neutronV20.CreateCommand):
 
         neutronV20.update_dict(parsed_args, body[self.resource],
                                ['name', 'tenant_id', 'description',
-                                'ip_version', 'ip_pool', 'routers',
-                                'subnet_prefix_length', 'shared',
+                                'ip_version', 'ip_pool',
+                                'address_scope_v4_id', 'address_scope_v6_id',
+                                'subnetpools_v4', 'subnetpools_v6',
+                                'routers', 'subnet_prefix_length', 'shared',
                                 'allowed_vm_names'])
 
         return body
@@ -579,6 +599,14 @@ class UpdateL3Policy(neutronV20.UpdateCommand):
             #        '(this option can be repeated)'))
             help=_('New comma separated list of External Segments'
                    '(this option can be repeated)'))
+        parser.add_argument(
+            '--subnetpools-v4', type=utils.str2list,
+            help=_('New comma separated list of Neutron Subnetpool v4 UUIDs '
+                   'if ip_version and address scope is v4'))
+        parser.add_argument(
+            '--subnetpools-v6', type=utils.str2list,
+            help=_('New comma separated list of Neutron Subnetpool v6 UUIDs '
+                   'if ip_version and address scope is v6'))
         parser.add_argument(
             '--routers', type=utils.str2list,
             help=_('New comma separated list of Neutron Router UUIDs'))
@@ -616,6 +644,8 @@ class UpdateL3Policy(neutronV20.UpdateCommand):
         neutronV20.update_dict(parsed_args, body[self.resource],
                                ['name', 'tenant_id', 'description',
                                 'ip_version', 'ip_pool', 'routers',
+                                'subnetpools_v4', 'subnetpools_v6',
+                                'subnet_prefix_length', 'shared',
                                 'subnet_prefix_length', 'shared',
                                 'allowed_vm_names'])
 
