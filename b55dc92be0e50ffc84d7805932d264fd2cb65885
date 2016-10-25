@@ -1,0 +1,9 @@
+Code-Review+2: Amit Bose <amitbose@gmail.com>
+Code-Review+2: Robert Kukura <kukura@noironetworks.com>
+Workflow+1: Robert Kukura <kukura@noironetworks.com>
+Verified+2: Jenkins
+Submitted-by: Jenkins
+Submitted-at: Tue, 25 Oct 2016 22:05:50 +0000
+Reviewed-on: https://review.openstack.org/390625
+Project: openstack/python-group-based-policy-client
+Branch: refs/heads/stable/mitaka
