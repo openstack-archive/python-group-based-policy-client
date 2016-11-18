@@ -63,6 +63,23 @@ class CLITestV20L2PolicyJSON(test_cli20.CLITestV20Base):
                                    tenant_id=tenant_id, shared=shared,
                                    inject_default_route=inject_default_route)
 
+    def test_create_l2_policy_with_reuse_bd(self):
+        """l2-policy-create with reuse_bd option."""
+        resource = 'l2_policy'
+        cmd = gbp.CreateL2Policy(test_cli20.MyApp(sys.stdout), None)
+        my_id = 'my-id'
+        tenant_id = 'my-tenant'
+        name = 'my-name'
+        target_l2p = 'another-l2p'
+        args = [name,
+                '--tenant-id', tenant_id,
+                '--reuse-bd', target_l2p]
+        position_names = ['name', 'reuse_bd']
+        position_values = [name, target_l2p]
+        self._test_create_resource(resource, cmd, name, my_id, args,
+                                   position_names, position_values,
+                                   tenant_id=tenant_id)
+
     def test_list_l2_policies(self):
         resource = 'l2_policies'
         cmd = gbp.ListL2Policy(test_cli20.MyApp(sys.stdout), None)

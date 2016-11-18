@@ -393,6 +393,11 @@ class CreateL2Policy(neutronV20.CreateCommand):
         n_utils.add_boolean_argument(
             parser, '--shared', dest='shared',
             help=_('Enable or disable resource sharing, default is False'))
+        parser.add_argument(
+            '--reuse-bd',
+            default=None,
+            help=_('Name or UUID of L2 Policy whose BridgeDomain should '
+                   'be reused (APIC only)'))
 
     def args2body(self, parsed_args):
         body = {self.resource: {}, }
@@ -408,7 +413,11 @@ class CreateL2Policy(neutronV20.CreateCommand):
         if parsed_args.network:
             body[self.resource]['network_id'] = (
                 parsed_args.network)
-
+        if parsed_args.reuse_bd:
+            body[self.resource]['reuse_bd'] = \
+                neutronV20.find_resourceid_by_name_or_id(
+                    self.get_client(), 'l2_policy',
+                    parsed_args.reuse_bd)
         return body
 
 
