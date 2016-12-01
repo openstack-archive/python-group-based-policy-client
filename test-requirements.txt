@@ -3,8 +3,6 @@
 # process, which may cause wedges in the gate later.
 hacking<0.11,>=0.10.0
 
-# REVISIT: After mitaka release remove this dependency on python-neutronclient and add a dependency on release version inside requirements.txt
--e git+https://git.openstack.org/openstack/python-neutronclient@stable/mitaka#egg=neutronclient
 cliff-tablib>=1.0
 coverage>=3.6 # Apache-2.0
 fixtures>=1.3.1 # Apache-2.0/BSD
