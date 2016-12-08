@@ -225,6 +225,12 @@ class CreatePolicyTargetGroup(neutronV20.CreateCommand):
         n_utils.add_boolean_argument(
             parser, '--shared', dest='shared',
             help=_('Enable or disable resource sharing, default is False'))
+        n_utils.add_boolean_argument(
+            parser, '--intra-ptg-allow', dest='intra_ptg_allow',
+            help=_("Allow or disallow communication between Policy Targets of "
+                   "this Policy Target Group. Default is True, i.e., all "
+                   "Policy Targets can communicate with each other. This "
+                   "option is only available with the APIC backend."))
 
     def args2body(self, parsed_args):
         body = {self.resource: {}, }
@@ -260,7 +266,8 @@ class CreatePolicyTargetGroup(neutronV20.CreateCommand):
         neutronV20.update_dict(parsed_args, body[self.resource],
                                ['name', 'tenant_id', 'description',
                                 'provided_policy_rule_sets', 'subnets',
-                                'consumed_policy_rule_sets', 'shared'])
+                                'consumed_policy_rule_sets', 'shared',
+                                'intra_ptg_allow'])
 
         return body
 
@@ -303,6 +310,12 @@ class UpdatePolicyTargetGroup(neutronV20.UpdateCommand):
         n_utils.add_boolean_argument(
             parser, '--shared', dest='shared',
             help=_('Enable or disable resource sharing, default is False'))
+        n_utils.add_boolean_argument(
+            parser, '--intra-ptg-allow', dest='intra_ptg_allow',
+            help=_("Allow or disallow communication between Policy Targets of "
+                   "this Policy Target Group. Default is True, i.e., all "
+                   "Policy Targets can communicate with each other. This "
+                   "option is only available with the APIC backend."))
 
     def args2body(self, parsed_args):
         body = {self.resource: {}, }
@@ -340,7 +353,8 @@ class UpdatePolicyTargetGroup(neutronV20.UpdateCommand):
         neutronV20.update_dict(parsed_args, body[self.resource],
                                ['name', 'tenant_id', 'description',
                                 'provided_policy_rule_sets', 'subnets',
-                                'consumed_policy_rule_sets', 'shared'])
+                                'consumed_policy_rule_sets', 'shared',
+                                'intra_ptg_allow'])
 
         return body
 
