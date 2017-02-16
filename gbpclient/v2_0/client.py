@@ -12,15 +12,9 @@
 #
 
 import logging
-import time
 
-from neutronclient import client
 from neutronclient.common import exceptions
-from neutronclient.common import serializer
-from neutronclient.common import utils
-from neutronclient.i18n import _
-import requests
-import six.moves.urllib.parse as urlparse
+from neutronclient.v2_0 import client as clientV2_0
 
 
 _logger = logging.getLogger(__name__)
@@ -98,7 +92,7 @@ class APIParamsCall(object):
         return with_params
 
 
-class Client(object):
+class Client(clientV2_0.ClientBase):
     """Client for the GBP API.
 
     :param string username: Username for authentication. (optional)
@@ -687,152 +681,4 @@ class Client(object):
 
     def __init__(self, **kwargs):
         """Initialize a new client for the GBP v2.0 API."""
-        super(Client, self).__init__()
-        self.retries = kwargs.pop('retries', 0)
-        self.raise_errors = kwargs.pop('raise_errors', True)
-        self.httpclient = client.construct_http_client(**kwargs)
-        self.version = '2.0'
-        self.format = 'json'
-        self.action_prefix = "/v%s" % (self.version)
-        self.retry_interval = 1
-
-    def _handle_fault_response(self, status_code, response_body):
-        # Create exception with HTTP status code and message
-        _logger.debug("Error message: %s", response_body)
-        # Add deserialized error message to exception arguments
-        try:
-            des_error_body = self.deserialize(response_body, status_code)
-        except Exception:
-            # If unable to deserialized body it is probably not a
-            # Neutron error
-            des_error_body = {'message': response_body}
-        # Raise the appropriate exception
-        exception_handler_v20(status_code, des_error_body)
-
-    def _check_uri_length(self, action):
-        uri_len = len(self.httpclient.endpoint_url) + len(action)
-        if uri_len > self.MAX_URI_LEN:
-            raise exceptions.RequestURITooLong(
-                excess=uri_len - self.MAX_URI_LEN)
-
-    def do_request(self, method, action, body=None, headers=None, params=None):
-        # Add format and tenant_id
-        action += ".%s" % self.format
-        action = self.action_prefix + action
-        if type(params) is dict and params:
-            params = utils.safe_encode_dict(params)
-            action += '?' + urlparse.urlencode(params, doseq=1)
-
-        if body:
-            body = self.serialize(body)
-
-        resp, replybody = self.httpclient.do_request(action, method, body=body)
-
-        status_code = resp.status_code
-        if status_code in (requests.codes.ok,
-                           requests.codes.created,
-                           requests.codes.accepted,
-                           requests.codes.no_content):
-            return self.deserialize(replybody, status_code)
-        else:
-            if not replybody:
-                replybody = resp.reason
-            self._handle_fault_response(status_code, replybody)
-
-    def get_auth_info(self):
-        return self.httpclient.get_auth_info()
-
-    def serialize(self, data):
-        """Serializes a dictionary into JSON.
-
-        A dictionary with a single key can be passed and it can contain any
-        structure.
-        """
-        if data is None:
-            return None
-        elif type(data) is dict:
-            return serializer.Serializer().serialize(data)
-        else:
-            raise Exception(_("Unable to serialize object of type = '%s'") %
-                            type(data))
-
-    def deserialize(self, data, status_code):
-        """Deserializes a JSON string into a dictionary."""
-        if status_code == 204:
-            return data
-        return serializer.Serializer().deserialize(
-            data)['body']
-
-    def retry_request(self, method, action, body=None,
-                      headers=None, params=None):
-        """Call do_request with the default retry configuration.
-
-        Only idempotent requests should retry failed connection attempts.
-        :raises: ConnectionFailed if the maximum # of retries is exceeded
-        """
-        max_attempts = self.retries + 1
-        for i in range(max_attempts):
-            try:
-                return self.do_request(method, action, body=body,
-                                       headers=headers, params=params)
-            except exceptions.ConnectionFailed:
-                # Exception has already been logged by do_request()
-                if i < self.retries:
-                    _logger.debug('Retrying connection to Neutron service')
-                    time.sleep(self.retry_interval)
-                elif self.raise_errors:
-                    raise
-
-        if self.retries:
-            msg = (_("Failed to connect to Neutron server after %d attempts")
-                   % max_attempts)
-        else:
-            msg = _("Failed to connect Neutron server")
-
-        raise exceptions.ConnectionFailed(reason=msg)
-
-    def delete(self, action, body=None, headers=None, params=None):
-        return self.retry_request("DELETE", action, body=body,
-                                  headers=headers, params=params)
-
-    def get(self, action, body=None, headers=None, params=None):
-        return self.retry_request("GET", action, body=body,
-                                  headers=headers, params=params)
-
-    def post(self, action, body=None, headers=None, params=None):
-        # Do not retry POST requests to avoid the orphan objects problem.
-        return self.do_request("POST", action, body=body,
-                               headers=headers, params=params)
-
-    def put(self, action, body=None, headers=None, params=None):
-        return self.retry_request("PUT", action, body=body,
-                                  headers=headers, params=params)
-
-    def list(self, collection, path, retrieve_all=True, **params):
-        if retrieve_all:
-            res = []
-            for r in self._pagination(collection, path, **params):
-                res.extend(r[collection])
-            return {collection: res}
-        else:
-            return self._pagination(collection, path, **params)
-
-    def _pagination(self, collection, path, **params):
-        if params.get('page_reverse', False):
-            linkrel = 'previous'
-        else:
-            linkrel = 'next'
-        next = True
-        while next:
-            res = self.get(path, params=params)
-            yield res
-            next = False
-            try:
-                for link in res['%s_links' % collection]:
-                    if link['rel'] == linkrel:
-                        query_str = urlparse.urlparse(link['href']).query
-                        params = urlparse.parse_qs(query_str)
-                        next = True
-                        break
-            except KeyError:
-                break
+        super(Client, self).__init__(**kwargs)
