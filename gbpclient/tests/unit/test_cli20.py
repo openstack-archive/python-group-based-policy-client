@@ -16,7 +16,6 @@ from neutronclient.common import exceptions
 from neutronclient.tests.unit import test_cli20 as neutron_test_cli20
 import requests
 
-from gbpclient.gbp import v2_0 as gbpV2_0
 from gbpclient import gbpshell
 from gbpclient.v2_0 import client as gbpclient
 
@@ -90,8 +89,7 @@ class CLITestV20Base(neutron_test_cli20.CLITestV20Base):
         self.client.format = self.format
         resstr = self.client.serialize(ress)
         # url method body
-        resource_plural = gbpV2_0._get_resource_plural(cmd_resource,
-                                                       self.client)
+        resource_plural = self.client.get_resource_plural(cmd_resource)
         path = getattr(self.client, resource_plural + "_path")
         if parent_id:
             path = path % parent_id
