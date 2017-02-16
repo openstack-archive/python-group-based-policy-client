@@ -17,13 +17,13 @@ import logging
 from neutronclient.common import utils as n_utils
 from neutronclient.i18n import _
 from neutronclient.neutron import v2_0 as neutronV20
+from neutronclient.v2_0 import client as neutron_client
 from oslo_serialization import jsonutils
 
 from gbpclient.common import utils
 
-
-neutronV20.UUID_PATTERN = neutronV20.UUID_PATTERN + (
-    '|auto' + neutronV20.HEX_ELEM + '{32}')
+neutron_client.UUID_PATTERN = neutron_client.UUID_PATTERN + (
+    '|auto' + neutron_client.HEX_ELEM + '{32}')
 
 
 def _format_fixed_ips(pt):
