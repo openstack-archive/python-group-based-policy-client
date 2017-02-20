@@ -11,7 +11,6 @@
 #    under the License.
 #
 
-import logging
 import sys
 
 from gbpclient.gbp.v2_0 import groupbasedpolicy as gbp
@@ -19,8 +18,6 @@ from gbpclient.tests.unit import test_cli20
 
 
 class CLITestV20ExternalPolicyJSON(test_cli20.CLITestV20Base):
-
-    LOG = logging.getLogger(__name__)
 
     def setUp(self):
         super(CLITestV20ExternalPolicyJSON, self).setUp()
