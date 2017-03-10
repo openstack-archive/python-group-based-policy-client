@@ -14,6 +14,7 @@
 import logging
 import time
 
+from gbpclient.gbp.v2_0 import purge as gbpclient_purge
 from neutronclient import client
 from neutronclient.common import exceptions
 from neutronclient.common import serializer
@@ -684,6 +685,10 @@ class Client(object):
         """Deletes the specified service chain instance."""
         return self.delete(self.servicechain_instance_path %
                            (servicechain_instance))
+
+    def purge(self, tenant_id):
+        purge_obj = gbpclient_purge.PurgeAPI(None, None, self)
+        purge_obj.take_action(tenant_id)
 
     def __init__(self, **kwargs):
         """Initialize a new client for the GBP v2.0 API."""
