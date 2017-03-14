@@ -179,7 +179,8 @@ class ListPolicyTargetGroup(neutronV20.ListCommand):
 
     resource = 'policy_target_group'
     log = logging.getLogger(__name__ + '.ListPolicyTargetGroup')
-    list_columns = ['id', 'name', 'description', 'l2_policy_id', 'subnets']
+    list_columns = ['id', 'name', 'description', 'application_policy_group_id',
+                    'l2_policy_id', 'subnets']
     pagination_support = True
     sorting_support = True
 
@@ -205,6 +206,11 @@ class CreatePolicyTargetGroup(neutronV20.CreateCommand):
             'name', metavar='NAME',
             help=_('Name of Policy Target Group to create '
                    '(required argument)'))
+        parser.add_argument(
+            '--application-policy-group', metavar='APPLICATION_POLICY_GROUP',
+            default='',
+            help=_('Application Policy Group UUID (optional, default '
+                   'is None)'))
         parser.add_argument(
             '--l2-policy', metavar='L2_POLICY',
             default='',
@@ -240,6 +246,12 @@ class CreatePolicyTargetGroup(neutronV20.CreateCommand):
                 neutronV20.find_resourceid_by_name_or_id(
                     self.get_client(), 'l2_policy',
                     parsed_args.l2_policy)
+
+        if parsed_args.application_policy_group:
+            body[self.resource]['application_policy_group_id'] = (
+                neutronV20.find_resourceid_by_name_or_id(
+                    self.get_client(), 'application_policy_group',
+                    parsed_args.application_policy_group))
 
         if parsed_args.network_service_policy:
             body[self.resource]['network_service_policy_id'] = \
@@ -293,6 +305,9 @@ class UpdatePolicyTargetGroup(neutronV20.UpdateCommand):
             '--l2-policy', metavar='L2_POLICY',
             help=_('New L2 policy'))
         parser.add_argument(
+            '--application-policy-group', metavar='APPLICATION_POLICY_GROUP',
+            help=_('New Application Policy Group'))
+        parser.add_argument(
             '--network-service-policy', metavar='NETWORK_SERVICE_POLICY',
             help=_('New Network Service Policy'))
         parser.add_argument(
@@ -325,6 +340,12 @@ class UpdatePolicyTargetGroup(neutronV20.UpdateCommand):
                 neutronV20.find_resourceid_by_name_or_id(
                     self.get_client(), 'l2_policy',
                     parsed_args.l2_policy)
+
+        if parsed_args.application_policy_group:
+            body[self.resource]['application_policy_group_id'] = (
+                neutronV20.find_resourceid_by_name_or_id(
+                    self.get_client(), 'application_policy_group',
+                    parsed_args.application_policy_group))
 
         if parsed_args.network_service_policy == '':
             body[self.resource]['network_service_policy_id'] = None
@@ -670,6 +691,85 @@ class UpdateL3Policy(neutronV20.UpdateCommand):
                                 'subnetpools_v4', 'subnetpools_v6',
                                 'subnet_prefix_length', 'shared',
                                 'allowed_vm_names'])
+
+        return body
+
+
+class ListApplicationPolicyGroup(neutronV20.ListCommand):
+    """List l3_policies that belong to a given tenant."""
+
+    resource = 'application_policy_group'
+    log = logging.getLogger(__name__ + '.ListApplicationPolicyGroup')
+    _formatters = {}
+    list_columns = ['id', 'name', 'description', 'shared']
+    pagination_support = True
+    sorting_support = True
+
+
+class ShowApplicationPolicyGroup(neutronV20.ShowCommand):
+    """Show information of a given Application Policy Group."""
+
+    resource = 'application_policy_group'
+    log = logging.getLogger(__name__ + '.ShowApplicationPolicyGroup')
+
+
+class CreateApplicationPolicyGroup(neutronV20.CreateCommand):
+    """Create a Application Policy Group for a given tenant."""
+
+    resource = 'application_policy_group'
+    log = logging.getLogger(__name__ + '.CreateApplicationPolicyGroup')
+
+    def add_known_arguments(self, parser):
+        parser.add_argument(
+            '--description',
+            help=_('Description of the Application Policy Group'))
+        parser.add_argument(
+            'name', metavar='NAME',
+            help=_('Name of L3 policy to create (required argument)'))
+        n_utils.add_boolean_argument(
+            parser, '--shared', dest='shared',
+            help=_('Enable or disable resource sharing, default is False'))
+
+    def args2body(self, parsed_args):
+        body = {self.resource: {}, }
+
+        neutronV20.update_dict(parsed_args, body[self.resource],
+                               ['name', 'tenant_id', 'description',
+                                'shared'])
+
+        return body
+
+
+class DeleteApplicationPolicyGroup(neutronV20.DeleteCommand):
+    """Delete a given Application Policy Group."""
+
+    resource = 'application_policy_group'
+    log = logging.getLogger(__name__ + '.DeleteApplicationPolicyGroup')
+
+
+class UpdateApplicationPolicyGroup(neutronV20.UpdateCommand):
+    """Update Application Policy Group's information."""
+
+    resource = 'application_policy_group'
+    log = logging.getLogger(__name__ + '.UpdateApplicationPolicyGroup')
+
+    def add_known_arguments(self, parser):
+        parser.add_argument(
+            '--description',
+            help=_('New description of the Application Policy Group'))
+        parser.add_argument(
+            '--name',
+            help=_('New name of the Application Policy Group'))
+        n_utils.add_boolean_argument(
+            parser, '--shared', dest='shared',
+            help=_('Enable or disable resource sharing'))
+
+    def args2body(self, parsed_args):
+        body = {self.resource: {}, }
+
+        neutronV20.update_dict(parsed_args, body[self.resource],
+                               ['name', 'tenant_id', 'description',
+                                'shared'])
 
         return body
 

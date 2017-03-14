@@ -149,6 +149,8 @@ class Client(object):
     policy_target_path = "/grouppolicy/policy_targets/%s"
     policy_target_groups_path = "/grouppolicy/policy_target_groups"
     policy_target_group_path = "/grouppolicy/policy_target_groups/%s"
+    application_policy_groups_path = "/grouppolicy/application_policy_groups"
+    application_policy_group_path = "/grouppolicy/application_policy_groups/%s"
     l2_policies_path = "/grouppolicy/l2_policies"
     l2_policy_path = "/grouppolicy/l2_policies/%s"
     l3_policies_path = "/grouppolicy/l3_policies"
@@ -181,6 +183,7 @@ class Client(object):
     # API has no way to report plurals, so we have to hard code them
     EXTED_PLURALS = {'policy_targets': 'policy_target',
                      'policy_target_groups': 'policy_target_group',
+                     'application_policy_groups': 'application_policy_group',
                      'l2_policies': 'l2_policy',
                      'l3_policies': 'l3_policy',
                      'network_service_policies': 'network_service_policy',
@@ -217,6 +220,40 @@ class Client(object):
         """Fetches information of a certain policy target."""
         return self.get(self.policy_target_path % (policy_target),
                         params=_params)
+
+    @APIParamsCall
+    def list_application_policy_groups(self, retrieve_all=True, **_params):
+        """Fetches a list of all application_policy_groups for a tenant."""
+        # Pass filters in "params" argument to do_request
+        return self.list('application_policy_groups',
+                         self.application_policy_groups_path,
+                         retrieve_all, **_params)
+
+    @APIParamsCall
+    def show_application_policy_group(
+        self, application_policy_group, **_params):
+        """Fetches information of a certain application_policy_group."""
+        return self.get(self.application_policy_group_path % (
+            application_policy_group), params=_params)
+
+    @APIParamsCall
+    def create_application_policy_group(self, body=None):
+        """Creates a new application_policy_group."""
+        return self.post(self.application_policy_groups_path, body=body)
+
+    @APIParamsCall
+    def update_application_policy_group(
+        self, application_policy_group, body=None):
+        """Updates a application_policy_group."""
+        return self.put(
+            self.application_policy_group_path % (application_policy_group),
+            body=body)
+
+    @APIParamsCall
+    def delete_application_policy_group(self, application_policy_group):
+        """Deletes the specified application_policy_group."""
+        return self.delete(
+            self.application_policy_group_path % (application_policy_group))
 
     @APIParamsCall
     def create_policy_target(self, body=None):
