@@ -87,7 +87,8 @@ class Purge(n_purge.Purge):
                           'policy_rule', 'policy_classifier',
                           'policy_action', 'network_service_policy',
                           'servicechain_instance', 'servicechain_spec',
-                          'servicechain_node', 'service_profile']
+                          'servicechain_node', 'service_profile',
+                          'application_policy_group']
         deleted = {}
         failed = {}
         self.total_resources = 0
