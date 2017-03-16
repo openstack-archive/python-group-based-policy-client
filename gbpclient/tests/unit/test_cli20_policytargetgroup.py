@@ -48,6 +48,7 @@ class CLITestV20PolicyTargetGroupJSON(test_cli20.CLITestV20Base):
         tenant_id = 'my-tenant'
         name = 'my-name'
         description = 'ptg description'
+        application_policy_group_id = 'application_policy_group_id'
         l2_policy_id = 'l2_policy_id'
         provided_prs = "icmp-prs=false,web-prs=true"
         consumed_prs = "ssh-prs=true,ftp-prs=false"
@@ -57,13 +58,15 @@ class CLITestV20PolicyTargetGroupJSON(test_cli20.CLITestV20Base):
         args = [name,
                 '--tenant-id', tenant_id,
                 '--description', description,
+                '--application-policy-group-id', application_policy_group_id,
                 '--l2-policy-id', l2_policy_id,
                 '--provided-policy-rule-sets', provided_prs,
                 '--consumed-policy-rule-sets', consumed_prs,
                 '--network-service-policy-id', network_service_policy_id,
                 '--shared', shared,
                 '--intra-ptg-allow', intra_ptg_allow]
-        position_names = ['name', 'description', 'l2_policy_id',
+        position_names = ['name', 'description', 'application_policy_group_id',
+                          'l2_policy_id',
                           'provided_policy_rule_sets',
                           'consumed_policy_rule_sets',
                           'network_service_policy_id']
@@ -73,7 +76,8 @@ class CLITestV20PolicyTargetGroupJSON(test_cli20.CLITestV20Base):
         consumed_policy_rule_sets = {
             'ssh-prs': 'true',
             'ftp-prs': 'false'}
-        position_values = [name, description, l2_policy_id,
+        position_values = [name, description, application_policy_group_id,
+                           l2_policy_id,
                            provided_policy_rule_sets,
                            consumed_policy_rule_sets,
                            network_service_policy_id]
@@ -111,6 +115,7 @@ class CLITestV20PolicyTargetGroupJSON(test_cli20.CLITestV20Base):
         my_id = 'my-id'
         name = 'ptg'
         description = 'ptg description'
+        application_policy_group_id = 'application_policy_group_id'
         l2_policy_id = 'l2_policy_id'
         provided_prs = "icmp-prs=false,web-prs=true"
         consumed_prs = "ssh-prs=true,ftp-prs=false"
@@ -120,6 +125,7 @@ class CLITestV20PolicyTargetGroupJSON(test_cli20.CLITestV20Base):
         args = [my_id,
                 '--name', name,
                 '--description', description,
+                '--application-policy-group-id', application_policy_group_id,
                 '--l2-policy-id', l2_policy_id,
                 '--provided-policy-rule-sets', provided_prs,
                 '--consumed-policy-rule-sets', consumed_prs,
@@ -135,6 +141,7 @@ class CLITestV20PolicyTargetGroupJSON(test_cli20.CLITestV20Base):
         params = {
             'name': name,
             'description': description,
+            'application_policy_group_id': application_policy_group_id,
             'l2_policy_id': l2_policy_id,
             'provided_policy_rule_sets': provided_policy_rule_sets,
             'consumed_policy_rule_sets': consumed_policy_rule_sets,
@@ -170,6 +177,17 @@ class CLITestV20PolicyTargetGroupJSON(test_cli20.CLITestV20Base):
         args = [my_id,
                 '--network-service-policy', network_service_policy_id]
         params = {'network_service_policy_id': None}
+        self._test_update_resource(resource, cmd, my_id, args, params)
+
+    def test_update_policy_target_group_unset_apg(self):
+        """policy-target-group-update."""
+        resource = 'policy_target_group'
+        cmd = gbp.UpdatePolicyTargetGroup(test_cli20.MyApp(sys.stdout), None)
+        my_id = 'my-id'
+        application_policy_group_id = ''
+        args = [my_id,
+                '--application-policy-group', application_policy_group_id]
+        params = {'application_policy_group_id': None}
         self._test_update_resource(resource, cmd, my_id, args, params)
 
     def test_delete_policy_target_group_name(self):
