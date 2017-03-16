@@ -727,7 +727,8 @@ class CreateApplicationPolicyGroup(neutronV20.CreateCommand):
             help=_('Description of the Application Policy Group'))
         parser.add_argument(
             'name', metavar='NAME',
-            help=_('Name of L3 policy to create (required argument)'))
+            help=_('Name of the Application Policy Group to create '
+                   '(required argument)'))
         n_utils.add_boolean_argument(
             parser, '--shared', dest='shared',
             help=_('Enable or disable resource sharing, default is False'))
