@@ -93,7 +93,7 @@ class APIParamsCall(object):
         return with_params
 
 
-class Client(clientV2_0.ClientBase):
+class Client(clientV2_0.Client):
     """Client for the GBP API.
 
     :param string username: Username for authentication. (optional)
