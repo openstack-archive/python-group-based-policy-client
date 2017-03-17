@@ -39,7 +39,6 @@ from neutronclient.i18n import _
 from neutronclient.version import __version__
 
 from gbpclient.gbp.v2_0 import groupbasedpolicy as gbp
-from gbpclient.gbp.v2_0 import purge
 from gbpclient.gbp.v2_0 import servicechain
 
 VERSION = '2.0'
@@ -158,7 +157,6 @@ COMMAND_V2 = {
     'policy-rule-set-update': gbp.UpdatePolicyRuleSet,
     'policy-rule-set-list': gbp.ListPolicyRuleSet,
     'policy-rule-set-show': gbp.ShowPolicyRuleSet,
-    'purge': purge.Purge,
     'service-profile-list': servicechain.ListServiceProfile,
     'service-profile-show': servicechain.ShowServiceProfile,
     'service-profile-create': servicechain.CreateServiceProfile,
