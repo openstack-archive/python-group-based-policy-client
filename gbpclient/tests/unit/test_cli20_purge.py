@@ -24,4 +24,5 @@ class CLITestV20Purge(test_cli20_purge.CLITestV20Purge):
                                'policy_classifier', 'policy_action',
                                'network_service_policy',
                                'servicechain_instance', 'servicechain_spec',
-                               'servicechain_node', 'service_profile']
+                               'servicechain_node', 'service_profile',
+                               'application_policy_group']

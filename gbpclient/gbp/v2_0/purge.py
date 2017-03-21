@@ -87,7 +87,8 @@ class Purge(n_purge.Purge):
                           'policy_rule', 'policy_classifier',
                           'policy_action', 'network_service_policy',
                           'servicechain_instance', 'servicechain_spec',
-                          'servicechain_node', 'service_profile']
+                          'servicechain_node', 'service_profile',
+                          'application_policy_group']
         deleted = {}
         failed = {}
         self.total_resources = 0
@@ -99,8 +100,8 @@ class Purge(n_purge.Purge):
                                                           resources)
         print('\n%s' % self._build_message(deleted, failed, failures))
 
-        # TODO(Kent): clean up Neutron resources also
-        # super(Purge, self).take_action(parsed_args)
+        # clean up Neutron resources also
+        super(Purge, self).take_action(parsed_args)
 
 
 class PurgeAPI(Purge):
