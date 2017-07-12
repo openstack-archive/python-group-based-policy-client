@@ -32,10 +32,10 @@ import six.moves.urllib.parse as urlparse
 
 from cliff import app
 from cliff import commandmanager
+from neutronclient._i18n import _
 from neutronclient.common import clientmanager
 from neutronclient.common import exceptions as exc
 from neutronclient.common import utils
-from neutronclient.i18n import _
 from neutronclient.version import __version__
 
 from gbpclient.gbp.v2_0 import groupbasedpolicy as gbp

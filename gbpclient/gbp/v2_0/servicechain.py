@@ -20,9 +20,9 @@ import os
 
 from heatclient.common import template_utils
 
+from neutronclient._i18n import _
 from neutronclient.common import exceptions as exc
 from neutronclient.common import utils as n_utils
-from neutronclient.i18n import _
 from neutronclient.neutron import v2_0 as neutronV20
 
 from gbpclient.common import utils
