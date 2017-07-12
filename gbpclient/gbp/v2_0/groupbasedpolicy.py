@@ -15,7 +15,7 @@ import argparse
 import logging
 
 from neutronclient.common import utils as n_utils
-from neutronclient.i18n import _
+from neutronclient._i18n import _
 from neutronclient.neutron import v2_0 as neutronV20
 from neutronclient.v2_0 import client as neutron_client
 from oslo_serialization import jsonutils
