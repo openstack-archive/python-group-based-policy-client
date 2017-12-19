@@ -20,7 +20,6 @@ from gbpclient import gbpshell
 from gbpclient.v2_0 import client as gbpclient
 
 API_VERSION = neutron_test_cli20.API_VERSION
-FORMAT = neutron_test_cli20.FORMAT
 TOKEN = neutron_test_cli20.TOKEN
 ENDURL = neutron_test_cli20.ENDURL
 capture_std_streams = neutron_test_cli20.capture_std_streams
