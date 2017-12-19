@@ -20,7 +20,6 @@ from gbpclient import gbpshell
 from gbpclient.v2_0 import client as gbpclient
 
 API_VERSION = neutron_test_cli20.API_VERSION
-FORMAT = neutron_test_cli20.FORMAT
 TOKEN = neutron_test_cli20.TOKEN
 ENDURL = neutron_test_cli20.ENDURL
 capture_std_streams = neutron_test_cli20.capture_std_streams
@@ -86,25 +85,18 @@ class CLITestV20Base(neutron_test_cli20.CLITestV20Base):
                 {self.id_field: myid}, }
         if name:
             ress[resource].update({'name': name})
-        self.client.format = self.format
         resstr = self.client.serialize(ress)
         # url method body
         resource_plural = self.client.get_resource_plural(cmd_resource)
         path = getattr(self.client, resource_plural + "_path")
         if parent_id:
             path = path % parent_id
-        # Work around for LP #1217791. XML deserializer called from
-        # MyComparator does not decodes XML string correctly.
-        if self.format == 'json':
-            mox_body = MyComparator(body, self.client)
-        else:
-            mox_body = self.client.serialize(body)
+        mox_body = MyComparator(body, self.client)
         self.client.httpclient.request(
-            end_url(path, format=self.format), 'POST',
+            end_url(path), 'POST',
             body=mox_body,
             headers=mox.ContainsKeyValue(
                 'X-Auth-Token', TOKEN)).AndReturn((MyResp(200), resstr))
-        args.extend(['--request-format', self.format])
         self.mox.ReplayAll()
         cmd_parser = cmd.get_parser('create_' + resource)
         gbpshell.run_command(cmd, cmd_parser, args)
