@@ -1,0 +1,9 @@
+Code-Review+2: Thomas Bachman <bachman@noironetworks.com>
+Code-Review+2: Sumit Naiksatam <sumitnaiksatam@gmail.com>
+Workflow+1: Sumit Naiksatam <sumitnaiksatam@gmail.com>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Mon, 17 Sep 2018 17:42:55 +0000
+Reviewed-on: https://review.openstack.org/602727
+Project: openstack/python-group-based-policy-client
+Branch: refs/heads/stable/queens
